@@ -8,6 +8,7 @@ const Freebizzy = () => {
   const scope = useRef<Scope | null>(null);
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // test
     scope.current = createScope({ root }).add((self) => {
       animate("#logoTitle", {
         scale: [
