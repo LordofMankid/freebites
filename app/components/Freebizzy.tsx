@@ -1,9 +1,9 @@
 import React from "react";
 import { useRef, useEffect } from "react";
 import { animate, createScope, createSpring, Scope } from "animejs";
-import Logo from "../Logo";
+import Logo from "../assets/freebites.svg";
 
-export default function Freebizzy() {
+const Freebizzy = () => {
   const root = useRef(null);
   const scope = useRef<Scope | null>(null);
   useEffect(() => {
@@ -34,4 +34,6 @@ export default function Freebizzy() {
       </div>
     </div>
   );
-}
+};
+
+export default Freebizzy;
