@@ -37,7 +37,7 @@ const CommonButton = (props: ButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-row items-center justify-center gap-2 py-2.5 px-5 min-w-max border rounded-[100px] border-black bg-white" ${altStyle}`}
+      className={`flex flex-row items-center justify-center gap-2 py-2.5 px-5 min-w-max border rounded-[100px] border-black " ${altStyle}`}
       disabled={disabled}
       type={type ?? "button"}
     >
