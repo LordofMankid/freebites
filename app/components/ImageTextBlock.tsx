@@ -13,17 +13,17 @@ const ImageTextBlock = (props: ImageTextBlockProps) => {
 
   return (
     <div
-      className={`w-full flex ${
+      className={`min-w-full flex ${
         imgFirst ? "flex-row" : "flex-row-reverse"
       } justify-between`}
     >
       <Image src={src} alt={alt} width={550} height={564} />
       <div
-        className={`flex flex-col justify-center ${
-          imgFirst ? "items-end" : "items-start"
-        }`}
+        className={`w-full flex flex-col justify-center ${
+          imgFirst ? "items-end" : "items-start pl-5"
+        } flex-1`}
       >
-        <div className="max-w-96 flex flex-col gap-2">
+        <div className=" max-w-[30rem] flex flex-col gap-2">
           <p className="font-baloo font-bold text-5xl">{title}</p>
           <p className="font-inter font-normal text-2xl">{body}</p>
         </div>
