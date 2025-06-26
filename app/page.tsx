@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="flex flex-col items-center mx-24 gap-20 mb-24">
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 gap-20 mb-24">
         <TopHero />
         <div className="w-full">
           <div className="flex flex-col items-center gap-20 mx-16">

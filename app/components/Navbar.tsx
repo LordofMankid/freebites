@@ -68,7 +68,7 @@ const Navbar = () => {
   return (
     <nav
       ref={root}
-      className="flex flex-row h-32 items-center justify-between mx-20"
+      className="flex flex-row h-32 items-center justify-between lg:mx-20 mx-12"
     >
       <Logo className="w-14 h-16" />
       <button
@@ -76,7 +76,7 @@ const Navbar = () => {
           handleClick();
           // setOpen(!isOpen);
         }}
-        className="logo lg:hidden mx-10"
+        className="logo lg:hidden lg:mx-10 mx-4"
         onMouseEnter={() => {
           scope.current?.methods.bounceLogo();
         }}

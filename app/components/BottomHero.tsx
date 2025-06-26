@@ -12,7 +12,7 @@ const BottomHero = () => {
           Sign up to be an ambassador :)
         </p>
       </div>
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-col md:flex-row gap-2">
         <CommonButton
           label="Sign Up Form"
           altStyle="bg-orange-medium border-orange-medium border-[1.5px] py-4 px-10"
