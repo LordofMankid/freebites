@@ -8,7 +8,9 @@ import {
   createDraggable,
   createScope,
   createSpring,
+  createTimeline,
   Scope,
+  stagger,
 } from "animejs";
 const Navbar = () => {
   const [isOpen, setOpen] = useState(false); // open/close the hamburger menu
@@ -29,7 +31,7 @@ const Navbar = () => {
       // Register function methods to be used outside the useEffect
       self.add("rotateLogo", (open: boolean) => {
         animate(".logo", {
-          rotate: open ? 0 : 360,
+          rotate: open ? 360 : 0,
           ease: "out(4)",
           duration: 1000,
         });
@@ -53,6 +55,57 @@ const Navbar = () => {
         bounceAnim?.pause();
         bounceAnim?.seek(0); // Reset the animation to start
       });
+
+      // MENU ANIMATION
+
+      const t1 = createTimeline({ autoplay: false })
+        .add(".menu", {
+          height: ["0vh", "100vh"],
+          ease: "out(4)",
+        })
+        .add(
+          ".menu-item",
+          {
+            opacity: [0, 1],
+            delay: stagger(60),
+            duration: 300,
+            ease: "out(3)",
+          },
+          200
+        );
+
+      self.add("toggleMenu", (open: boolean) => {
+        if (open) t1.play();
+        else t1.seek(400).reverse(); // plays in reverse
+      });
+
+      // menu hover animations
+      let hoverListenersAttached = false;
+
+      self.add("onHover", () => {
+        if (hoverListenersAttached) return; // already attached
+        hoverListenersAttached = true;
+
+        const menuItems = document.querySelectorAll(".menu-item"); // change the items to select here
+
+        menuItems.forEach((item) => {
+          item.addEventListener("mouseenter", () => {
+            animate(item, {
+              // change the animations here
+              scale: [
+                { to: 1.1, ease: "inOut(3)", duration: 200 },
+                { to: 1, ease: createSpring({ stiffness: 200 }) },
+              ],
+            });
+          });
+
+          item.addEventListener("mouseleave", () => {
+            animate(item, {
+              scale: [{ to: 1, ease: "inOut(3)", duration: 150 }],
+            });
+          });
+        });
+      });
     });
 
     // Properly cleanup all anime.js instances declared inside the scope
@@ -62,29 +115,67 @@ const Navbar = () => {
   // prevent scrolling when menu is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      const scrollY = window.scrollY;
+
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.overflowY = "scroll"; // so the page doesn't jump when scrollbar hides
+      document.body.style.width = "100%";
+
+      // Store scroll position so we can restore later
+      document.body.dataset.scrollY = scrollY.toString();
     } else {
-      document.body.style.overflow = "";
+      const scrollY = document.body.dataset.scrollY ?? "0";
+
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+      document.body.style.width = "";
+
+      // Restore scroll position
+      window.scrollTo(0, parseInt(scrollY));
     }
 
-    // Clean up in case the component unmounts
+    // Cleanup just in case
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+      document.body.style.width = "";
     };
   }, [isOpen]);
 
+  // add listener to auto close menu when resizing window
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    const handleResize = () => {
+      if (mediaQuery.matches) {
+        setOpen(false);
+        scope.current?.methods.toggleMenu(false);
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleResize);
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
+
   const handleClick = () => {
     // Animate logo rotation on click using the method declared inside the scope
-    scope.current?.methods.rotateLogo(isOpen);
     setOpen(!isOpen);
+    scope.current?.methods.rotateLogo(!isOpen);
+    scope.current?.methods.toggleMenu(!isOpen);
+    scope.current?.methods.onHover();
   };
 
   return (
-    <>
-      <nav
-        ref={root}
-        className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10"
-      >
+    <div ref={root}>
+      <nav className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10">
         <Logo className="w-14 h-10 lg:h-16" />
         <button
           onClick={() => {
@@ -112,27 +203,27 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <>
-        <div
-          className={`lg:block flex flex-col items-start pl-12 ${
-            isOpen ? "visible" : "hidden"
-          }`}
-          // ref={spacerRef}
-          style={{
-            height: isOpen ? "100vh" : "0px", // Takes full screen height when expanded
-            // visibility: isOpen ? "visible" : "hidden", // Hide when collapsed
-          }}
-        >
-          <Link href="/mission">Mission</Link>
-          <Link href="/team">Team</Link>
-          <Link href="/contact">Contact</Link>
-          <div className="flex flex-col lg:flex-row lg:h-11 lg:items-center gap-4">
-            <CommonButton label={"sign up"} />
-            <CommonButton label={"consult with freebites"} />
-          </div>
-        </div>
-      </>
-    </>
+
+      <div
+        className={`menu lg:hidden flex flex-col h-0 z-50 items-start pl-12`}
+      >
+        <Link href="/mission" className="menu-item opacity-0 font-inter">
+          Mission
+        </Link>
+        <Link href="/team" className="menu-item opacity-0 font-inter">
+          Team
+        </Link>
+        <Link href="/contact" className="menu-item opacity-0 font-inter">
+          Contact
+        </Link>
+        <Link href="/consult" className="menu-item opacity-0 font-inter">
+          Consult with Freebites
+        </Link>
+        <Link href="/signup" className="menu-item opacity-0 font-inter">
+          Sign Up
+        </Link>
+      </div>
+    </div>
   );
 };
 
