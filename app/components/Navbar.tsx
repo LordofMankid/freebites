@@ -59,6 +59,20 @@ const Navbar = () => {
     return () => scope.current?.revert();
   }, []);
 
+  // prevent scrolling when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // Clean up in case the component unmounts
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   const handleClick = () => {
     // Animate logo rotation on click using the method declared inside the scope
     scope.current?.methods.rotateLogo(isOpen);
@@ -66,40 +80,59 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      ref={root}
-      className="flex flex-row h-32 items-center justify-between lg:mx-20 mx-12"
-    >
-      <Logo className="w-14 h-16" />
-      <button
-        onClick={() => {
-          handleClick();
-          // setOpen(!isOpen);
-        }}
-        className="logo lg:hidden lg:mx-10 mx-4"
-        onMouseEnter={() => {
-          scope.current?.methods.bounceLogo();
-        }}
-        onMouseLeave={() => {
-          scope.current?.methods.stopBounceLogo();
-        }}
+    <>
+      <nav
+        ref={root}
+        className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10"
       >
-        <IoMenu size={24} />
-      </button>
-      <div
-        className={`lg:flex flex-row h-11 font-inter items-center gap-12 ${
-          isOpen ? "block" : "hidden"
-        }`}
-      >
-        <Link href="/mission">Mission</Link>
-        <Link href="/team">Team</Link>
-        <Link href="/contact">Contact</Link>
-        <div className="flex flex-row h-11 items-center gap-4">
-          <CommonButton label={"sign up"} />
-          <CommonButton label={"consult with freebites"} />
+        <Logo className="w-14 h-10 lg:h-16" />
+        <button
+          onClick={() => {
+            handleClick();
+          }}
+          className="logo lg:hidden lg:mx-10 mx-4"
+          onMouseEnter={() => {
+            scope.current?.methods.bounceLogo();
+          }}
+          onMouseLeave={() => {
+            scope.current?.methods.stopBounceLogo();
+          }}
+        >
+          <IoMenu size={24} />
+        </button>
+        <div
+          className={`font-inter items-center lg:flex lg:flex-row lg:h-11 lg:gap-12 hidden`}
+        >
+          <Link href="/mission">Mission</Link>
+          <Link href="/team">Team</Link>
+          <Link href="/contact">Contact</Link>
+          <div className="flex flex-col lg:flex-row lg:h-11 lg:items-center gap-4">
+            <CommonButton label={"sign up"} />
+            <CommonButton label={"consult with freebites"} />
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+      <>
+        <div
+          className={`lg:block flex flex-col items-start pl-12 ${
+            isOpen ? "visible" : "hidden"
+          }`}
+          // ref={spacerRef}
+          style={{
+            height: isOpen ? "100vh" : "0px", // Takes full screen height when expanded
+            // visibility: isOpen ? "visible" : "hidden", // Hide when collapsed
+          }}
+        >
+          <Link href="/mission">Mission</Link>
+          <Link href="/team">Team</Link>
+          <Link href="/contact">Contact</Link>
+          <div className="flex flex-col lg:flex-row lg:h-11 lg:items-center gap-4">
+            <CommonButton label={"sign up"} />
+            <CommonButton label={"consult with freebites"} />
+          </div>
+        </div>
+      </>
+    </>
   );
 };
 
