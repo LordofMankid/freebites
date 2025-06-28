@@ -205,21 +205,36 @@ const Navbar = () => {
       </nav>
 
       <div
-        className={`menu lg:hidden flex flex-col h-0 z-50 items-start pl-12`}
+        className={`menu lg:hidden flex flex-col h-0 z-50 items-start pl-12 gap-2`}
       >
-        <Link href="/mission" className="menu-item opacity-0 font-inter">
+        <Link
+          href="/mission"
+          className="menu-item opacity-0 font-inter text-2xl font-semibold"
+        >
           Mission
         </Link>
-        <Link href="/team" className="menu-item opacity-0 font-inter">
+        <Link
+          href="/team"
+          className="menu-item opacity-0 font-inter text-2xl font-semibold"
+        >
           Team
         </Link>
-        <Link href="/contact" className="menu-item opacity-0 font-inter">
+        <Link
+          href="/contact"
+          className="menu-item opacity-0 font-inter text-2xl font-semibold"
+        >
           Contact
         </Link>
-        <Link href="/consult" className="menu-item opacity-0 font-inter">
+        <Link
+          href="/consult"
+          className="menu-item opacity-0 font-inter text-2xl font-semibold"
+        >
           Consult with Freebites
         </Link>
-        <Link href="/signup" className="menu-item opacity-0 font-inter">
+        <Link
+          href="/signup"
+          className="menu-item opacity-0 font-inter text-2xl font-semibold"
+        >
           Sign Up
         </Link>
       </div>
