@@ -11,7 +11,7 @@ export const postFeedback = async (feedback: FeedbackFormData) => {
     if (response) {
       const resend = new Resend(env.RESEND_API_KEY);
       resend.emails.send({
-        from: "onboarding@resend.dev",
+        from: "no-reply@freebites.org",
         to: "freebites7@gmail.com",
         subject: "Someone Submitted a Feedback Form!",
         html: `<p>
