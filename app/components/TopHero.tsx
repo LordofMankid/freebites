@@ -1,8 +1,15 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-const TopHero = () => {
+interface TopHeroProps {
+  altContainerStyle?: string;
+}
+const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
+  const { altContainerStyle } = props;
   return (
-    <div className="w-full flex flex-col justify-center items-center bg-orange-faint rounded-4xl sm:rounded-[70px] py-10 px-8 sm:p-40 sm:gap-8">
+    <div
+      ref={ref}
+      className={`w-full flex flex-col justify-center items-center bg-orange-faint rounded-4xl sm:rounded-[70px] py-10 px-8 sm:p-40 sm:gap-8 ${altContainerStyle}`}
+    >
       <div className="flex flex-col text-center sm:gap-4">
         <p className="font-baloo text-xl sm:text-4xl font-bold text-dark-text">
           Fighting food waste,
@@ -26,6 +33,8 @@ const TopHero = () => {
       </a>
     </div>
   );
-};
+});
+
+TopHero.displayName = "TopHero"; // necessary to avoid "unnamed function" warning
 
 export default TopHero;
