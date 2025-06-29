@@ -36,11 +36,11 @@ export default function Home() {
         targets,
         {
           opacity: [0, 1],
-          delay: stagger(200),
-          duration: 750,
+          delay: stagger(250),
+          duration: 1000,
           ease: "out(3)",
         },
-        300
+        400
       );
     });
   }, []);
