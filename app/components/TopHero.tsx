@@ -1,10 +1,61 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
+import { animate, createScope, createSpring, Scope } from "animejs";
 
 interface TopHeroProps {
   altContainerStyle?: string;
 }
 const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
   const { altContainerStyle } = props;
+  const root = useRef(null);
+  const scope = useRef<Scope | null>(null);
+
+  const handleMouseEnter = () => {
+    animate("#download", {
+      scale: [
+        { to: 1.15, ease: createSpring({ stiffness: 400 }), duration: 200 },
+      ],
+      rotate: [
+        { to: "4deg", ease: createSpring({ stiffness: 500 }), duration: 200 },
+      ],
+    });
+    animate("#download-hover", {
+      inset: [{ to: 2, ease: "in", duration: 100 }],
+    });
+    animate("#download-text", {
+      color: [{ to: "#FF9529", ease: "in", duration: 100 }],
+    });
+  };
+
+  const handleMouseExit = () => {
+    animate("#download", {
+      scale: [{ to: 1, ease: createSpring({ stiffness: 400 }), duration: 400 }],
+      rotate: [
+        { to: "0", ease: createSpring({ stiffness: 500 }), duration: 200 },
+      ],
+    });
+    animate("#download-hover", {
+      inset: [{ to: 30, ease: "in", duration: 50 }],
+    });
+    animate("#download-text", {
+      color: [{ to: "#FFF", ease: "in", duration: 100 }],
+    });
+  };
+
+  useEffect(() => {
+    scope.current = createScope({ root });
+    // .add(() => {
+    //   animate("#download", {
+    //     scale: [
+    //       { to: 1.25, ease: "inOut(2)", duration: 200 },
+    //       { to: 1, ease: createSpring({ stiffness: 300 }) },
+    //     ],
+    //     loop: true,
+    //   });
+    // });
+    return () => {
+      if (scope.current) scope.current.revert();
+    };
+  }, []);
   return (
     <div
       ref={ref}
@@ -23,14 +74,33 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
           insecurity.
         </p>
       </div>
-      <a
-        href="https://apps.apple.com/us/app/freebites/id6664051907"
-        className="w-fit flex flex-row items-center justify-center rounded-full bg-orange-medium mt-2 py-2 px-5 sm:mt-0 sm:py-4 sm:px-10"
-      >
-        <p className="text-white text-md sm:text-xl font-semibold">
-          Download Now
-        </p>
-      </a>
+      <div ref={root} className="relative">
+        {/* Base button */}
+        <a
+          id="download"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseExit}
+          href="https://apps.apple.com/us/app/freebites/id6664051907"
+          className="relative z-30 w-fit flex flex-row items-center bg-orange-medium justify-center rounded-full mt-2 py-2 px-5 sm:mt-0 sm:py-4 sm:px-10"
+          // style={{ background: "radial-gradient(#FFF, #FF9529 0%)" }}
+        >
+          <p
+            id="download-text"
+            className="z-30 text-md sm:text-xl font-semibold"
+            style={{ color: "#FFFFFF" }}
+          >
+            Download Now
+          </p>
+          <div
+            id="download-hover"
+            className="absolute z-20 rounded-full bg-orange-faint pointer-events-none"
+            style={{
+              inset: 30,
+            }}
+          />
+        </a>
+        {/* Hover overlay for gradient effect */}
+      </div>
     </div>
   );
 });
