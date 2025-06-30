@@ -20,8 +20,13 @@ const Navbar = () => {
   useEffect(() => {
     // let bounceAnim: ReturnType<typeof animate> | null = null;
     scope.current = createScope({ root }).add((self) => {
-      // Every anime.js instances declared here are now scopped to <div ref={root}>
-
+      // animate navbar intro
+      animate(".navbar-container", {
+        opacity: [0, 1],
+        duration: 350,
+        ease: "in(4)",
+        autoplay: true,
+      });
       // Make the logo draggable around its center
       createDraggable(".logo", {
         container: [0, 0, 0, 0],
@@ -175,68 +180,70 @@ const Navbar = () => {
 
   return (
     <div ref={root}>
-      <nav className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10">
-        <Logo className="w-14 h-10 lg:h-16" />
-        <button
-          onClick={() => {
-            handleClick();
-          }}
-          className="logo lg:hidden lg:mx-10 mx-4"
-          onMouseEnter={() => {
-            scope.current?.methods.bounceLogo();
-          }}
-          onMouseLeave={() => {
-            scope.current?.methods.stopBounceLogo();
-          }}
-        >
-          <IoMenu size={24} />
-        </button>
-        <div
-          className={`font-inter items-center lg:flex lg:flex-row lg:h-11 lg:gap-12 hidden`}
-        >
-          <Link href="/mission">Mission</Link>
-          <Link href="/team">Team</Link>
-          <Link href="/contact">Contact</Link>
-          <div className="flex flex-col lg:flex-row lg:h-11 lg:items-center gap-4">
-            <CommonButton label={"sign up"} />
-            <CommonButton label={"consult with freebites"} />
+      <div className={"navbar-container opacity-0"}>
+        <nav className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10">
+          <Logo className="w-14 h-10 lg:h-16" />
+          <button
+            onClick={() => {
+              handleClick();
+            }}
+            className="logo lg:hidden lg:mx-10 mx-4"
+            onMouseEnter={() => {
+              scope.current?.methods.bounceLogo();
+            }}
+            onMouseLeave={() => {
+              scope.current?.methods.stopBounceLogo();
+            }}
+          >
+            <IoMenu size={24} />
+          </button>
+          <div
+            className={`font-inter items-center lg:flex lg:flex-row lg:h-11 lg:gap-12 hidden`}
+          >
+            <Link href="/mission">Mission</Link>
+            <Link href="/team">Team</Link>
+            <Link href="/contact">Contact</Link>
+            <div className="flex flex-col lg:flex-row lg:h-11 lg:items-center gap-4">
+              <CommonButton label={"sign up"} />
+              <CommonButton label={"consult with freebites"} />
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      <div
-        className={`menu lg:hidden flex flex-col h-0 z-50 items-start pl-12 gap-2`}
-      >
-        <Link
-          href="/mission"
-          className="menu-item opacity-0 font-inter text-2xl font-semibold"
+        <div
+          className={`menu lg:hidden flex flex-col h-0 z-50 items-start pl-12 gap-2`}
         >
-          Mission
-        </Link>
-        <Link
-          href="/team"
-          className="menu-item opacity-0 font-inter text-2xl font-semibold"
-        >
-          Team
-        </Link>
-        <Link
-          href="/contact"
-          className="menu-item opacity-0 font-inter text-2xl font-semibold"
-        >
-          Contact
-        </Link>
-        <Link
-          href="/consult"
-          className="menu-item opacity-0 font-inter text-2xl font-semibold"
-        >
-          Consult with Freebites
-        </Link>
-        <Link
-          href="/signup"
-          className="menu-item opacity-0 font-inter text-2xl font-semibold"
-        >
-          Sign Up
-        </Link>
+          <Link
+            href="/mission"
+            className="menu-item opacity-0 font-inter text-2xl font-semibold"
+          >
+            Mission
+          </Link>
+          <Link
+            href="/team"
+            className="menu-item opacity-0 font-inter text-2xl font-semibold"
+          >
+            Team
+          </Link>
+          <Link
+            href="/contact"
+            className="menu-item opacity-0 font-inter text-2xl font-semibold"
+          >
+            Contact
+          </Link>
+          <Link
+            href="/consult"
+            className="menu-item opacity-0 font-inter text-2xl font-semibold"
+          >
+            Consult with Freebites
+          </Link>
+          <Link
+            href="/signup"
+            className="menu-item opacity-0 font-inter text-2xl font-semibold"
+          >
+            Sign Up
+          </Link>
+        </div>
       </div>
     </div>
   );

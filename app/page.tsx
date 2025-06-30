@@ -34,12 +34,12 @@ export default function Home() {
         if (!target) return;
         animate(target, {
           opacity: [0, 1],
-          duration: 1000,
-          ease: "out(3)",
+          duration: 750,
+          ease: "in(4)",
           autoplay: onScroll({
             target: target,
             container: ".page",
-            enter: "bottom-=40% top",
+            enter: "bottom-=30% top",
             leave: "top+=40% bottom",
             sync: "play",
           }),
