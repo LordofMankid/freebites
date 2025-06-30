@@ -6,14 +6,7 @@ import BottomHero from "./components/BottomHero";
 import ImageTextBlock from "./components/ImageTextBlock";
 import tempImg from "./assets/tempImg.png";
 import { useEffect, useRef } from "react";
-import {
-  animate,
-  createScope,
-  createTimeline,
-  onScroll,
-  Scope,
-  stagger,
-} from "animejs";
+import { animate, createScope, onScroll, Scope } from "animejs";
 
 export default function Home() {
   const root = useRef(null);
