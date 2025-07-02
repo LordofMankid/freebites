@@ -39,7 +39,7 @@ export default function Home() {
           autoplay: onScroll({
             target: target,
             container: ".page",
-            enter: "bottom-=70% top",
+            enter: "bottom-=40% top",
             leave: "min bottom",
             sync: "play",
           }),

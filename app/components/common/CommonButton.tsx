@@ -11,6 +11,7 @@ interface ButtonProps {
   disabled?: boolean;
   type?: HTMLButtonElement["type"];
   noFocusStyle?: boolean;
+  hover?: boolean;
 }
 
 /**
@@ -37,7 +38,7 @@ const CommonButton = (props: ButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-row items-center justify-center gap-2 py-2.5 px-5 min-w-max border rounded-[100px] border-black " ${altStyle}`}
+      className={`flex flex-row items-center justify-center gap-2 py-2.5 px-5 min-w-max border rounded-[100px] border-[#211f1f] cursor-pointer ${altStyle}`}
       disabled={disabled}
       type={type ?? "button"}
     >

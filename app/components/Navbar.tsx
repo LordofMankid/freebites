@@ -12,6 +12,7 @@ import {
   Scope,
   stagger,
 } from "animejs";
+
 const Navbar = () => {
   const [isOpen, setOpen] = useState(false); // open/close the hamburger menu
   const root = useRef(null);
@@ -182,7 +183,9 @@ const Navbar = () => {
     <div ref={root}>
       <div className={"navbar-container opacity-0"}>
         <nav className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10">
-          <Logo className="w-14 h-10 lg:h-16" />
+          <Link href="/">
+            <Logo className="w-14 h-10 lg:h-16" />
+          </Link>
           <button
             onClick={() => {
               handleClick();
@@ -200,25 +203,28 @@ const Navbar = () => {
           <div
             className={`font-inter items-center lg:flex lg:flex-row lg:h-11 lg:gap-12 hidden`}
           >
-            <Link href="/mission">Mission</Link>
-            <Link href="/team">Team</Link>
-            <Link href="/contact">Contact</Link>
-            <div className="flex flex-col lg:flex-row lg:h-11 lg:items-center gap-4">
-              <CommonButton label={"sign up"} />
-              <CommonButton label={"consult with freebites"} />
-            </div>
+            <Link className="text-[#211f1f]" href="/team">
+              Team
+            </Link>
+            <Link className="text-[#211f1f]" href="/contact">
+              Contact
+            </Link>
+            <Link
+              className="flex flex-col lg:flex-row lg:h-11 lg:items-center"
+              href={"/partner"}
+            >
+              <CommonButton
+                label={"Partner with Us"}
+                altStyle="border-[#211f1f]"
+                altTextStyle="text-[#211f1f]"
+              />
+            </Link>
           </div>
         </nav>
 
         <div
           className={`menu lg:hidden flex flex-col h-0 z-50 items-start pl-12 gap-2`}
         >
-          <Link
-            href="/mission"
-            className="menu-item opacity-0 font-inter text-2xl font-semibold"
-          >
-            Mission
-          </Link>
           <Link
             href="/team"
             className="menu-item opacity-0 font-inter text-2xl font-semibold"
@@ -232,16 +238,10 @@ const Navbar = () => {
             Contact
           </Link>
           <Link
-            href="/consult"
+            href="/partner"
             className="menu-item opacity-0 font-inter text-2xl font-semibold"
           >
-            Consult with Freebites
-          </Link>
-          <Link
-            href="/signup"
-            className="menu-item opacity-0 font-inter text-2xl font-semibold"
-          >
-            Sign Up
+            Partner with Us
           </Link>
         </div>
       </div>
