@@ -80,6 +80,7 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
           id="download"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseExit}
+          onClick={handleMouseExit}
           href="https://apps.apple.com/us/app/freebites/id6664051907"
           className="relative z-30 w-fit flex flex-row items-center bg-orange-medium justify-center rounded-full mt-2 py-2 px-5 sm:mt-0 sm:py-4 sm:px-10"
           // style={{ background: "radial-gradient(#FFF, #FF9529 0%)" }}

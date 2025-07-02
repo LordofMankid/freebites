@@ -18,6 +18,42 @@ const Navbar = () => {
   const root = useRef(null);
   const scope = useRef<Scope | null>(null);
 
+  const lilBiteMouseEnter = () => {
+    animate("#lilBite", {
+      translateX: [
+        { to: 6, ease: createSpring({ stiffness: 500 }), duration: 150 },
+      ],
+      scale: [{ to: 1.05, ease: "inOut(3)", duration: 100 }],
+      rotate: [
+        { to: "10deg", ease: createSpring({ stiffness: 400 }), duration: 150 },
+      ],
+    });
+  };
+  const lilBiteMouseExit = (clicked: boolean) => {
+    animate("#lilBite", {
+      translateX: [
+        {
+          to: 0,
+          ease: createSpring({ stiffness: 500, damping: 10 }),
+          duration: 100,
+        },
+      ],
+      scale: clicked
+        ? [
+            { to: 1.2, ease: "inOut(3)", duration: 100 },
+            { to: 1, ease: "in", duration: 100 },
+          ]
+        : [{ to: 1, ease: "in", duration: 100 }],
+      rotate: [
+        {
+          to: "0deg",
+          ease: createSpring({ stiffness: 500, damping: 10 }),
+          duration: 100,
+        },
+      ],
+    });
+  };
+
   useEffect(() => {
     // let bounceAnim: ReturnType<typeof animate> | null = null;
     scope.current = createScope({ root }).add((self) => {
@@ -183,7 +219,13 @@ const Navbar = () => {
     <div ref={root}>
       <div className={"navbar-container opacity-0"}>
         <nav className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10">
-          <Link href="/">
+          <Link
+            id="lilBite"
+            href="/"
+            onMouseEnter={lilBiteMouseEnter}
+            onMouseLeave={() => lilBiteMouseExit(false)}
+            onClick={() => lilBiteMouseExit(true)}
+          >
             <Logo className="w-14 h-10 lg:h-16" />
           </Link>
           <button
