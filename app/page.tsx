@@ -1,13 +1,28 @@
 "use client";
-
+// import { Assets } from "pixi.js";
 import Navbar from "./components/Navbar";
 import TopHero from "./components/TopHero";
 import BottomHero from "./components/BottomHero";
-import ImageTextBlock from "./components/ImageTextBlock";
-import tempImg from "./assets/tempImg.png";
 import { useEffect, useRef } from "react";
-import { animate, createScope, onScroll, Scope } from "animejs";
+import {
+  animate,
+  createScope,
+  createSpring,
+  createTimeline,
+  onScroll,
+  Scope,
+} from "animejs";
+import FullScreenSection from "./components/common/FullScreenSection";
+import { Application, extend } from "@pixi/react";
+import { Container, Text, Graphics } from "pixi.js";
+import PopupTag from "./components/common/PopupTag";
 
+extend({
+  Container,
+  Graphics,
+  Text,
+});
+// await Assets.init();
 export default function Home() {
   const root = useRef(null);
   const scope = useRef<Scope | null>(null);
@@ -19,10 +34,13 @@ export default function Home() {
   const block2Ref = useRef<HTMLDivElement>(null);
   const block3Ref = useRef<HTMLDivElement>(null);
   const bottomHeroRef = useRef<HTMLDivElement>(null);
+  const popupTagRef = useRef<HTMLDivElement>(null);
+  const popupWrapperRef = useRef<HTMLDivElement>(null);
 
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const canvasRef2 = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const targets = [
-      topHeroRef.current,
       block1Ref.current,
       block2Ref.current,
       block3Ref.current,
@@ -30,18 +48,156 @@ export default function Home() {
     ].filter(Boolean); // Filter out null refs
 
     scope.current = createScope({ root }).add(() => {
+      if (
+        topHeroRef.current &&
+        popupTagRef.current &&
+        popupWrapperRef.current
+      ) {
+        const landingTimeline = createTimeline({ autoplay: true });
+
+        // topHero animation
+        landingTimeline.set(topHeroRef.current, { scale: 0 }).add(
+          topHeroRef.current,
+          {
+            scale: {
+              from: 0,
+              to: 1,
+              ease: createSpring({
+                damping: 5,
+                stiffness: 120,
+                velocity: 2,
+                mass: 0.125,
+              }),
+              duration: 1000,
+            },
+          },
+          500
+        );
+        // animating the popup
+        landingTimeline.set(popupTagRef.current, { translateY: 150 }, 0).add(
+          popupTagRef.current,
+          {
+            translateY: {
+              from: 100,
+              to: 0,
+              ease: createSpring({
+                damping: 4.25,
+                stiffness: 150,
+                velocity: 2,
+                mass: 0.125,
+              }),
+              duration: 1000,
+              delay: 150,
+            },
+          },
+          600
+        );
+
+        // animate on scroll
+        animate(topHeroRef.current, {
+          opacity: { from: 1, to: 0, duration: 350, ease: "in(3)" },
+          autoplay: onScroll({
+            target: topHeroRef.current,
+            container: ".page",
+            enter: "top+=10% top",
+            leave: "top+=10% bottom-=20%",
+            repeat: true,
+            sync: 1,
+            // debug: true,
+          }),
+        });
+
+        animate(popupWrapperRef.current, {
+          opacity: { from: 1, to: 0, duration: 350, ease: "in(3)" },
+          translateY: {
+            from: 0,
+            to: 150,
+            ease: "linear",
+            duration: 1000,
+          },
+          autoplay: onScroll({
+            target: topHeroRef.current,
+            container: ".page",
+            enter: "top+=10% top",
+            leave: "top+=10% bottom+=20%",
+            repeat: true,
+            sync: 0.1,
+            // debug: true,
+          }),
+        });
+      }
+
+      if (canvasRef.current && canvasRef2.current) {
+        const canvasAnimation = animate(canvasRef.current, {
+          opacity: { from: 0, to: 1, duration: 1000, ease: "linear" },
+          translateY: {
+            from: 200,
+            to: 0,
+            ease: "inOut",
+            duration: 500,
+            delay: 150,
+          },
+          autoplay: false,
+        });
+
+        const exitAnimation = animate(canvasRef2.current, {
+          opacity: { from: 1, to: 0, duration: 500, ease: "out(4)" },
+          translateY: {
+            from: 0,
+            to: -200,
+            ease: "inOut",
+            duration: 500,
+            delay: 150,
+          },
+          autoplay: false,
+        });
+
+        onScroll({
+          target: canvasRef.current,
+          container: ".page",
+          enter: "bottom-=20% top+=5%",
+          leave: "bottom max",
+          onEnterForward: () => {
+            canvasAnimation.play();
+          },
+          onLeaveBackward: () => {
+            canvasAnimation.reverse();
+          },
+          onLeaveForward: () => {
+            exitAnimation.play();
+          },
+          onEnterBackward: () => {
+            exitAnimation.reverse();
+          },
+          // debug: true,
+        });
+      }
+
+      // animate on scroll
       targets.forEach((target) => {
         if (!target) return;
         animate(target, {
-          opacity: [0, 1],
-          duration: 750,
-          ease: "in(4)",
+          opacity: { from: 0, to: 1, duration: 350, ease: "out(3)" },
+          translateY: {
+            from: 50,
+            to: 0,
+            ease: createSpring({
+              damping: 4.25,
+              stiffness: 150,
+              velocity: 2,
+              mass: 0.125,
+            }),
+            duration: 1000,
+            delay: 150,
+          },
           autoplay: onScroll({
             target: target,
             container: ".page",
-            enter: "bottom-=40% top",
+            enter: "bottom-=10% top",
             leave: "min bottom",
-            sync: "play",
+            repeat: true,
+            sync: 0.25,
+            // debug: true,
           }),
         });
       });
@@ -51,38 +207,47 @@ export default function Home() {
   return (
     <div ref={root} className="page flex flex-col">
       <Navbar />
-      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 gap-20 mb-24">
-        <TopHero ref={topHeroRef} altContainerStyle="opacity-0" />
-        <div className="w-full">
-          <div className="flex flex-col items-center gap-20 mx-16">
-            <ImageTextBlock
+      <div ref={popupWrapperRef} className="absolute bottom-16 mx-40 z-50">
+        <PopupTag ref={popupTagRef} text="Learn more below!" />
+      </div>
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24">
+        <div className="flex flex-col w-full justify-start min-h-[90vh]">
+          <TopHero ref={topHeroRef} />
+        </div>
+        <div className="flex w-full md:flex-row">
+          <div className="flex flex-col items-start gap-20 mx-16 md:w-1/2">
+            <div className="h-[90vh]"> </div>
+            <FullScreenSection
               ref={block1Ref}
-              src={tempImg}
-              alt="temp"
               title="Find Free Food"
               body="Feeling hungry? Browse Freebites for free food opportunities on your campus."
               altContainerStyle="opacity-0"
-              imgFirst={false}
             />
 
-            <ImageTextBlock
+            <FullScreenSection
               ref={block2Ref}
-              src={tempImg}
-              alt="temp"
               title="Share Free Food"
               body="Got leftover food from an event you hosted? Post it on Freebites instead of throwing it away."
               altContainerStyle="opacity-0"
-              imgFirst={true}
             />
-            <ImageTextBlock
+            <FullScreenSection
               ref={block3Ref}
-              src={tempImg}
-              alt="temp"
               title="Get Notified"
               body="Receive instant push notifications when new food is posted, and check the comments for updates!"
               altContainerStyle="opacity-0"
-              imgFirst={false}
             />
+          </div>
+          <div
+            ref={canvasRef}
+            className="sticky md:top-50 md:w-1/2 md:h-[60vh]"
+          >
+            <div ref={canvasRef2}>
+              <Application>
+                <pixiContainer>
+                  <pixiText text="cock"></pixiText>
+                </pixiContainer>
+              </Application>
+            </div>
           </div>
         </div>
         <BottomHero ref={bottomHeroRef} altContainerStyle="opacity-0" />

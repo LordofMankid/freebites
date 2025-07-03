@@ -59,13 +59,20 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
   return (
     <div
       ref={ref}
-      className={`w-full flex flex-col justify-center items-center bg-orange-faint rounded-4xl sm:rounded-[70px] py-10 px-8 sm:p-40 sm:gap-8 ${altContainerStyle}`}
+      className={`w-full min-h-[65vh] flex flex-col justify-center items-center overflow-hidden
+                bg-orange-faint rounded-4xl 
+                sm:rounded-[70px] sm:py-10 sm:px-4 sm:p-40 sm:gap-8  
+                lg:py-10 ${altContainerStyle}`}
     >
       <div className="flex flex-col text-center sm:gap-4">
         <p className="font-baloo text-xl sm:text-4xl font-bold text-dark-text">
           Fighting food waste,
         </p>
-        <p className="font-baloo text-2xl sm:text-7xl font-bold text-dark-text">
+        <p
+          className="font-baloo text-2xl 
+                      sm:text-5xl md:text-6xl 
+                      lg:text-7xl font-bold text-dark-text"
+        >
           one <span className="text-orange-dark">free bite</span> at a time
         </p>
         <p className="font-inter text-sm sm:text-2xl mt-2 sm:mt-0 text-dark-green">

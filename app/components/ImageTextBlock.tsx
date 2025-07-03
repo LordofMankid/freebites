@@ -1,6 +1,7 @@
 import Image, { StaticImageData } from "next/image";
 import React, { forwardRef } from "react";
 
+// unused component, may be useful later?
 interface ImageTextBlockProps {
   src: string | StaticImageData;
   alt: string;
