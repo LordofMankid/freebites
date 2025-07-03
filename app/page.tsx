@@ -3,7 +3,7 @@
 import Navbar from "./components/Navbar";
 import TopHero from "./components/TopHero";
 import BottomHero from "./components/BottomHero";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   animate,
   createScope,
@@ -14,13 +14,15 @@ import {
 } from "animejs";
 import FullScreenSection from "./components/common/FullScreenSection";
 import { Application, extend } from "@pixi/react";
-import { Container, Text, Graphics } from "pixi.js";
+import { Container, Text, Graphics, Assets, Texture, Sprite } from "pixi.js";
 import PopupTag from "./components/common/PopupTag";
 
 extend({
   Container,
   Graphics,
   Text,
+  Texture,
+  Sprite,
 });
 // await Assets.init();
 export default function Home() {
@@ -39,6 +41,18 @@ export default function Home() {
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const canvasRef2 = useRef<HTMLDivElement>(null);
+
+  const [texture, setTexture] = useState(Texture.EMPTY);
+  // PIXIJS USE EFFECT
+  useEffect(() => {
+    if (texture === Texture.EMPTY) {
+      Assets.load("https://pixijs.com/assets/bunny.png").then((result) => {
+        setTexture(result);
+      });
+    }
+  }, [texture]);
+
+  // ANIMATION USEEFFECT
   useEffect(() => {
     const targets = [
       block1Ref.current,
@@ -236,15 +250,29 @@ export default function Home() {
               body="Receive instant push notifications when new food is posted, and check the comments for updates!"
               altContainerStyle="opacity-0"
             />
+            <div className="h-[10vh]"> </div>
           </div>
+
           <div ref={canvasRef}>
             <div
               ref={canvasRef2}
               className="sticky md:top-50 md:w-1/2 md:h-[60vh]"
             >
-              <Application>
+              <Application width={300} height={300} background={"#FFF5EB"}>
                 <pixiContainer>
-                  <pixiText text="cock"></pixiText>
+                  <pixiText text="something free bit"></pixiText>
+                  <pixiSprite
+                    // ref={spriteRef}
+                    anchor={0.5}
+                    eventMode={"static"}
+                    // onClick={(event) => setIsActive(!isActive)}
+                    // onPointerOver={(event) => setIsHover(true)}
+                    // onPointerOut={(event) => setIsHover(false)}
+                    // scale={isActive ? 1 : 1.5}
+                    texture={texture}
+                    x={100}
+                    y={100}
+                  />
                 </pixiContainer>
               </Application>
             </div>
