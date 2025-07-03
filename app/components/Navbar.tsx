@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Logo from "../assets/freebites.svg";
+import LogoClosed from "../assets/closed.svg";
+
 import CommonButton from "./common/CommonButton";
 import Link from "next/link";
 import { IoMenu } from "react-icons/io5";
@@ -14,9 +16,31 @@ import {
 } from "animejs";
 
 const Navbar = () => {
-  const [isOpen, setOpen] = useState(false); // open/close the hamburger menu
+  const [isOpen, setOpen] = useState<boolean>(false); // open/close the hamburger menu
+  const [eyesOpen, setEyesOpen] = useState<boolean>(true);
   const root = useRef(null);
   const scope = useRef<Scope | null>(null);
+
+  // Blinking
+  // Blinking
+  // Blinking
+
+  useEffect(() => {
+    let blinkTimeout: NodeJS.Timeout;
+
+    const blink = () => {
+      setEyesOpen(false);
+      setTimeout(() => {
+        setEyesOpen(true);
+      }, 250);
+
+      blinkTimeout = setTimeout(blink, Math.random() * 10000 + 1000);
+    };
+
+    blinkTimeout = setTimeout(blink, Math.random() * 10000 + 1000);
+
+    return () => clearTimeout(blinkTimeout);
+  }, []);
 
   const lilBiteMouseEnter = () => {
     animate("#lilBite", {
@@ -226,7 +250,11 @@ const Navbar = () => {
             onMouseLeave={() => lilBiteMouseExit(false)}
             onClick={() => lilBiteMouseExit(true)}
           >
-            <Logo className="w-14 h-10 lg:h-16" />
+            {eyesOpen ? (
+              <Logo className="w-14 h-10 lg:h-16" />
+            ) : (
+              <LogoClosed className="w-14 h-10 lg:h-16" />
+            )}
           </Link>
           <button
             onClick={() => {
