@@ -237,11 +237,11 @@ export default function Home() {
               altContainerStyle="opacity-0"
             />
           </div>
-          <div
-            ref={canvasRef}
-            className="sticky md:top-50 md:w-1/2 md:h-[60vh]"
-          >
-            <div ref={canvasRef2}>
+          <div ref={canvasRef}>
+            <div
+              ref={canvasRef2}
+              className="sticky md:top-50 md:w-1/2 md:h-[60vh]"
+            >
               <Application>
                 <pixiContainer>
                   <pixiText text="cock"></pixiText>
