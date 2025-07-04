@@ -16,6 +16,7 @@ import FullScreenSection from "./components/common/FullScreenSection";
 import { Application, extend } from "@pixi/react";
 import { Container, Text, Graphics, Assets, Texture, Sprite } from "pixi.js";
 import PopupTag from "./components/common/PopupTag";
+import HomeBackground from "./components/HomeBackground";
 
 extend({
   Container,
@@ -219,7 +220,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div ref={root} className="page flex flex-col">
+    <div ref={root} className="relative z-10 page flex flex-col">
       <Navbar />
       <div ref={popupWrapperRef} className="absolute bottom-16 mx-40 z-50">
         <PopupTag ref={popupTagRef} text="Learn more below!" />
@@ -280,6 +281,7 @@ export default function Home() {
         </div>
         <BottomHero ref={bottomHeroRef} altContainerStyle="opacity-0" />
       </div>
+      <HomeBackground />
     </div>
   );
 }

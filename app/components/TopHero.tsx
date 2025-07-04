@@ -51,7 +51,7 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
     <div
       ref={ref}
       className={`w-full min-h-[65vh] flex flex-col justify-center items-center overflow-hidden
-                bg-orange-faint rounded-4xl 
+                 rounded-4xl 
                 sm:rounded-[70px] sm:py-10 sm:px-4 sm:p-40 sm:gap-8  
                 lg:py-10 ${altContainerStyle}`}
     >
