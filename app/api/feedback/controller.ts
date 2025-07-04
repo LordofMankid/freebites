@@ -17,8 +17,8 @@ export const postFeedback = async (feedback: FeedbackFormData) => {
         html: `<p>
                 Somebody submitted some feedback using the form on our website! :)) <br />
                 <strong>Name: </strong> ${feedback.name} <br />
-                <strong>School: </strong> ${feedback.school} <br />
-                <strong>Note: </strong> ${feedback.note} <br />
+                <strong>Email: </strong> ${feedback.email} <br />
+                <strong>Message: </strong> ${feedback.message} <br />
                 <strong>Timestamp: </strong> ${feedback.date}
               </p>`,
       });

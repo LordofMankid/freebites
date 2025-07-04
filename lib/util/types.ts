@@ -1,13 +1,13 @@
 export interface FeedbackFormData {
   name: string | null;
-  school: string | null;
-  note: string | null;
+  email: string | null;
+  message: string | null;
   date: Date | null;
 }
 
 export const emptyFeedback: FeedbackFormData = {
   name: null,
-  school: null,
-  note: null,
+  email: null,
+  message: null,
   date: null,
 };

@@ -1,51 +1,90 @@
 import { createFeedback } from "@/lib/api/feedback";
 import { emptyFeedback, FeedbackFormData } from "@/lib/util/types";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import FormInput from "../common/FormInput";
+import { animate, createScope, createSpring, Scope } from "animejs";
 
 const EmailForm = () => {
+  const scope = useRef<Scope | null>(null);
+  const root = useRef(null);
   const [formData, setFormData] = useState<FeedbackFormData>(emptyFeedback);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
+  const handleMouseEnter = () => {
+    animate("#submit", {
+      scale: [
+        { to: 1.05, ease: createSpring({ stiffness: 400 }), duration: 200 },
+      ],
+    });
+  };
+
+  const handleMouseExit = () => {
+    animate("#submit", {
+      scale: [{ to: 1, ease: createSpring({ stiffness: 500 }), duration: 400 }],
+    });
+  };
+
+  useEffect(() => {
+    scope.current = createScope({ root });
+    return () => {
+      if (scope.current) scope.current.revert();
+    };
+  }, []);
   const handleSubmit = async () => {
     setSubmitted(true);
-    const res = await createFeedback(formData);
-    console.log("response: ", res);
+    await createFeedback(formData);
   };
   return (
-    <div className="w-screen h-screen flex flex-col justify-center items-center">
+    <div
+      ref={root}
+      className="w-screen h-screen flex flex-col justify-start items-center"
+    >
       {!submitted ? (
-        <div className="flex flex-col gap-2 justify-center items-center">
-          <p className="text-lg font-baloo font-semibold">Name</p>
-          <input
-            className="w-80 border-1 rounded-lg border-black p-2"
+        <div className="w-full flex flex-col gap-2 justify-center items-center">
+          <div className="py-8">
+            <p className="font-baloo text-dark-text font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center pb-2">
+              Contact our team
+            </p>
+            <p className="font-inter text-neutral-light-text font-normal text-base sm:text-lg md:text-xl lg:text-2xl text-center mx-10">
+              Got any questions or inquiries about Freebites? <br /> Send a
+              message and someone on our team will reach out :)
+            </p>
+          </div>
+          <FormInput
+            title="Full name"
+            placeholder="First and last"
             type="text"
-            id="name"
-            name="name"
             onChange={(n) => setFormData({ ...formData, name: n.target.value })}
           />
-          <p className="text-lg font-baloo font-semibold">School</p>
-          <input
-            className="w-80 border-1 rounded-lg border-black p-2"
+          <FormInput
+            title="Email"
+            placeholder="Email address"
             type="text"
-            id="school"
-            name="school"
-            onChange={(s) =>
-              setFormData({ ...formData, school: s.target.value })
+            onChange={(n) =>
+              setFormData({ ...formData, email: n.target.value })
             }
           />
-          <p className="text-lg font-baloo font-semibold">Note</p>
-          <textarea
-            className="w-80 h-24 border-1 rounded-lg border-black p-2"
-            id="note"
-            name="note"
-            onChange={(n) => setFormData({ ...formData, note: n.target.value })}
+          <FormInput
+            title="Message"
+            placeholder="Leave us a message"
+            type="textarea"
+            onChange={(n) =>
+              setFormData({ ...formData, message: n.target.value })
+            }
           />
           <button
-            className="rounded-full bg-orange-medium mt-2 px-10 py-2 text-white text-lg font-baloo font-semibold"
-            onClick={handleSubmit}
+            id="submit"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseExit}
+            className="z-30 w-2/3 max-w-xl rounded-full disabled:bg-neutral-disabled bg-orange-medium mt-8 px-10 py-2 md:py-3 lg:py-4 text-white disabled:text-neutral-text sm:text-lg md:text-xl font-inter font-semibold"
+            onClick={() => {
+              handleMouseExit();
+              handleSubmit();
+            }}
+            disabled={!formData.name || !formData.email || !formData.message}
           >
-            Submit
+            Send Message
           </button>
         </div>
       ) : (

@@ -43,15 +43,6 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
 
   useEffect(() => {
     scope.current = createScope({ root });
-    // .add(() => {
-    //   animate("#download", {
-    //     scale: [
-    //       { to: 1.25, ease: "inOut(2)", duration: 200 },
-    //       { to: 1, ease: createSpring({ stiffness: 300 }) },
-    //     ],
-    //     loop: true,
-    //   });
-    // });
     return () => {
       if (scope.current) scope.current.revert();
     };

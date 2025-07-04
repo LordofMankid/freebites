@@ -14,7 +14,11 @@
   --color-orange-medium: #FF9529;
   --color-orange-dark: #EC6300;
   --color-dark-text: #171717;
-  --color-neutral-text: #404040;
+  --color-neutral-text: #4C4C4C;
+  --color-neutral-light-text: #575757;
+  --color-neutral-lighter-text: #9E9E9E;
+  --color-neutral-disabled: #D4D4D4;
+  --color-neutral-gray: #D0D0D0;
   --color-dark-green: #00373E;
 
   --font-baloo: "Baloo 2", "sans-serif";

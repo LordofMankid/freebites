@@ -22,9 +22,6 @@ const Navbar = () => {
   const scope = useRef<Scope | null>(null);
 
   // Blinking
-  // Blinking
-  // Blinking
-
   useEffect(() => {
     let blinkTimeout: NodeJS.Timeout;
 
@@ -34,10 +31,10 @@ const Navbar = () => {
         setEyesOpen(true);
       }, 250);
 
-      blinkTimeout = setTimeout(blink, Math.random() * 10000 + 1000);
+      blinkTimeout = setTimeout(blink, Math.random() * 12000 + 1000);
     };
 
-    blinkTimeout = setTimeout(blink, Math.random() * 10000 + 1000);
+    blinkTimeout = setTimeout(blink, Math.random() * 12000 + 1000);
 
     return () => clearTimeout(blinkTimeout);
   }, []);
