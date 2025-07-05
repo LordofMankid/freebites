@@ -3,7 +3,7 @@
 import Navbar from "./components/Navbar";
 import TopHero from "./components/TopHero";
 import BottomHero from "./components/BottomHero";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   animate,
   createScope,
@@ -31,7 +31,6 @@ export default function Home() {
   const scope = useRef<Scope | null>(null);
 
   // this looks kinda ugly but it works -- refactor later?
-
   const topHeroRef = useRef<HTMLDivElement>(null);
   const block1Ref = useRef<HTMLDivElement>(null);
   const block2Ref = useRef<HTMLDivElement>(null);
@@ -46,10 +45,16 @@ export default function Home() {
   const landingBgRef = useRef<HTMLDivElement>(null);
   const textSectionRef = useRef<HTMLDivElement>(null);
   const [texture, setTexture] = useState(Texture.EMPTY);
+
+  // const demoInteractable = useMemo(() => {
+  //   if (canvasRef.current) {
+  //     return parseFloat(window.getComputedStyle(canvasRef.current).opacity) > 0;
+  //   }
+  // }, []);
   // PIXIJS USE EFFECT
   useEffect(() => {
     if (texture === Texture.EMPTY) {
-      Assets.load("https://pixijs.com/assets/bunny.png").then((result) => {
+      Assets.load("/assets/FreebitesScreen.png").then((result) => {
         setTexture(result);
       });
     }
@@ -64,7 +69,7 @@ export default function Home() {
       bottomHeroRef.current,
     ].filter(Boolean); // Filter out null refs
 
-    scope.current = createScope({ root }).add(() => {
+    scope.current = createScope({ root }).add((self) => {
       if (
         topHeroRef.current &&
         popupTagRef.current &&
@@ -200,7 +205,7 @@ export default function Home() {
           }),
         })
           .add(canvasRef.current, {
-            opacity: { from: 0, to: 1, duration: 250, ease: "linear" },
+            opacity: { from: 0, to: 1, duration: 500, ease: "linear" },
             translateY: {
               from: 50,
               to: 0,
@@ -278,14 +283,38 @@ export default function Home() {
           }),
         });
       });
+
+      self.add("jumpToDemo", () => {
+        if (!block1Ref.current) return;
+
+        const top =
+          block1Ref.current.getBoundingClientRect().top + window.scrollY;
+
+        const offset = window.innerHeight * 0.1;
+        animate([document.scrollingElement || document.documentElement], {
+          scrollTop: top - offset,
+          duration: 1000,
+          easing: "easeInOutQuad",
+        });
+      });
     });
   }, []);
+
+  const jumpToPhone = useCallback(() => {
+    scope.current?.methods.jumpToDemo();
+  }, []);
+  if (!texture) return null; // nothing until it’s ready
 
   return (
     <div ref={root} className="relative z-10 page flex flex-col">
       <Navbar />
+      <HomeBackground ref={landingBgRef} />
       <div ref={popupWrapperRef} className="fixed bottom-16 mx-40 z-50">
-        <PopupTag ref={popupTagRef} text="Learn more below!" />
+        <PopupTag
+          ref={popupTagRef}
+          text="Learn more below!"
+          onClick={jumpToPhone}
+        />
       </div>
       <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24">
         <div className="flex flex-col w-full justify-start min-h-[90vh]">
@@ -318,26 +347,27 @@ export default function Home() {
         </div>
         <BottomHero ref={bottomHeroRef} altContainerStyle="opacity-0" />
       </div>
-      <HomeBackground ref={landingBgRef} />
+
       <div
         ref={canvasRef}
         className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+        // style={{ pointerEvents: demoInteractable ? "none" : "auto" }} // Add dynamic pointer-events handling
+        style={{ pointerEvents: "none" }}
       >
         <div ref={canvasRef2}>
-          <Application width={300} height={300} background={"#FFF5EB"}>
+          <Application backgroundAlpha={0} width={800} height={800}>
             <pixiContainer>
-              <pixiText text="something free bit"></pixiText>
               <pixiSprite
                 // ref={spriteRef}
-                anchor={0.5}
-                eventMode={"static"}
+                texture={texture}
+                anchor={0.5} // centre of sprite is (0 .5, 0 .5)
+                x={400} // 4 ️⃣ place sprite in the middle
+                y={400}
+                eventMode="static"
                 // onClick={(event) => setIsActive(!isActive)}
                 // onPointerOver={(event) => setIsHover(true)}
                 // onPointerOut={(event) => setIsHover(false)}
                 // scale={isActive ? 1 : 1.5}
-                texture={texture}
-                x={100}
-                y={100}
               />
             </pixiContainer>
           </Application>
