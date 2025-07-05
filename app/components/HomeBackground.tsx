@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { animate, createScope, Scope } from "animejs";
 
 interface circleType {
@@ -7,7 +7,7 @@ interface circleType {
   y: number;
 }
 
-const HomeBackground = () => {
+const HomeBackground = forwardRef<HTMLDivElement, object>((props, ref) => {
   const root = useRef(null);
   const circleID = useRef<number>(0);
   const scope = useRef<Scope | null>(null);
@@ -61,7 +61,10 @@ const HomeBackground = () => {
     };
   }, []);
   return (
-    <div className="absolute z-[-10] w-screen h-screen blur-md pointer-events-none">
+    <div
+      ref={ref}
+      className="fixed z-[-10] w-full h-screen blur-md pointer-events-none"
+    >
       <div ref={root} className="absolute w-full h-full overflow-clip">
         {circles.map((c) => {
           return (
@@ -77,6 +80,8 @@ const HomeBackground = () => {
       <div className="w-full h-full bg-orange-faint" />
     </div>
   );
-};
+});
+
+HomeBackground.displayName = "HomeBackground";
 
 export default HomeBackground;

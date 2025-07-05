@@ -43,6 +43,8 @@ export default function Home() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const canvasRef2 = useRef<HTMLDivElement>(null);
 
+  const landingBgRef = useRef<HTMLDivElement>(null);
+  const textSectionRef = useRef<HTMLDivElement>(null);
   const [texture, setTexture] = useState(Texture.EMPTY);
   // PIXIJS USE EFFECT
   useEffect(() => {
@@ -142,49 +144,109 @@ export default function Home() {
         });
       }
 
-      if (canvasRef.current && canvasRef2.current) {
-        const canvasAnimation = animate(canvasRef.current, {
-          opacity: { from: 0, to: 1, duration: 1000, ease: "linear" },
-          translateY: {
-            from: 200,
-            to: 0,
-            ease: "inOut",
-            duration: 500,
-            delay: 150,
-          },
-          autoplay: false,
-        });
+      if (canvasRef.current && canvasRef2.current && textSectionRef.current) {
+        // const canvasAnimation = animate(canvasRef.current, {
+        // opacity: { from: 0, to: 1, duration: 1000, ease: "linear" },
+        // translateY: {
+        //   from: 50,
+        //   to: 0,
+        //   ease: "inOut",
+        //   duration: 500,
+        //   delay: 150,
+        // },
+        // autoplay: false,
+        // });
 
-        const exitAnimation = animate(canvasRef2.current, {
-          opacity: { from: 1, to: 0, duration: 500, ease: "out(4)" },
-          translateY: {
-            from: 0,
-            to: -200,
-            ease: "inOut",
-            duration: 500,
-            delay: 150,
-          },
-          autoplay: false,
-        });
+        // const exitAnimation = animate(canvasRef2.current, {
+        //   opacity: { from: 1, to: 0, duration: 500, ease: "out(4)" },
+        //   translateY: {
+        //     from: 0,
+        //     to: -200,
+        //     ease: "inOut",
+        //     duration: 500,
+        //     delay: 150,
+        //   },
+        //   autoplay: false,
+        // });
 
-        onScroll({
-          target: canvasRef.current,
-          container: ".page",
-          enter: "bottom-=20% top+=5%",
-          leave: "bottom max",
-          onEnterForward: () => {
-            canvasAnimation.play();
-          },
-          onLeaveBackward: () => {
-            canvasAnimation.reverse();
-          },
-          onLeaveForward: () => {
-            exitAnimation.play();
-          },
-          onEnterBackward: () => {
-            exitAnimation.reverse();
-          },
-          // debug: true,
+        // onScroll({
+        //   target: textSectionRef.current,
+        //   container: ".page",
+        //   enter: "bottom-=20% top+=5%",
+        //   leave: "bottom max",
+        //   onEnterForward: () => {
+        //     canvasAnimation.play();
+        //   },
+        //   onLeaveBackward: () => {
+        //     canvasAnimation.reverse();
+        //   },
+        //   onLeaveForward: () => {
+        //     exitAnimation.play();
+        //   },
+        //   onEnterBackward: () => {
+        //     exitAnimation.reverse();
+        //   },
+        //   // debug: true,
+        // });
+
+        createTimeline({
+          autoplay: onScroll({
+            target: textSectionRef.current,
+            container: ".page",
+            enter: "bottom-=20% top+=5%",
+            leave: "bottom-=20% max",
+            sync: 1,
+            // debug: true,
+          }),
+        })
+          .add(canvasRef.current, {
+            opacity: { from: 0, to: 1, duration: 250, ease: "linear" },
+            translateY: {
+              from: 50,
+              to: 0,
+              ease: "inOut",
+              duration: 600,
+            },
+          })
+          .add(
+            canvasRef.current,
+            {
+              translateX: {
+                from: 0,
+                to: window.innerWidth * 0.2,
+                ease: "inOut",
+                duration: 500,
+              },
+            },
+            1400
+          )
+          .add(
+            canvasRef.current,
+            {
+              opacity: { from: 1, to: 0, duration: 250, ease: "linear" },
+              translateY: {
+                from: 0,
+                to: 50,
+                ease: "linear",
+                duration: 250,
+              },
+            },
+            5500
+          );
+      }
+
+      // initial animation of fadeout for landing page
+      if (landingBgRef.current) {
+        animate(landingBgRef.current, {
+          opacity: { from: 1, to: 0, duration: 1000, ease: "in(4)" },
+          // maxHeight: { from: "100vh", to: "50vh", ease: "in(4)" },
+          autoplay: onScroll({
+            // target: landingBgRef.current,
+            container: ".page",
+            enter: "center bottom-=20%",
+            leave: "center bottom+=75%",
+            sync: 0.25,
+          }),
         });
       }
 
@@ -222,16 +284,16 @@ export default function Home() {
   return (
     <div ref={root} className="relative z-10 page flex flex-col">
       <Navbar />
-      <div ref={popupWrapperRef} className="absolute bottom-16 mx-40 z-50">
+      <div ref={popupWrapperRef} className="fixed bottom-16 mx-40 z-50">
         <PopupTag ref={popupTagRef} text="Learn more below!" />
       </div>
       <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24">
         <div className="flex flex-col w-full justify-start min-h-[90vh]">
           <TopHero ref={topHeroRef} />
         </div>
-        <div className="flex w-full md:flex-row">
+        <div className="flex w-full md:flex-row" ref={textSectionRef}>
           <div className="flex flex-col items-start gap-20 mx-16 md:w-1/2">
-            <div className="h-[90vh]"> </div>
+            <div className="h-[120vh]"> </div>
             <FullScreenSection
               ref={block1Ref}
               title="Find Free Food"
@@ -253,35 +315,34 @@ export default function Home() {
             />
             <div className="h-[10vh]"> </div>
           </div>
-
-          <div ref={canvasRef}>
-            <div
-              ref={canvasRef2}
-              className="sticky md:top-50 md:w-1/2 md:h-[60vh]"
-            >
-              <Application width={300} height={300} background={"#FFF5EB"}>
-                <pixiContainer>
-                  <pixiText text="something free bit"></pixiText>
-                  <pixiSprite
-                    // ref={spriteRef}
-                    anchor={0.5}
-                    eventMode={"static"}
-                    // onClick={(event) => setIsActive(!isActive)}
-                    // onPointerOver={(event) => setIsHover(true)}
-                    // onPointerOut={(event) => setIsHover(false)}
-                    // scale={isActive ? 1 : 1.5}
-                    texture={texture}
-                    x={100}
-                    y={100}
-                  />
-                </pixiContainer>
-              </Application>
-            </div>
-          </div>
         </div>
         <BottomHero ref={bottomHeroRef} altContainerStyle="opacity-0" />
       </div>
-      <HomeBackground />
+      <HomeBackground ref={landingBgRef} />
+      <div
+        ref={canvasRef}
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+      >
+        <div ref={canvasRef2}>
+          <Application width={300} height={300} background={"#FFF5EB"}>
+            <pixiContainer>
+              <pixiText text="something free bit"></pixiText>
+              <pixiSprite
+                // ref={spriteRef}
+                anchor={0.5}
+                eventMode={"static"}
+                // onClick={(event) => setIsActive(!isActive)}
+                // onPointerOver={(event) => setIsHover(true)}
+                // onPointerOut={(event) => setIsHover(false)}
+                // scale={isActive ? 1 : 1.5}
+                texture={texture}
+                x={100}
+                y={100}
+              />
+            </pixiContainer>
+          </Application>
+        </div>
+      </div>
     </div>
   );
 }
