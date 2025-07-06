@@ -11,3 +11,15 @@ export const emptyFeedback: FeedbackFormData = {
   message: null,
   date: null,
 };
+
+export interface LoginData {
+  email?: string;
+  username?: string;
+  password?: string;
+}
+
+export const emptyLoginData: LoginData = {
+  email: "",
+  username: "",
+  password: "",
+};

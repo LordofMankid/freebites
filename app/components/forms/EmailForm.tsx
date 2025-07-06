@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import FormInput from "../common/FormInput";
 import { animate, createScope, createSpring, Scope } from "animejs";
+import PageHeader from "../common/PageHeader";
 
 const EmailForm = () => {
   const scope = useRef<Scope | null>(null);
@@ -43,13 +44,15 @@ const EmailForm = () => {
       {!submitted ? (
         <div className="w-full flex flex-col gap-2 justify-center items-center">
           <div className="py-8">
-            <p className="font-baloo text-dark-text font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center pb-2">
-              Contact our team
-            </p>
-            <p className="font-inter text-neutral-light-text font-normal text-base sm:text-lg md:text-xl lg:text-2xl text-center mx-10">
-              Got any questions or inquiries about Freebites? <br /> Send a
-              message and someone on our team will reach out :)
-            </p>
+            <PageHeader
+              title="Contact our team"
+              subtitle={
+                <>
+                  Got any questions or inquiries about Freebites? <br /> Send a
+                  message and someone on our team will reach out :)
+                </>
+              }
+            />
           </div>
           <FormInput
             title="Full name"
