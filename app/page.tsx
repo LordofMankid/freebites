@@ -3,7 +3,7 @@
 import Navbar from "./components/Navbar";
 import TopHero from "./components/TopHero";
 import BottomHero from "./components/BottomHero";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   animate,
   createScope,
