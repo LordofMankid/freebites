@@ -67,9 +67,7 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
           one <span className="text-orange-dark">free bite</span> at a time
         </p>
         <p className="font-inter text-sm sm:text-2xl mt-2 sm:mt-0 text-dark-green">
-          Freebites helps college students find and share free food
-          opportunities on campus in an effort to combat food waste and
-          insecurity.
+          Find free bites on your campus in real time.
         </p>
       </div>
       <div ref={root} className="relative">
