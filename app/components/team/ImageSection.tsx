@@ -22,14 +22,16 @@ const ImageSection = (props: ImageSectionProps) => {
       <div className="grid grid-cols-3">
         {imageCardInfo?.map((item: ImageCardProps, idx) => {
           return (
-            <div key={idx + "section"}>
+            <div
+              key={idx + "section"}
+              className="h-72 w-72 rounded-2xl bg-amber-50 border-0"
+            >
               {item.src ? (
                 <Image
                   fill
                   // key={idx + "image"}
-                  src={item.src ?? ""}
+                  src={item.src ?? "/assets/logo.png"}
                   alt={"staff guy"}
-                  className="h-72 w-72 rounded-2xl bg-amber-50 border-0"
                 ></Image>
               ) : null}
               <p>{item.name}</p>
