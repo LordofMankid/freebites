@@ -19,8 +19,8 @@ const FallingFood = () => {
     const objects: { s: Sprite; b: Matter.Body }[] = [];
 
     const initFood = async (x: number, y: number) => {
-      const i = Math.floor(Math.random() * 2);
-      const randFood = ["Sandwich", "Cookie"][i];
+      const i = Math.floor(Math.random() * 4);
+      const randFood = ["Sandwich", "Cookie", "Pizza", "Donut"][i];
       const texture = await Assets.load(`/assets/${randFood}.png`);
       const sandwichSprite = new Sprite(texture);
       sandwichSprite.x = x;
@@ -29,7 +29,7 @@ const FallingFood = () => {
       container.addChild(sandwichSprite);
 
       const body = Matter.Bodies.circle(x, y, sandwichSprite.height / 2.2, {
-        restitution: 0.6,
+        restitution: 0.5,
         friction: 0.2,
       });
 
@@ -43,7 +43,7 @@ const FallingFood = () => {
         Math.random() * app.renderer.width,
         app.renderer.width - 150
       );
-      const y = (Math.random() * app.renderer.height) / 3;
+      const y = (Math.random() * -app.renderer.height) / 1.5 - 100;
       return { x, y };
     });
 
@@ -77,7 +77,7 @@ const FallingFood = () => {
     Matter.World.add(world, rightWall);
 
     const ticker = app.ticker.add(() => {
-      Matter.Engine.update(engine, 1000 / 60);
+      Matter.Engine.update(engine, 800 / 60);
       objects.map((ob) => {
         ob.s.x = ob.b.position.x;
         ob.s.y = ob.b.position.y;
