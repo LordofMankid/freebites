@@ -31,10 +31,10 @@ const Navbar = () => {
         setEyesOpen(true);
       }, 250);
 
-      blinkTimeout = setTimeout(blink, Math.random() * 12000 + 1000);
+      blinkTimeout = setTimeout(blink, Math.random() * 5000 + 1000);
     };
 
-    blinkTimeout = setTimeout(blink, Math.random() * 12000 + 1000);
+    blinkTimeout = setTimeout(blink, Math.random() * 5000 + 1000);
 
     return () => clearTimeout(blinkTimeout);
   }, []);
