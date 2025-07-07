@@ -4,12 +4,22 @@ import Navbar from "../components/Navbar";
 import PageHeader from "../components/common/PageHeader";
 import ImageSection, { ImageCardProps } from "../components/team/ImageSection";
 
-const imageCardInfo: ImageCardProps[] = [
-  // { src: Logo, name: "clcok", position: "clcock" },
-  { name: "clcok", position: "clcock" },
-  { name: "clcok", position: "clcock" },
-  { name: "clcok", position: "clcock" },
+const Leadership: ImageCardProps[] = [
+  { name: "Sarah Jun", position: "Co-Founder" },
+  { name: "Clarence Yeh", position: "Co-Founder, Tech Lead†" },
+  { name: "Sydnie Chen", position: "Lead Designer†" },
+  { name: "Alice Fang", position: "Marketing Head†, Lead Designer†" },
+  { name: "Johnny Tan", position: "Tech Lead†" },
+  { name: "Keiji Numata", position: "Tech Lead" },
+  { name: "Johnny Tan", position: "Tech Lead" },
+  { name: "Anneka Le", position: "Project Manager†" },
 ];
+
+// const GenTwoInfo: ImageCardProps[] = [
+//   { name: "Sristi Panchu", position: "Project Manager†" },
+//   { name: "Owen Prendergast", position: "Developer" },
+//   { name: "Jet Yotsuuye", position: "Project Manager†" },
+// ];
 
 export default function page() {
   return (
@@ -20,7 +30,7 @@ export default function page() {
         subtitle="We're proud to be entirely student run blah blah blah"
         altStyle="mt-12"
       />
-      <ImageSection sectionTitle="Alumni" imageCardInfo={imageCardInfo} />
+      <ImageSection sectionTitle="Leadership" imageCardInfo={Leadership} />
     </div>
   );
 }
