@@ -50,8 +50,8 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
   return (
     <div
       ref={ref}
-      className={`w-full min-h-[65vh] flex flex-col justify-center items-center overflow-hidden
-                 rounded-4xl 
+      className={`w-full min-h-[65vh] flex flex-col justify-center items-center 
+                pointer-events-none rounded-4xl 
                 sm:rounded-[70px] sm:py-10 sm:px-4 sm:p-40 sm:gap-8  
                 lg:py-10 ${altContainerStyle}`}
     >
@@ -78,7 +78,9 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
           onMouseLeave={handleMouseExit}
           onClick={handleMouseExit}
           href="https://apps.apple.com/us/app/freebites/id6664051907"
-          className="relative z-30 w-fit flex flex-row items-center bg-orange-medium justify-center rounded-full mt-2 py-2 px-5 sm:mt-0 sm:py-4 sm:px-10"
+          className="relative z-30 w-fit flex flex-row items-center bg-orange-medium 
+                      justify-center rounded-full mt-2 py-2 px-5 sm:mt-0 sm:py-4 sm:px-10
+                      pointer-events-auto"
           // style={{ background: "radial-gradient(#FFF, #FF9529 0%)" }}
         >
           <p

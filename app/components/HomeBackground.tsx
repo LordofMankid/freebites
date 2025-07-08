@@ -10,8 +10,12 @@ const HomeBackground = forwardRef<HTMLDivElement, object>((props, ref) => {
       ref={ref}
       className="fixed z-[-10] w-full h-screen pointer-events-none"
     >
-      <div className="w-full h-screen" ref={pixiCanvas}>
-        <Application resizeTo={pixiCanvas} background={"#FFF5EB"}>
+      <div className="absolute w-full h-screen" ref={pixiCanvas}>
+        <Application
+          resizeTo={pixiCanvas}
+          background={"#FFF5EB"}
+          eventMode="auto"
+        >
           <FallingFood />
         </Application>
       </div>

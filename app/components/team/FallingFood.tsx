@@ -1,7 +1,7 @@
 import { useApplication } from "@pixi/react";
 import { Assets, Container, Sprite, Texture } from "pixi.js";
 import React, { useEffect, useState } from "react";
-import Matter from "matter-js";
+import Matter, { MouseConstraint } from "matter-js";
 
 const FallingFood = () => {
   const { app } = useApplication();
@@ -9,6 +9,7 @@ const FallingFood = () => {
   const [texture, setTexture] = useState(Texture.EMPTY);
 
   useEffect(() => {
+    // if (scrollY != 0) return;
     const engine = Matter.Engine.create();
     const world = engine.world;
 
@@ -29,20 +30,20 @@ const FallingFood = () => {
         "Burger",
       ][i];
       const texture = await Assets.load(`/assets/${randFood}.png`);
-      const sandwichSprite = new Sprite(texture);
-      sandwichSprite.x = x;
-      sandwichSprite.y = y;
-      sandwichSprite.anchor.set(0.5);
-      container.addChild(sandwichSprite);
+      const sprite = new Sprite(texture);
+      sprite.x = x;
+      sprite.y = y;
+      sprite.anchor.set(0.5);
+      container.addChild(sprite);
 
-      const body = Matter.Bodies.circle(x, y, sandwichSprite.height / 2.2, {
+      const body = Matter.Bodies.circle(x, y, sprite.height / 2.2, {
         restitution: 0.5,
         friction: 0.2,
       });
 
       Matter.World.add(world, body);
 
-      objects.push({ s: sandwichSprite, b: body });
+      objects.push({ s: sprite, b: body });
     };
 
     const foods = Array.from({ length: 35 }, () => {
@@ -59,29 +60,54 @@ const FallingFood = () => {
     const floor = Matter.Bodies.rectangle(
       app.renderer.width / 2,
       app.renderer.height,
-      app.renderer.width,
+      app.renderer.width - 10,
       10,
+      // { inertia: Infinity, friction: 1, frictionStatic: 1, mass: 1000 }
+      { id: 0, isStatic: true }
+    );
+    let floorExists = true;
+
+    Matter.World.add(world, floor);
+
+    const ceiling = Matter.Bodies.rectangle(
+      app.renderer.width / 2,
+      -app.renderer.height,
+      app.renderer.width,
+      20,
       { isStatic: true }
     );
-    Matter.World.add(world, floor);
+    Matter.World.add(world, ceiling);
 
     const leftWall = Matter.Bodies.rectangle(
       0,
-      app.renderer.height / 2,
-      10,
-      app.renderer.height,
+      0,
+      20,
+      app.renderer.height * 4,
       { isStatic: true }
     );
     Matter.World.add(world, leftWall);
 
     const rightWall = Matter.Bodies.rectangle(
       app.renderer.width,
-      app.renderer.height / 2,
-      10,
-      app.renderer.height,
+      0,
+      20,
+      app.renderer.height * 4,
       { isStatic: true }
     );
     Matter.World.add(world, rightWall);
+
+    const mouse = Matter.Mouse.create(app.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse,
+      constraint: {
+        stiffness: 0.5,
+        render: {
+          visible: false,
+        },
+      },
+    });
+
+    Matter.World.add(world, mouseConstraint);
 
     const ticker = app.ticker.add(() => {
       Matter.Engine.update(engine, 800 / 60);
@@ -89,6 +115,21 @@ const FallingFood = () => {
         ob.s.x = ob.b.position.x;
         ob.s.y = ob.b.position.y;
         ob.s.rotation = ob.b.angle;
+      });
+      app.stage.y = floorExists ? -scrollY : -app.renderer.height * 0.8;
+      if (scrollY > app.renderer.height * 0.8 && floorExists) {
+        Matter.World.remove(world, floor);
+        floorExists = false;
+      }
+
+      const viewBottom = scrollY + app.renderer.height;
+
+      objects.forEach((ob) => {
+        const y = ob.b.position.y;
+        if (y > viewBottom + 200) {
+          Matter.World.remove(world, ob.b);
+          container.removeChild(ob.s);
+        }
       });
     });
 
