@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import Logo from "../assets/freebites.svg";
 import LogoClosed from "../assets/closed.svg";

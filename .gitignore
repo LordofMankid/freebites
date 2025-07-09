@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# the service account jsons
+freebites-prod-firebase-adminsdk-8oyqc-895d151520.json
+freebites-ff666-firebase-adminsdk-szswt-096118c56e.json
 # vercel
 .vercel
 
