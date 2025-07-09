@@ -1,6 +1,6 @@
+import { verifyIdToken } from "@/lib/firebaseAdmin";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-// import { verifyIdToken } from "../lib/firebaseAdmin";
 
 export default async function AuthGuard({
   children,
@@ -15,7 +15,9 @@ export default async function AuthGuard({
   }
 
   try {
-    // const decodedToken = await verifyIdToken(token);
+    const decodedToken = await verifyIdToken(token);
+
+    console.log(decodedToken);
     // Token is valid, render children
     // Later you can add MongoDB admin role check here
     return <>{children}</>;
