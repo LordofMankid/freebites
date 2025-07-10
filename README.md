@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev
@@ -14,23 +14,49 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Tech Stack:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Front-End
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Anime.js
 
-## Learn More
+###
 
-To learn more about Next.js, take a look at the following resources:
+# Architectural Design Decisions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Currently trying to figure out how to present this info better
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Firebase Admin SDK vs Firebase Client SDK
 
-## Deploy on Vercel
+**Decision**: Use both Firebase Admin SDK and Client SDK for server-side
+verification and client-side authentication.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Reasoning**: Firebase Admin SDK works on the server-side, allowing for manual
+token verification, which allows to protect api routes, for example. We also can
+take advantage of Next.js server-side rendering (which we can't have in-app) to
+handle redirection logic.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This _also_ means that we can we chain custom logic to backend verification,
+_including_ our MongoDB verification, so that we can verify valid MongoDB
+credentials in the same API call/server render.
+
+**Why Both?**
+| SDK | Used for | Where |
+| ----------------------- | --------------------------------------------------------------- | --------------------------------------------- |
+| **Firebase Client SDK** | Signing in/out, getting ID tokens | On the client (browser) |
+| **Firebase Admin SDK** | Verifying tokens, protecting API routes, chaining backend logic | On the server (API routes, server components) |
+
+**Sign-in Flow**
+
+1. The user signs in via the Firebase Client SDK (e.g., `signInWithEmailAndPassword()`).
+2. Firebase authenticates and returns an ID token for that user.
+3. The client sends this token to our backend via a POST request to /api/session.
+4. The server:
+   - Verifies the token using the Firebase Admin SDK.
+   - (Optional) Checks MongoDB to verify user role or registration.
+   - If all checks pass, it sets an HTTP-only cookie to persist the session.
+5. The client is then redirected to `/admin`.
+6. In `/admin`, there an `AuthGuard` server component. It:
+   - Runs on every server-side render of protected routes.
+   - Validates the cookie and re-verifies the token.
+   - Redirects to /admin/login if validation fails (e.g., expired or forged cookie).

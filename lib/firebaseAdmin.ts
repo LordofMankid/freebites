@@ -1,4 +1,23 @@
-// lib/firebaseAdmin.ts
+/**
+ * Firebase Admin SDK Initialization and Utilities
+ *
+ * This module initializes the Firebase Admin SDK and provides utility functions
+ * to interact with Firebase services such as authentication and Firestore.
+ *
+ * Ensures a unique Firebase Admin SDK instance. We use the Firebase Admin SDK
+ * for more secure server-side authentication
+ *
+ * @module firebaseAdmin
+ *
+ * @example
+ * // Example usage to verify an ID token
+ * const decodedToken = await verifyIdToken(idToken);
+ *
+ * @example
+ * // Example usage to get Firestore instance
+ * const firestore = getFirestore();
+ * const docRef = firestore.collection('users').doc(userId);
+ */
 import admin from "firebase-admin";
 
 // Extend global to include our Firebase app

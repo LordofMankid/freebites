@@ -6,8 +6,13 @@ import { emptyLoginData, LoginData } from "@/lib/util/types";
 import { animate, createScope, createSpring, Scope } from "animejs";
 import Link from "next/link";
 import PageHeader from "@/app/components/common/PageHeader";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebaseClient";
+import { setAuthCookie } from "@/lib/util/backend";
+import { useRouter } from "next/navigation";
 
 export default function AdminLogin() {
+  const router = useRouter();
   const scope = useRef<Scope | null>(null);
   const root = useRef(null);
   const [loginData, setLoginData] = useState<LoginData>(emptyLoginData);
@@ -32,9 +37,41 @@ export default function AdminLogin() {
       if (scope.current) scope.current.revert();
     };
   }, []);
+
+  // auth flows
+
+  // redirect if already signed in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+
+        await setAuthCookie(token); // reverify valid cookie, then send again
+
+        router.push("/admin");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
   const handleSubmit = async () => {
-    // setSubmitted(true);
-    // await createFeedback(formData);
+    if (loginData.email && loginData.password) {
+      await signInWithEmailAndPassword(
+        auth,
+        loginData.email,
+        loginData.password
+      )
+        .then((userCredential) => {
+          return userCredential.user.getIdToken();
+        })
+        .then(async (idToken) => {
+          await setAuthCookie(idToken);
+        })
+        .then(() => {
+          router.push("/admin");
+        });
+    }
   };
   return (
     <div ref={root}>
