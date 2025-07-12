@@ -11,7 +11,7 @@ const BottomHero = forwardRef<HTMLDivElement, BottomHeroProps>((props, ref) => {
   return (
     <div
       ref={ref}
-      className={`w-full flex flex-col sm:justify-start sm:items-start bg-orange-faint rounded-4xl sm:rounded-[70px] px-10 py-14 sm:px-20 sm:py-28 sm:gap-8 ${altContainerStyle}`}
+      className={`w-full flex flex-col sm:justify-start sm:items-start bg-orange-faint rounded-4xl sm:rounded-[70px] px-10 py-14 sm:px-20 sm:py-28 sm:gap-8 pointer-events-auto ${altContainerStyle}`}
     >
       <div className="flex flex-col gap-2 sm:gap-4">
         <p className="max-w-3xl font-inter text-xl text-center sm:text-left sm:text-[52px] font-bold text-dark-green">

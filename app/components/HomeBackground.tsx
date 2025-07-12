@@ -8,9 +8,16 @@ const HomeBackground = forwardRef<HTMLDivElement, object>((props, ref) => {
   return (
     <div
       ref={ref}
-      className="fixed z-[-10] w-full h-screen pointer-events-none"
+      className="fixed z-[-10] w-full h-screen"
+      onWheel={(e) => {
+        // Allow scroll to propagate
+        e.stopPropagation(); // optional, depends on other listeners
+      }}
     >
-      <div className="absolute w-full h-screen" ref={pixiCanvas}>
+      <div
+        className="absolute w-full h-screen pointer-events-auto"
+        ref={pixiCanvas}
+      >
         <Application
           resizeTo={pixiCanvas}
           background={"#FFF5EB"}

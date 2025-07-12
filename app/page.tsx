@@ -316,11 +316,14 @@ export default function Home() {
           onClick={jumpToPhone}
         />
       </div>
-      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24">
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24 pointer-events-none">
         <div className="flex flex-col w-full justify-start min-h-[90vh]">
           <TopHero ref={topHeroRef} />
         </div>
-        <div className="flex w-full md:flex-row" ref={textSectionRef}>
+        <div
+          className="flex w-full md:flex-row pointer-events-auto"
+          ref={textSectionRef}
+        >
           <div className="flex flex-col items-start gap-20 mx-16 md:w-1/2">
             <div className="h-[120vh]"> </div>
             <FullScreenSection

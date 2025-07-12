@@ -240,7 +240,7 @@ const Navbar = () => {
 
   return (
     <div ref={root}>
-      <div className={"navbar-container opacity-0"}>
+      <div className="navbar-container opacity-0 pointer-events-auto">
         <nav className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10">
           <Link
             id="lilBite"

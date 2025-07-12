@@ -1,7 +1,7 @@
 import { useApplication } from "@pixi/react";
 import { Assets, Container, Sprite, Texture } from "pixi.js";
 import React, { useEffect, useState } from "react";
-import Matter, { MouseConstraint } from "matter-js";
+import Matter, { Mouse, MouseConstraint } from "matter-js";
 
 const FallingFood = () => {
   const { app } = useApplication();
@@ -20,25 +20,29 @@ const FallingFood = () => {
     const objects: { s: Sprite; b: Matter.Body }[] = [];
 
     const initFood = async (x: number, y: number) => {
-      const i = Math.floor(Math.random() * 6);
+      const i = Math.floor(Math.random() * 8);
       const randFood = [
-        "Sandwich",
-        "Cookie",
-        "Pizza",
-        "Donut",
-        "Taco",
-        "Burger",
+        "cake",
+        "chicken",
+        "fries",
+        "hamburger",
+        "hotdog",
+        "pancake",
+        "pizza",
+        "sandwich",
       ][i];
-      const texture = await Assets.load(`/assets/${randFood}.png`);
+      const texture = await Assets.load(`/assets/foods/${randFood}.png`);
       const sprite = new Sprite(texture);
       sprite.x = x;
       sprite.y = y;
+      sprite.scale = 0.75;
       sprite.anchor.set(0.5);
       container.addChild(sprite);
 
       const body = Matter.Bodies.circle(x, y, sprite.height / 2.2, {
-        restitution: 0.5,
-        friction: 0.2,
+        restitution: 0.75,
+        friction: 0.5,
+        mass: 1,
       });
 
       Matter.World.add(world, body);
@@ -46,10 +50,13 @@ const FallingFood = () => {
       objects.push({ s: sprite, b: body });
     };
 
-    const foods = Array.from({ length: 35 }, () => {
+    const foodCount = Math.floor(
+      Math.min(app.renderer.height, app.renderer.width) / 20
+    );
+    const foods = Array.from({ length: foodCount }, () => {
       const x = Math.min(
         Math.random() * app.renderer.width,
-        app.renderer.width - 150
+        app.renderer.width - 100
       );
       const y = (Math.random() * -app.renderer.height) / 1.25 - 100;
       return { x, y };
@@ -81,7 +88,7 @@ const FallingFood = () => {
     const leftWall = Matter.Bodies.rectangle(
       0,
       0,
-      20,
+      10,
       app.renderer.height * 4,
       { isStatic: true }
     );
@@ -90,13 +97,17 @@ const FallingFood = () => {
     const rightWall = Matter.Bodies.rectangle(
       app.renderer.width,
       0,
-      20,
+      10,
       app.renderer.height * 4,
       { isStatic: true }
     );
     Matter.World.add(world, rightWall);
 
-    const mouse = Matter.Mouse.create(app.canvas);
+    const mouse = Matter.Mouse.create(app.canvas) as Mouse & {
+      mousewheel: (event: WheelEvent) => void;
+    };
+    app.canvas.removeEventListener("wheel", mouse.mousewheel);
+
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
       constraint: {
@@ -110,7 +121,7 @@ const FallingFood = () => {
     Matter.World.add(world, mouseConstraint);
 
     const ticker = app.ticker.add(() => {
-      Matter.Engine.update(engine, 800 / 60);
+      Matter.Engine.update(engine, 500 / 60);
       objects.map((ob) => {
         ob.s.x = ob.b.position.x;
         ob.s.y = ob.b.position.y;
@@ -126,7 +137,7 @@ const FallingFood = () => {
 
       objects.forEach((ob) => {
         const y = ob.b.position.y;
-        if (y > viewBottom + 200) {
+        if (y > viewBottom * 4) {
           Matter.World.remove(world, ob.b);
           container.removeChild(ob.s);
         }
@@ -145,7 +156,7 @@ const FallingFood = () => {
 
   useEffect(() => {
     if (texture === Texture.EMPTY) {
-      Assets.load("/assets/Sandwich.png").then((result) => {
+      Assets.load("/assets/foods/sandwich.png").then((result) => {
         setTexture(result);
       });
     }
