@@ -1,6 +1,9 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Setup and Deployment
 
-## Getting Started
+This repository requires your GitHub account to be added directly to Freebites
+organization to be able to install packages. You will need a **Personal Access Token (PAT)**
+
+## Generating a PAT
 
 Run the development server:
 

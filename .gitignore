@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+*.npmrc
 
 # the service account jsons
 freebites-prod-firebase-adminsdk-8oyqc-895d151520.json

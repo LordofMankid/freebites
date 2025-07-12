@@ -2,10 +2,12 @@
  * Firebase Admin SDK Initialization and Utilities
  *
  * This module initializes the Firebase Admin SDK and provides utility functions
- * to interact with Firebase services such as authentication and Firestore.
+ * to interact with Firebase services.
  *
- * Ensures a unique Firebase Admin SDK instance. We use the Firebase Admin SDK
- * for more secure server-side authentication
+ * Ensures a unique Firebase Admin SDK instance.
+ *
+ * We use the Firebase Admin SDK for more secure server-side authentication
+ * which happens pre-render
  *
  * @module firebaseAdmin
  *
@@ -94,10 +96,11 @@ export const verifyIdToken = async (token: string) => {
   }
 
   try {
-    console.log("Verifying ID token...");
+    // console.log("Verifying ID token...");
     const app = getFirebaseAdmin();
     const decodedToken = await admin.auth(app).verifyIdToken(token);
-    console.log("Token verified successfully for user:", decodedToken.uid);
+
+    // console.log("Token verified successfully for user:", decodedToken.uid);
     return decodedToken;
   } catch (error) {
     console.error("Token verification failed:", error);
