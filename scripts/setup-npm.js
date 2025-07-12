@@ -1,17 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-require('dotenv').config();
+const fs = require("fs");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const fs = require('fs');
-const token = process.env.GITHUB_TOKEN;
+require("dotenv").config();
 
+const token = process.env.GITHUB_TOKEN;
 if (!token) {
-    console.error('GITHUB_TOKEN not found in .env');
+    console.error("❌ Missing GITHUB_TOKEN in .env");
     process.exit(1);
 }
 
-const npmrc = `@freebites:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${token}
-`;
+const scope = "@freebites";
 
-fs.writeFileSync('.npmrc', npmrc);
-console.log('.npmrc created successfully');
+fs.writeFileSync(
+    ".npmrc",
+    `${scope}:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${token}\n`
+);
+
+console.log("✅ .npmrc created");

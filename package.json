@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "setup-npm": "node scripts/setup-npm.js",
-    "prepare": "npm run setup-npm",
-    "preinstall": "npm run setup-npm",
+    "prepare": "node scripts/setup-npm.js",
+    "preinstall": "node scripts/setup-npm.js",
     "build": "npm run setup-npm && next build",
     "start": "next start",
     "lint": "next lint"
