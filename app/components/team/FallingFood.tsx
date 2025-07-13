@@ -161,7 +161,7 @@ const FallingFood = () => {
         y,
         [vertexMap.get(randFood) ?? [{ x: 0, y: 0 }]],
         {
-          restitution: 0.75,
+          restitution: 0.5,
           friction: 0.5,
           mass: 1,
         }
@@ -191,7 +191,6 @@ const FallingFood = () => {
       app.renderer.height,
       app.renderer.width - 10,
       10,
-      // { inertia: Infinity, friction: 1, frictionStatic: 1, mass: 1000 }
       { id: 0, isStatic: true }
     );
     let floorExists = true;
@@ -233,7 +232,7 @@ const FallingFood = () => {
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
       constraint: {
-        stiffness: 0.5,
+        stiffness: 0.2,
         render: {
           visible: false,
         },
@@ -242,9 +241,21 @@ const FallingFood = () => {
 
     Matter.World.add(world, mouseConstraint);
 
+    const MAX_VELOCITY = 40;
+
+    const clampVelocity = (body: Matter.Body) => {
+      const { x, y } = body.velocity;
+      const clampedX = Math.max(-MAX_VELOCITY, Math.min(MAX_VELOCITY, x));
+      const clampedY = Math.max(-MAX_VELOCITY, Math.min(MAX_VELOCITY, y));
+      if (x !== clampedX || y !== clampedY) {
+        Matter.Body.setVelocity(body, { x: clampedX, y: clampedY });
+      }
+    };
+
     const ticker = app.ticker.add(() => {
       Matter.Engine.update(engine, 500 / 60);
       objects.map((ob) => {
+        clampVelocity(ob.b);
         ob.s.x = ob.b.position.x;
         ob.s.y = ob.b.position.y;
         ob.s.rotation = ob.b.angle;
