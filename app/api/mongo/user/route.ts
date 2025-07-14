@@ -1,10 +1,38 @@
-import { getUserModel } from "./controller";
+import { NextResponse } from "next/server";
+import { getAllUsers, getUserById, putUserController } from "./controller";
+import { UserType } from "@freebites/freebites-types";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(req: Request) {
-  const User = await getUserModel();
+  try {
+    const { searchParams } = new URL(req.url);
 
-  const user = await User.findOne({ uid: "4CZts4lv6XYWhUpQlt8BMBJNlNF2" });
-  console.log(user);
-  return Response.json(user);
+    const uid = searchParams.get("uid");
+
+    if (uid) {
+      const user = await getUserById(uid);
+      // console.log(user);
+      return NextResponse.json(user);
+    } else {
+      const users = await getAllUsers();
+      return NextResponse.json(users);
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: `Failed to get user: ${error}` },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const userData: UserType = await req.json();
+    const updatedUser = await putUserController(userData);
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    return NextResponse.json(
+      { error: `Failed to update user: ${error}` },
+      { status: 500 }
+    );
+  }
 }

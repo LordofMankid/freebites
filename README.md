@@ -1,10 +1,27 @@
 # Setup and Deployment
 
 This repository requires your GitHub account to be added directly to Freebites
-organization to be able to install packages. You will need a **Personal Access Token (PAT)**
+organization to be able to install packages. You will need your GitHub account's
+**Personal Access Token (PAT)**
 
 ## Generating a PAT
 
+go to your profile at github.com, go to settings/Developer Settings/Personal Access Tokens (classic) and generate a personal access token (PAT)
+permissions: read:packages .npmrc in root directory
+keep that PAT safe and everyone will need to manage their own
+note that you can have a PAT never expire, but i'd recommend expiring it for safety reasons
+
+write setup (you guys):
+in your PAT have write:packages
+will need to think about finetuning access control in the organization a bit more securely so that only certain ppl in the org can publish, but it's fine for now and more conveneient cuz maybe we want erveryone to be able to publish
+
+maintain/update:
+make whatever changes you need
+cd into packages/freebites-types (or whatever package you wanna update)
+increment the version in package.json of the freebites-types, then npm publish
+note: local changes (and probably to the local repo) seem to not need npm publish, we'll only need to update for the website
+can create a CI/CD pipeline to auto publish every time you push to staging
+if they pull latest it should be fine given that it's there locally, but npx expo install also works
 Run the development server:
 
 ```bash
