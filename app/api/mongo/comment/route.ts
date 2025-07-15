@@ -5,10 +5,10 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
 
-    const uid = searchParams.get("uid");
+    const id = searchParams.get("id");
     const postId = searchParams.get("postId");
-    if (uid) {
-      const comment = await getCommentById(uid);
+    if (id) {
+      const comment = await getCommentById(id);
       // console.log(comment);
       return NextResponse.json(comment);
     } else if (postId) {
