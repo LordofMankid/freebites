@@ -1,7 +1,8 @@
 import { verifyIdToken } from "@/lib/firebaseAdmin";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
+import { UserType, UserSchemaDefinition } from "@freebites/freebites-types";
+import getAccountConnection from "@/lib/mongoAccounts";
 export default async function AuthGuard({
   children,
 }: {
@@ -13,17 +14,26 @@ export default async function AuthGuard({
   if (!token) {
     redirect("/admin/login");
   }
-
   try {
     const decodedToken = await verifyIdToken(token);
-
     console.log(decodedToken);
-    // Token is valid, render children
-    // Later you can add MongoDB admin role check here
+
+    const conn = await getAccountConnection();
+
+    const UserModel =
+      conn.models.User ||
+      conn.model<UserType>("User", UserSchemaDefinition, "profiles");
+
+    const user = await UserModel.findOne({
+      uid: decodedToken.uid,
+    }).exec();
+    if (!user || !user.isAdmin)
+      throw new Error("user not found or not an admin");
+
+    // Token is valid and mongo admin status verified, render children
     return <>{children}</>;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    // Token invalid, redirect to login
-    redirect("/admin/login");
+    redirect("/admin/login?logout=1");
   }
 }
