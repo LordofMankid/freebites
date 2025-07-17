@@ -14,6 +14,7 @@
   "dependencies": {
     "@freebites/freebites-types": "^1.0.2",
     "@pixi/react": "^8.0.0-beta.25",
+    "@tanstack/react-query": "^5.83.0",
     "animejs": "^4.0.2",
     "axios": "^1.10.0",
     "dotenv": "^16.6.1",
@@ -27,12 +28,14 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
-    "resend": "^4.6.0"
+    "resend": "^4.6.0",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.81.2",
     "@types/matter-js": "^0.19.8",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^20",

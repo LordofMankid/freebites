@@ -100,6 +100,8 @@ export const verifyIdToken = async (token: string) => {
     const app = getFirebaseAdmin();
     const decodedToken = await admin.auth(app).verifyIdToken(token);
 
+    // add mongoDB verification here, throw error if not admin
+
     // console.log("Token verified successfully for user:", decodedToken.uid);
     return decodedToken;
   } catch (error) {

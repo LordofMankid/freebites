@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import CommonButton from "../common/CommonButton";
 import { auth } from "@/lib/firebaseClient";
 import { clearAuthCookie } from "@/lib/util/backend";
-
+import { FaArrowRightLong } from "react-icons/fa6";
 const SignoutButton = () => {
   //   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -24,7 +24,15 @@ const SignoutButton = () => {
     }
   };
 
-  return <CommonButton label={"Sign out"} onClick={handleSignOut} />;
+  return (
+    <CommonButton
+      label={"Log out"}
+      onClick={handleSignOut}
+      altStyle="border-0 justify-end p-0"
+      altTextStyle="font-inter text-neutral-light-text text-right"
+      rightIcon={<FaArrowRightLong />}
+    />
+  );
 };
 
 export default SignoutButton;

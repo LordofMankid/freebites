@@ -242,18 +242,20 @@ const Navbar = () => {
     <div ref={root}>
       <div className="navbar-container opacity-0 pointer-events-auto">
         <nav className="flex flex-row z:50 lg:z-0 h-16 lg:h-32 items-center justify-between lg:mx-20 mx-10">
-          <Link
-            id="lilBite"
-            href="/"
-            onMouseEnter={lilBiteMouseEnter}
-            onMouseLeave={() => lilBiteMouseExit(false)}
-            onClick={() => lilBiteMouseExit(true)}
-          >
-            {eyesOpen ? (
-              <Logo className="w-14 h-10 lg:h-16" />
-            ) : (
-              <LogoClosed className="w-14 h-10 lg:h-16" />
-            )}
+          <Link href="/" className="flex flex-row items-center gap-6">
+            <div
+              id="lilBite"
+              onMouseEnter={lilBiteMouseEnter}
+              onMouseLeave={() => lilBiteMouseExit(false)}
+              onClick={() => lilBiteMouseExit(true)}
+            >
+              {eyesOpen ? (
+                <Logo className="w-14 h-10 lg:h-16" />
+              ) : (
+                <LogoClosed className="w-14 h-10 lg:h-16" />
+              )}
+            </div>
+            <p className="text-2xl font-inter">Freebites</p>
           </Link>
           <button
             onClick={() => {

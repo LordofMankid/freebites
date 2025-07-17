@@ -40,13 +40,19 @@ export const getCommentsByPost = async (postId: string): Promise<Comment[]> => {
 
 ////////////////////////////////////////////
 // post crud
-export const getPost = async (postId: string): Promise<PostType> => {
+export type PostWithUser = PostType & {
+  posterInfo: UserType | null;
+};
+export const getPost = async (postId: string): Promise<PostWithUser> => {
   try {
     const response = await axios.get("/api/mongo/post", {
       params: { id: postId },
     });
 
-    return response.data;
+    return response.data.map((post: PostType) => ({
+      ...post,
+      postTime: new Date(post.postTime),
+    }));
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Failed to fetch post: ${error.message}`);
@@ -56,11 +62,14 @@ export const getPost = async (postId: string): Promise<PostType> => {
   }
 };
 
-export const getAllPosts = async (): Promise<PostType[]> => {
+export const getAllPosts = async (): Promise<PostWithUser[]> => {
   try {
     const response = await axios.get("/api/mongo/post");
 
-    return response.data;
+    return response.data.map((post: PostType) => ({
+      ...post,
+      postTime: new Date(post.postTime),
+    }));
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Failed to fetch posts: ${error.message}`);

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-
+import { twMerge } from "tailwind-merge";
 interface ButtonProps {
   label: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -38,13 +38,17 @@ const CommonButton = (props: ButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-row items-center justify-center gap-2 py-2.5 px-5 min-w-max border rounded-[100px] border-[#211f1f] cursor-pointer ${altStyle}`}
+      className={twMerge(
+        `flex flex-row items-center justify-center gap-2 py-2.5 px-5 min-w-max border rounded-[100px] border-[#211f1f] cursor-pointer ${altStyle}`
+      )}
       disabled={disabled}
       type={type ?? "button"}
     >
       {leftIcon ? leftIcon : null}
       <p
-        className={`text-dark-blue text-sm font-medium font-[family-name:var(--font-rubik)] ${altTextStyle}`}
+        className={twMerge(
+          `text-dark-blue text-sm font-medium font-[family-name:var(--font-rubik)] ${altTextStyle}`
+        )}
       >
         {label}
       </p>
