@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import Navbar from "../../components/Navbar";
 import FormInput from "@/app/components/common/FormInput";
 import { emptyLoginData, LoginData } from "@/lib/util/types";
@@ -15,7 +15,7 @@ import { auth } from "@/lib/firebaseClient";
 import { clearAuthCookie, setAuthCookie } from "@/lib/util/backend";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function AdminLogin() {
+function AdminLogin() {
   const router = useRouter();
   const scope = useRef<Scope | null>(null);
   const root = useRef(null);
@@ -141,5 +141,13 @@ export default function AdminLogin() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <AdminLogin />
+    </Suspense>
   );
 }
