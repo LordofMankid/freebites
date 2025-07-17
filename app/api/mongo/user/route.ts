@@ -3,9 +3,12 @@
 import { NextResponse } from "next/server";
 import { getAllUsers, getUserById, putUserController } from "./controller";
 import { UserType } from "@freebites/freebites-types";
+import { verifySessionCookie } from "@/lib/verifySession";
 
 export async function GET(req: Request) {
   try {
+    await verifySessionCookie();
+
     const { searchParams } = new URL(req.url);
 
     const uid = searchParams.get("uid");
