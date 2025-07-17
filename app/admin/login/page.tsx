@@ -1,21 +1,27 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import Navbar from "../../components/Navbar";
 import FormInput from "@/app/components/common/FormInput";
 import { emptyLoginData, LoginData } from "@/lib/util/types";
 import { animate, createScope, createSpring, Scope } from "animejs";
 import Link from "next/link";
 import PageHeader from "@/app/components/common/PageHeader";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
-import { setAuthCookie } from "@/lib/util/backend";
-import { useRouter } from "next/navigation";
+import { clearAuthCookie, setAuthCookie } from "@/lib/util/backend";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function AdminLogin() {
+function AdminLogin() {
   const router = useRouter();
   const scope = useRef<Scope | null>(null);
   const root = useRef(null);
   const [loginData, setLoginData] = useState<LoginData>(emptyLoginData);
+  const params = useSearchParams();
+  const logout = params.get("logout");
 
   const handleMouseEnter = () => {
     animate("#submit", {
@@ -39,9 +45,15 @@ export default function AdminLogin() {
   }, []);
 
   // auth flows
-
-  // redirect if already signed in
   useEffect(() => {
+    // remove cookies and signout if Mongo broke
+    if (logout) {
+      signOut(auth);
+      clearAuthCookie();
+      return;
+    }
+
+    // redirect if already signed in
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const token = await user.getIdToken();
@@ -53,7 +65,7 @@ export default function AdminLogin() {
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [router, logout]);
 
   const handleSubmit = async () => {
     if (loginData.email && loginData.password) {
@@ -87,6 +99,11 @@ export default function AdminLogin() {
             </>
           }
         />
+        {logout && (
+          <p className="font-inter text-neutral-light-text font-normal text-base sm:text-lg md:text-xl lg:text-2xl text-center mx-10">
+            Sorry, we couldn&apos;t log you in :(
+          </p>
+        )}
         <FormInput
           title="Email"
           placeholder="Email address"
@@ -124,5 +141,13 @@ export default function AdminLogin() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <AdminLogin />
+    </Suspense>
   );
 }
