@@ -180,7 +180,7 @@ const FallingFood = () => {
         Math.random() * app.renderer.width,
         app.renderer.width - 100
       );
-      const y = (Math.random() * -app.renderer.height) / 1.25 - 100;
+      const y = Math.random() * -app.renderer.height * 1.8 - 100;
       return { x, y };
     });
 
@@ -199,7 +199,7 @@ const FallingFood = () => {
 
     const ceiling = Matter.Bodies.rectangle(
       app.renderer.width / 2,
-      -app.renderer.height,
+      -app.renderer.height * 2,
       app.renderer.width,
       20,
       { isStatic: true }
@@ -226,13 +226,15 @@ const FallingFood = () => {
 
     const mouse = Matter.Mouse.create(app.canvas) as Mouse & {
       mousewheel: (event: WheelEvent) => void;
+      touchmove: (event: TouchEvent) => void;
     };
     app.canvas.removeEventListener("wheel", mouse.mousewheel);
+    app.canvas.removeEventListener("touchmove", mouse.touchmove);
 
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
       constraint: {
-        stiffness: 0.2,
+        stiffness: 0.07,
         render: {
           visible: false,
         },

@@ -1,5 +1,6 @@
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { animate, createScope, createSpring, Scope } from "animejs";
+import Image from "next/image";
 
 interface TopHeroProps {
   altContainerStyle?: string;
@@ -8,34 +9,33 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
   const { altContainerStyle } = props;
   const root = useRef(null);
   const scope = useRef<Scope | null>(null);
+  const [hover, setHover] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
+    setHover(true);
     animate("#download", {
       scale: [
         { to: 1.15, ease: createSpring({ stiffness: 400 }), duration: 200 },
       ],
-      rotate: [
-        { to: "4deg", ease: createSpring({ stiffness: 500 }), duration: 200 },
-      ],
+      backgroundColor: [{ to: "#FF952900", ease: "in", duration: 100 }],
     });
-    animate("#download-hover", {
-      inset: [{ to: 2, ease: "in", duration: 100 }],
-    });
+    // animate("#download-hover", {
+    //   inset: [{ to: 2, ease: "in", duration: 100 }],
+    // });
     animate("#download-text", {
       color: [{ to: "#FF9529", ease: "in", duration: 100 }],
     });
   };
 
   const handleMouseExit = () => {
+    setHover(false);
     animate("#download", {
       scale: [{ to: 1, ease: createSpring({ stiffness: 400 }), duration: 400 }],
-      rotate: [
-        { to: "0", ease: createSpring({ stiffness: 500 }), duration: 200 },
-      ],
+      backgroundColor: [{ to: "#FF9529FF", ease: "in", duration: 100 }],
     });
-    animate("#download-hover", {
-      inset: [{ to: 30, ease: "in", duration: 50 }],
-    });
+    // animate("#download-hover", {
+    //   inset: [{ to: 30, ease: "in", duration: 50 }],
+    // });
     animate("#download-text", {
       color: [{ to: "#FFF", ease: "in", duration: 100 }],
     });
@@ -56,18 +56,17 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
                 lg:py-10 ${altContainerStyle}`}
     >
       <div className="flex flex-col text-center sm:gap-4">
-        <p className="font-baloo text-xl sm:text-4xl font-bold text-dark-text">
-          Fighting food waste,
-        </p>
         <p
           className="font-baloo text-2xl 
                       sm:text-5xl md:text-6xl 
                       lg:text-7xl font-bold text-dark-text"
         >
-          one <span className="text-orange-dark">free bite</span> at a time
+          Find <span className="text-orange-dark">free bites</span> on <br />{" "}
+          your campus in real time
         </p>
         <p className="font-inter text-sm sm:text-2xl mt-2 sm:mt-0 text-dark-green">
-          Find free bites on your campus in real time.
+          Freebites connects college students with free food <br /> from campus
+          events before it&apos;s thrown away
         </p>
       </div>
       <div ref={root} className="relative">
@@ -78,27 +77,27 @@ const TopHero = forwardRef<HTMLDivElement, TopHeroProps>((props, ref) => {
           onMouseLeave={handleMouseExit}
           onClick={handleMouseExit}
           href="https://apps.apple.com/us/app/freebites/id6664051907"
-          className="relative z-30 w-fit flex flex-row items-center bg-orange-medium 
-                      justify-center rounded-full mt-2 py-2 px-5 sm:mt-0 sm:py-4 sm:px-10
+          className="relative z-30 w-fit flex flex-row items-center justify-center gap-2 
+                    bg-orange-medium border-2 border-orange-medium rounded-full
+                      drop-shadow-[0px_5px_30px_#FF9529]
+                      mt-2 py-2 px-5 md:py-3 sm:mt-0 sm:px-10
                       pointer-events-auto"
           // style={{ background: "radial-gradient(#FFF, #FF9529 0%)" }}
         >
+          <Image
+            src={`/assets/apple${hover ? "Orange" : "White"}.png`}
+            alt="apple store logo"
+            width={30}
+            height={30}
+          />
           <p
             id="download-text"
             className="z-30 text-md sm:text-xl font-semibold"
             style={{ color: "#FFFFFF" }}
           >
-            Download Now
+            Download On App Store
           </p>
-          <div
-            id="download-hover"
-            className="absolute z-20 rounded-full bg-orange-faint pointer-events-none"
-            style={{
-              inset: 30,
-            }}
-          />
         </a>
-        {/* Hover overlay for gradient effect */}
       </div>
     </div>
   );
