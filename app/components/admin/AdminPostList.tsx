@@ -14,7 +14,7 @@ const AdminPostList = () => {
   if (error) return <div>Error loading posts</div>;
 
   return (
-    <div className="grid grid-cols-3 gap-20 mt-11">
+    <div className="grid grid-cols-[repeat(auto-fit,_minmax(20rem,_1fr))] gap-20 mt-11">
       {data?.map((post) => {
         const postKey = post._id ?? `${post.title}-${post.locationName}`;
         return <PostCard post={post} key={postKey} />;
