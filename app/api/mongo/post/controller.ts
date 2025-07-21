@@ -3,6 +3,7 @@ import connectToDatabase from "@/lib/mongodb";
 import { PostType, PostSchemaDefinition } from "@freebites/freebites-types";
 import mongoose from "mongoose";
 import { getUserModel } from "../user/controller";
+import { getStorage } from "@/lib/firebaseAdmin";
 
 let PostModel: mongoose.Model<PostType> | null = null;
 
@@ -96,6 +97,50 @@ export const putPostController = async (
     }
 
     return updatedPost;
+  } catch (error) {
+    console.error("Error updating post", error);
+    throw error;
+  }
+};
+
+/**
+ *
+ * deletePostController takes in a post id and deletes the post
+ * @param postData - the post id to delete
+ * @returns - the deleted post
+ */
+export const deletePostController = async (
+  postId: string
+): Promise<PostType> => {
+  try {
+    const Post = await getPostModel();
+    if (!postId) {
+      throw new Error("Missing required information");
+    }
+
+    const deletedPost = await Post.findByIdAndDelete(postId)
+      .lean() // save as javascript document for less overhead
+      .exec();
+
+    if (!deletedPost) {
+      throw new Error(`Post with id ${postId} not found`);
+    }
+
+    const bucket = getStorage().bucket(); // This uses your initialized admin app
+    await Promise.all(
+      deletedPost.imageURIs.map(async (imagePath: string) => {
+        try {
+          await bucket.file(imagePath).delete();
+        } catch (error) {
+          console.warn(
+            `Failed to delete Firebase Storage file at ${imagePath}:`,
+            error
+          );
+        }
+      })
+    );
+
+    return deletedPost;
   } catch (error) {
     console.error("Error updating post", error);
     throw error;

@@ -5,7 +5,7 @@ import { Resend } from "resend";
 import { env } from "process";
 
 export const postFeedback = async (feedback: FeedbackFormData) => {
-  console.log(feedback);
+  // console.log(feedback);
   try {
     const response = await addDoc(collection(db, "feedback"), feedback);
     if (response) {

@@ -49,10 +49,12 @@ export const getPost = async (postId: string): Promise<PostWithUser> => {
       params: { id: postId },
     });
 
-    return response.data.map((post: PostType) => ({
-      ...post,
-      postTime: new Date(post.postTime),
-    }));
+    const post: PostWithUser = {
+      ...response.data,
+      postTime: new Date(response.data.postTime),
+    };
+
+    return post;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Failed to fetch post: ${error.message}`);
@@ -75,6 +77,41 @@ export const getAllPosts = async (): Promise<PostWithUser[]> => {
       throw new Error(`Failed to fetch posts: ${error.message}`);
     } else {
       throw new Error(`Failed to fetch posts: An unknown error occurred.`);
+    }
+  }
+};
+
+export const updatePost = async (updatedPost: PostType): Promise<PostType> => {
+  try {
+    const response = await axios.put("/api/mongo/post", updatedPost);
+
+    const deletedPost: PostType = {
+      ...response.data,
+      postTime: new Date(response.data.postTime),
+    };
+
+    return deletedPost;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete post: ${error.message}`);
+    } else {
+      throw new Error(`Failed to delete post: An unknown error occurred.`);
+    }
+  }
+};
+
+export const deletePost = async (postId: string): Promise<PostType> => {
+  try {
+    const response = await axios.delete("/api/mongo/post", {
+      params: { id: postId },
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete post: ${error.message}`);
+    } else {
+      throw new Error(`Failed to delete post: An unknown error occurred.`);
     }
   }
 };

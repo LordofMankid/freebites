@@ -1,9 +1,10 @@
 "use client";
-import { PostWithUser } from "@/lib/api/admin";
+import { deletePost, PostWithUser } from "@/lib/api/admin";
 import CommonButton from "../common/CommonButton";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchImageURL } from "@/lib/util/backend";
 import Image from "next/image";
+import { useCallback } from "react";
 interface PostCardProps {
   post: PostWithUser;
 }
@@ -21,6 +22,14 @@ const PostCard = (props: PostCardProps) => {
     queryFn: () => fetchImageURL(pathToFirstImage),
     enabled: !!pathToFirstImage,
   });
+
+  const queryClient = useQueryClient();
+
+  const deletePostCallback = useCallback(async () => {
+    await deletePost(post._id);
+
+    queryClient.invalidateQueries({ queryKey: ["posts"] });
+  }, [post._id, queryClient]);
 
   return (
     <div className="flex flex-col w-full relative bg-white rounded-4xl max-w-md items-center px-9">
@@ -53,6 +62,7 @@ const PostCard = (props: PostCardProps) => {
           label={"Delete Post"}
           altStyle="w-full bg-[#FF9529] border-0 py-3 mt-11 mb-16"
           altTextStyle="font-inter text-white text-lg font-medium"
+          onClick={deletePostCallback}
         />
       </div>
     </div>
