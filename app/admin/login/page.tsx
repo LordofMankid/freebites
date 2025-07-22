@@ -100,10 +100,12 @@ function AdminLogin() {
           }
         />
         {logout && (
-          <p className="font-inter text-neutral-light-text font-normal text-base sm:text-lg md:text-xl lg:text-2xl text-center mx-10">
-            Sorry, we couldn&apos;t log you in :(
+          <p className="font-inter text-red-700 font-normal text-base sm:text-lg md:text-xl lg:text-2xl text-center mx-10 mb-8">
+            Unable to access the admin page. If you think something is wrong,
+            please contact the Freebites team.
           </p>
         )}
+
         <FormInput
           title="Email"
           placeholder="Email address"

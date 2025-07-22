@@ -12,11 +12,10 @@ export default async function AuthGuard({
   const token = (await cookieStore).get("auth-token")?.value;
 
   if (!token) {
-    redirect("/admin/login");
+    redirect("/admin/login?logout=1");
   }
   try {
     const decodedToken = await verifyIdToken(token);
-    console.log(decodedToken);
 
     const conn = await getAccountConnection();
 
@@ -34,6 +33,6 @@ export default async function AuthGuard({
     return <>{children}</>;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    redirect("/admin/login?logout=1");
+    redirect("/admin/login?logout=2");
   }
 }
