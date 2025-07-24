@@ -309,14 +309,14 @@ export default function Home() {
     <div ref={root} className="relative z-10 page flex flex-col">
       <Navbar />
       <HomeBackground ref={landingBgRef} />
-      <div ref={popupWrapperRef} className="fixed bottom-16 mx-40 z-50">
+      <div ref={popupWrapperRef} className="fixed bottom-16 mx-40 z-20">
         <PopupTag
           ref={popupTagRef}
           text="Learn more below!"
           onClick={jumpToPhone}
         />
       </div>
-      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24 pointer-events-none">
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24 pointer-events-none  mt-16 lg:mt-32">
         <div className="flex flex-col w-full justify-start min-h-[90vh]">
           <TopHero ref={topHeroRef} />
         </div>
@@ -353,7 +353,7 @@ export default function Home() {
 
       <div
         ref={canvasRef}
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
         // style={{ pointerEvents: demoInteractable ? "none" : "auto" }} // Add dynamic pointer-events handling
         style={{ pointerEvents: "none" }}
       >
