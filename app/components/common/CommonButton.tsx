@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import { animate, createSpring } from "animejs";
+import React, { useRef } from "react";
 import { twMerge } from "tailwind-merge";
 interface ButtonProps {
   label: string;
@@ -12,6 +13,7 @@ interface ButtonProps {
   type?: HTMLButtonElement["type"];
   noFocusStyle?: boolean;
   hover?: boolean;
+  animated?: boolean;
 }
 
 /**
@@ -32,16 +34,38 @@ const CommonButton = (props: ButtonProps) => {
     altTextStyle,
     disabled,
     type,
+    animated,
   } = props;
+
+  const btn = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (!animated || !btn.current) return;
+    animate(btn.current, {
+      scale: [
+        { to: 1.05, ease: createSpring({ stiffness: 400 }), duration: 150 },
+      ],
+    });
+  };
+  const handleMouseLeave = () => {
+    if (!animated || !btn.current) return;
+    animate(btn.current, {
+      scale: [{ to: 1, ease: createSpring({ stiffness: 400 }), duration: 300 }],
+    });
+  };
 
   // if icon isn't passed in, nothing will show
   return (
+    // <div  className="w-full h-full">
     <button
+      ref={btn}
       onClick={onClick}
       className={twMerge(
         `flex flex-row items-center justify-center gap-2 py-2.5 px-5 min-w-max border rounded-[100px] border-[#211f1f] cursor-pointer ${altStyle}`
       )}
       disabled={disabled}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       type={type ?? "button"}
     >
       {leftIcon ? leftIcon : null}
@@ -55,6 +79,7 @@ const CommonButton = (props: ButtonProps) => {
 
       {rightIcon ? rightIcon : null}
     </button>
+    // </div>
   );
 };
 

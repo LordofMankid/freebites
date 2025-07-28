@@ -14,6 +14,7 @@
   "dependencies": {
     "@freebites/freebites-types": "^1.0.2",
     "@pixi/react": "^8.0.0-beta.25",
+    "@splinetool/react-spline": "^4.1.0",
     "@tanstack/react-query": "^5.83.0",
     "animejs": "^4.0.2",
     "axios": "^1.10.0",
@@ -29,7 +30,8 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "resend": "^4.6.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "three": "^0.178.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -41,6 +43,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.178.1",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",

@@ -254,6 +254,56 @@ const FallingFood = () => {
       }
     };
 
+    const handleResize = () => {
+      app.renderer.resize(window.innerWidth, window.innerHeight);
+
+      Matter.Body.setPosition(floor, {
+        x: app.renderer.width / 2,
+        y: app.renderer.height,
+      });
+      Matter.Body.setVertices(floor, [
+        { x: -app.renderer.width / 2 + 5, y: -5 },
+        { x: app.renderer.width / 2 - 5, y: -5 },
+        { x: app.renderer.width / 2 - 5, y: 5 },
+        { x: -app.renderer.width / 2 + 5, y: 5 },
+      ]);
+
+      Matter.Body.setPosition(ceiling, {
+        x: app.renderer.width / 2,
+        y: -app.renderer.height * 2,
+      });
+      Matter.Body.setVertices(ceiling, [
+        { x: -app.renderer.width / 2, y: -10 },
+        { x: app.renderer.width / 2, y: -10 },
+        { x: app.renderer.width / 2, y: 10 },
+        { x: -app.renderer.width / 2, y: 10 },
+      ]);
+
+      Matter.Body.setPosition(leftWall, {
+        x: 5,
+        y: 0,
+      });
+      Matter.Body.setVertices(leftWall, [
+        { x: -5, y: -app.renderer.height * 2 },
+        { x: 5, y: -app.renderer.height * 2 },
+        { x: 5, y: app.renderer.height * 2 },
+        { x: -5, y: app.renderer.height * 2 },
+      ]);
+
+      Matter.Body.setPosition(rightWall, {
+        x: app.renderer.width - 5,
+        y: 0,
+      });
+      Matter.Body.setVertices(rightWall, [
+        { x: -5, y: -app.renderer.height * 2 },
+        { x: 5, y: -app.renderer.height * 2 },
+        { x: 5, y: app.renderer.height * 2 },
+        { x: -5, y: app.renderer.height * 2 },
+      ]);
+    };
+
+    window.addEventListener("resize", handleResize);
+
     const ticker = app.ticker.add(() => {
       Matter.Engine.update(engine, 500 / 60);
       objects.map((ob) => {
@@ -280,6 +330,7 @@ const FallingFood = () => {
     });
 
     return () => {
+      window.removeEventListener("resize", handleResize);
       ticker.destroy();
       app.stage.removeChild(container);
       container.destroy({ children: true });
