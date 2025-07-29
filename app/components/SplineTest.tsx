@@ -9,22 +9,45 @@ export default function SplineTest() {
     splineRef.current = splineApp;
     const carrot = splineApp.findObjectByName("Carrot");
     if (!carrot) return;
-    // carrot.scale = { x: 3, y: 3, z: 3 };
-    carrot.position.x = 250;
+    //idk why but setting all 3 axes as one obj doesn't work
+    carrot.scale.x = 17;
+    carrot.scale.y = 17;
+    carrot.scale.z = 17;
+
+    let velocity = 0;
+    const grav = -24 * 1000;
+    const ground = -6000;
+    let y = ground;
+    let time = performance.now();
+
     let angle = 0;
-    let pos = -200;
-    let ascending = true;
-    const anim = () => {
-      angle += 0.1;
-      pos += ascending ? 10 : -10;
-      if (pos > 600) ascending = false;
-      if (pos < -300) ascending = true;
+    let turning = false;
+
+    const anim = (currentTime: number) => {
+      const deltaTime = (currentTime - time) / 1000;
+      time = currentTime;
+
+      velocity += grav * deltaTime;
+      y += velocity * deltaTime;
+      if (y < ground) {
+        y = ground;
+        velocity = -grav * 0.73;
+      }
+
+      if (y > 0) turning = true;
+      if (turning) {
+        angle += 0.12;
+        if (angle >= 2 * Math.PI) {
+          angle = 0;
+          turning = false;
+        }
+      }
+      carrot.position.y = y;
       carrot.rotation.y = angle;
-      carrot.position.y = pos;
       requestAnimationFrame(anim);
     };
 
-    anim();
+    requestAnimationFrame(anim);
   };
   return (
     <div className="w-full h-full pointer-events-none">

@@ -16,13 +16,13 @@ function LoadingPage() {
         <div className="absolute z-10 bottom-0 left-0 w-full h-full">
           <SplineTest />
         </div>
-
+        <div className="absolute z-20 bottom-0 left-0 w-full h-20 bg-orange-faint" />
         <Image
           src={"/assets/loading/dirtfront.png"}
           alt="dirt mound"
           width={408}
           height={115}
-          className="absolute z-20 bottom-0 left-0"
+          className="absolute z-30 bottom-0 left-0"
         />
       </div>
     </div>
