@@ -15,12 +15,12 @@ const ImageSection = (props: ImageSectionProps) => {
   const { sectionTitle, imageCardInfo } = props;
 
   return (
-    <div className="py-8 mx-48">
+    <div className="py-8 mx-16 lg:mx-48">
       <p
         className="font-baloo text-dark-text font-semibold 
-                    text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-left pb-12"
+                    text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center lg:text-left pb-16 w-full"
       >
-        {sectionTitle}{" "}
+        {sectionTitle}
       </p>
       <div className="flex flex-wrap justify-center gap-x-24 gap-y-8">
         {imageCardInfo?.map((item: ImageCardProps, idx) => {
