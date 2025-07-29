@@ -5,9 +5,9 @@ import EmailForm from "../components/forms/EmailForm";
 
 export default function page() {
   return (
-    <div>
+    <div className="flex flex-col">
       <Navbar />
-      <EmailForm />
+      <EmailForm className="mt-16 lg:mt-32" />
     </div>
   );
 }

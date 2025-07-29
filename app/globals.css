@@ -10,16 +10,16 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-orange-faint: #FFF5EB;
-  --color-orange-medium: #FF9529;
-  --color-orange-dark: #EC6300;
+  --color-orange-faint: #fff5eb;
+  --color-orange-medium: #ff9529;
+  --color-orange-dark: #ec6300;
   --color-dark-text: #171717;
-  --color-neutral-text: #4C4C4C;
+  --color-neutral-text: #4c4c4c;
   --color-neutral-light-text: #575757;
-  --color-neutral-lighter-text: #9E9E9E;
-  --color-neutral-disabled: #D4D4D4;
-  --color-neutral-gray: #D0D0D0;
-  --color-dark-green: #00373E;
+  --color-neutral-lighter-text: #9e9e9e;
+  --color-neutral-disabled: #d4d4d4;
+  --color-neutral-gray: #d0d0d0;
+  --color-dark-green: #00373e;
 
   --font-baloo: "Baloo 2", "sans-serif";
   --font-inter: "Inter", "sans-serif";

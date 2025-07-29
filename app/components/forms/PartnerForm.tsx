@@ -6,10 +6,10 @@ import FormInput from "../common/FormInput";
 import { animate, createScope, createSpring, Scope } from "animejs";
 import PageHeader from "../common/PageHeader";
 
-export interface EmailFormProps {
+export interface PartnerFormProps {
   className?: string;
 }
-const EmailForm = (props: EmailFormProps) => {
+const PartnerForm = (props: PartnerFormProps) => {
   const { className } = props;
   const scope = useRef<Scope | null>(null);
   const root = useRef(null);
@@ -49,11 +49,12 @@ const EmailForm = (props: EmailFormProps) => {
         <div className="w-full flex flex-col gap-2 justify-center items-center">
           <div className="py-8">
             <PageHeader
-              title="Contact our team"
+              title="Let's work together"
               subtitle={
                 <>
-                  Got any questions or inquiries about Freebites? <br /> Send a
-                  message and someone on our team will reach out :)
+                  Got any questions or want to bring Freebites to your school?{" "}
+                  <br />
+                  Send a message and someone on our team will reach out :)
                 </>
               }
             />
@@ -93,6 +94,12 @@ const EmailForm = (props: EmailFormProps) => {
           >
             Send Message
           </button>
+          <p className="font-inter text-neutral-light-text">
+            Already an ambassador?{" "}
+            <Link href="/admin" className="underline">
+              Manage your school here
+            </Link>
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-2 justify-center items-center">
@@ -111,4 +118,4 @@ const EmailForm = (props: EmailFormProps) => {
   );
 };
 
-export default EmailForm;
+export default PartnerForm;
