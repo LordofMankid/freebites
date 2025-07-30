@@ -3,17 +3,18 @@ import Spline from "@splinetool/react-spline";
 import { useRef } from "react";
 import { Application } from "@splinetool/runtime";
 
-export default function SplineTest() {
+export default function LogoSpline() {
   const splineRef = useRef<Application | null>(null);
   const onLoad = (splineApp: Application) => {
     splineRef.current = splineApp;
     const carrot = splineApp.findObjectByName("Carrot");
     if (!carrot) return;
     //idk why but setting all 3 axes as one obj doesn't work
-    carrot.scale.x = 17;
-    carrot.scale.y = 17;
-    carrot.scale.z = 17;
+    carrot.scale.x = 20;
+    carrot.scale.y = 20;
+    carrot.scale.z = 20;
 
+    carrot.position.x = 1000;
     let velocity = 0;
     const grav = -24 * 1000;
     const ground = -6000;
@@ -36,7 +37,7 @@ export default function SplineTest() {
 
       if (y > 0) turning = true;
       if (turning) {
-        angle += 0.12;
+        angle += 5 * Math.PI * deltaTime;
         if (angle >= 2 * Math.PI) {
           angle = 0;
           turning = false;

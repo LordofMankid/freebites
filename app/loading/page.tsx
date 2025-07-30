@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import SplineTest from "../components/SplineTest";
+import LogoSpline from "../components/LogoSpline";
 
 function LoadingPage() {
   return (
@@ -14,7 +14,7 @@ function LoadingPage() {
           className="absolute z-0 bottom-0 left-0"
         />
         <div className="absolute z-10 bottom-0 left-0 w-full h-full">
-          <SplineTest />
+          <LogoSpline />
         </div>
         <div className="absolute z-20 bottom-0 left-0 w-full h-20 bg-orange-faint" />
         <Image
