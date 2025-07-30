@@ -244,35 +244,44 @@ const FallingFood = () => {
     // DRAGABILITY
     // DRAGABILITY
 
-    const preventTouch = (e: Event) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
+    const isTouchDevice =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-    app.canvas.addEventListener("touchstart", preventTouch, { passive: false });
-    app.canvas.addEventListener("touchmove", preventTouch, { passive: false });
-    app.canvas.addEventListener("touchend", preventTouch, { passive: false });
-    app.canvas.addEventListener("touchcancel", preventTouch, {
-      passive: false,
-    });
+    if (!isTouchDevice) {
+      const mouse = Matter.Mouse.create(app.canvas) as Mouse & {
+        mousewheel: (event: WheelEvent) => void;
+        touchmove: (event: TouchEvent) => void;
+      };
+      app.canvas.removeEventListener("wheel", mouse.mousewheel);
 
-    const mouse = Matter.Mouse.create(app.canvas) as Mouse & {
-      mousewheel: (event: WheelEvent) => void;
-      touchmove: (event: TouchEvent) => void;
-    };
-    app.canvas.removeEventListener("wheel", mouse.mousewheel);
-
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse,
-      constraint: {
-        stiffness: 0.07,
-        render: {
-          visible: false,
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse,
+        constraint: {
+          stiffness: 0.07,
+          render: {
+            visible: false,
+          },
         },
-      },
-    });
+      });
 
-    Matter.World.add(world, mouseConstraint);
+      Matter.World.add(world, mouseConstraint);
+    } else {
+      const preventTouch = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+
+      app.canvas.addEventListener("touchstart", preventTouch, {
+        passive: false,
+      });
+      app.canvas.addEventListener("touchmove", preventTouch, {
+        passive: false,
+      });
+      app.canvas.addEventListener("touchend", preventTouch, { passive: false });
+      app.canvas.addEventListener("touchcancel", preventTouch, {
+        passive: false,
+      });
+    }
 
     const MAX_VELOCITY = 40;
 
@@ -370,10 +379,18 @@ const FallingFood = () => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      app.canvas.removeEventListener("touchstart", preventTouch);
-      app.canvas.removeEventListener("touchmove", preventTouch);
-      app.canvas.removeEventListener("touchend", preventTouch);
-      app.canvas.removeEventListener("touchcancel", preventTouch);
+
+      // Only remove touch event listeners if they were added (touch devices)
+      if (isTouchDevice) {
+        const preventTouch = (e: Event) => {
+          e.preventDefault();
+          e.stopPropagation();
+        };
+        app.canvas.removeEventListener("touchstart", preventTouch);
+        app.canvas.removeEventListener("touchmove", preventTouch);
+        app.canvas.removeEventListener("touchend", preventTouch);
+        app.canvas.removeEventListener("touchcancel", preventTouch);
+      }
 
       ticker.destroy();
       app.stage.removeChild(container);
