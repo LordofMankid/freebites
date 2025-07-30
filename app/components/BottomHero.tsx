@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import CommonButton from "./common/CommonButton";
-import LogoClosed from "../assets/closed.svg";
+import LogoArms from "../assets/arms.svg";
 
 interface BottomHeroProps {
   altContainerStyle?: string;
@@ -39,7 +39,7 @@ const BottomHero = forwardRef<HTMLDivElement, BottomHeroProps>((props, ref) => {
           />
         </div>
       </div>
-      <LogoClosed className="max-w-48 lg:max-w-60 h-fit hidden md:block" />
+      <LogoArms className="max-w-60 lg:max-w-72 hidden md:block" />
     </div>
   );
 });

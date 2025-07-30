@@ -121,7 +121,10 @@ const FallingFood = () => {
   const [texture, setTexture] = useState(Texture.EMPTY);
 
   useEffect(() => {
-    // if (scrollY != 0) return;
+    // INIT
+    // INIT
+    // INIT
+
     const engine = Matter.Engine.create();
     const world = engine.world;
 
@@ -129,9 +132,15 @@ const FallingFood = () => {
     const container = new Container();
     app.stage.addChild(container);
 
+    // CREATING FOOD OBJECTS
+    // CREATING FOOD OBJECTS
+    // CREATING FOOD OBJECTS
+
     const objects: { s: Sprite; b: Matter.Body }[] = [];
 
     const initFood = async (x: number, y: number) => {
+      const scale = Math.min(Math.max(window.innerWidth / 1500, 0.6), 2);
+
       const i = Math.floor(Math.random() * 8);
       const randFood = [
         "cake",
@@ -147,33 +156,36 @@ const FallingFood = () => {
       const sprite = new Sprite(texture);
       sprite.x = x;
       sprite.y = y;
-      sprite.scale = 1;
+      sprite.scale = scale;
       sprite.anchor.set(0.5);
       container.addChild(sprite);
 
-      let body = Matter.Bodies.circle(x, y, sprite.height / 2.2, {
+      const scaledVertices = (vertexMap.get(randFood) ?? [{ x: 0, y: 0 }]).map(
+        (vertex) => ({
+          x: vertex.x * scale,
+          y: vertex.y * scale,
+        })
+      );
+
+      let body = Matter.Bodies.circle(x, y, (sprite.height * scale) / 2.2, {
         restitution: 0.75,
         friction: 0.5,
         mass: 1,
       });
-      body = Matter.Bodies.fromVertices(
-        x,
-        y,
-        [vertexMap.get(randFood) ?? [{ x: 0, y: 0 }]],
-        {
-          restitution: 0.5,
-          friction: 0.5,
-          mass: 1,
-        }
-      );
+      body = Matter.Bodies.fromVertices(x, y, [scaledVertices], {
+        restitution: 0.5,
+        friction: 0.5,
+        mass: 1,
+      });
 
       Matter.World.add(world, body);
 
       objects.push({ s: sprite, b: body });
     };
 
-    const foodCount = Math.floor(
-      Math.min(app.renderer.height, app.renderer.width) / 20
+    const foodCount = Math.min(
+      Math.floor(Math.min(app.renderer.height, app.renderer.width) / 20),
+      60
     );
     const foods = Array.from({ length: foodCount }, () => {
       const x = Math.min(
@@ -185,6 +197,10 @@ const FallingFood = () => {
     });
 
     Promise.all(foods.map(({ x, y }) => initFood(x, y)));
+
+    // CREATING BOUNDARIES
+    // CREATING BOUNDARIES
+    // CREATING BOUNDARIES
 
     const floor = Matter.Bodies.rectangle(
       app.renderer.width / 2,
@@ -224,12 +240,27 @@ const FallingFood = () => {
     );
     Matter.World.add(world, rightWall);
 
+    // DRAGABILITY
+    // DRAGABILITY
+    // DRAGABILITY
+
+    const preventTouch = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    app.canvas.addEventListener("touchstart", preventTouch, { passive: false });
+    app.canvas.addEventListener("touchmove", preventTouch, { passive: false });
+    app.canvas.addEventListener("touchend", preventTouch, { passive: false });
+    app.canvas.addEventListener("touchcancel", preventTouch, {
+      passive: false,
+    });
+
     const mouse = Matter.Mouse.create(app.canvas) as Mouse & {
       mousewheel: (event: WheelEvent) => void;
       touchmove: (event: TouchEvent) => void;
     };
     app.canvas.removeEventListener("wheel", mouse.mousewheel);
-    app.canvas.removeEventListener("touchmove", mouse.touchmove);
 
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
@@ -253,6 +284,10 @@ const FallingFood = () => {
         Matter.Body.setVelocity(body, { x: clampedX, y: clampedY });
       }
     };
+
+    // RESIZING
+    // RESIZING
+    // RESIZING
 
     const handleResize = () => {
       app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -304,6 +339,10 @@ const FallingFood = () => {
 
     window.addEventListener("resize", handleResize);
 
+    // FRAME BY FRAME UPDATE
+    // FRAME BY FRAME UPDATE
+    // FRAME BY FRAME UPDATE
+
     const ticker = app.ticker.add(() => {
       Matter.Engine.update(engine, 500 / 60);
       objects.map((ob) => {
@@ -331,13 +370,17 @@ const FallingFood = () => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      app.canvas.removeEventListener("touchstart", preventTouch);
+      app.canvas.removeEventListener("touchmove", preventTouch);
+      app.canvas.removeEventListener("touchend", preventTouch);
+      app.canvas.removeEventListener("touchcancel", preventTouch);
+
       ticker.destroy();
       app.stage.removeChild(container);
       container.destroy({ children: true });
       Matter.World.clear(world, false);
       Matter.Engine.clear(engine);
     };
-    // init();
   }, [app]);
 
   useEffect(() => {
