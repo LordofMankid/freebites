@@ -20,7 +20,7 @@ function LoadingScreen() {
   return (
     <div
       id="loading-bg"
-      className="z-30 absolute w-screen h-screen bg-orange-faint flex items-center justify-center pointer-events-none"
+      className="z-30 fixed w-screen h-screen bg-orange-faint flex items-center justify-center pointer-events-none"
     >
       <div id="jumping" className="relative w-[408px] h-[300px]">
         <Image
