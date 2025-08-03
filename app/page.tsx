@@ -20,6 +20,7 @@ import AnimatedPhone, {
   TransitionType,
 } from "./components/AnimatedPhone";
 import { Application } from "@pixi/react";
+import LoadingScreen from "./components/LoadingScreen";
 
 // await Assets.init();
 export default function Home() {
@@ -322,6 +323,7 @@ export default function Home() {
           </Application>
         </div>
       </div>
+      <LoadingScreen />
     </div>
   );
 }

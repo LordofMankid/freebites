@@ -196,7 +196,9 @@ const FallingFood = () => {
       return { x, y };
     });
 
-    Promise.all(foods.map(({ x, y }) => initFood(x, y)));
+    setTimeout(() => {
+      Promise.all(foods.map(({ x, y }) => initFood(x, y)));
+    }, 1000);
 
     // CREATING BOUNDARIES
     // CREATING BOUNDARIES
@@ -363,19 +365,6 @@ const FallingFood = () => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-
-      // Only remove touch event listeners if they were added (touch devices)
-      // if (isTouchDevice) {
-      //   const preventTouch = (e: Event) => {
-      //     e.preventDefault();
-      //     e.stopPropagation();
-      //   };
-      //   app.canvas.removeEventListener("touchstart", preventTouch);
-      //   app.canvas.removeEventListener("touchmove", preventTouch);
-      //   app.canvas.removeEventListener("touchend", preventTouch);
-      //   app.canvas.removeEventListener("touchcancel", preventTouch);
-      // }
-
       ticker.destroy();
       app.stage.removeChild(container);
       container.destroy({ children: true });

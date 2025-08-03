@@ -1,11 +1,17 @@
 "use client";
 import Spline from "@splinetool/react-spline";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Application } from "@splinetool/runtime";
 
-export default function LogoSpline() {
+interface LogoSplineProps {
+  setClose: (arg0: boolean) => void;
+}
+export default function LogoSpline(props: LogoSplineProps) {
+  const { setClose } = props;
   const splineRef = useRef<Application | null>(null);
+  const [loaded, setLoaded] = useState<boolean>(false);
   const onLoad = (splineApp: Application) => {
+    setLoaded(true);
     splineRef.current = splineApp;
     const carrot = splineApp.findObjectByName("Carrot");
     if (!carrot) return;
@@ -23,6 +29,7 @@ export default function LogoSpline() {
 
     let angle = 0;
     let turning = false;
+    let hits = 0;
 
     const anim = (currentTime: number) => {
       const deltaTime = (currentTime - time) / 1000;
@@ -31,6 +38,7 @@ export default function LogoSpline() {
       velocity += grav * deltaTime;
       y += velocity * deltaTime;
       if (y < ground) {
+        hits += 1;
         y = ground;
         velocity = -grav * 0.73;
       }
@@ -45,13 +53,17 @@ export default function LogoSpline() {
       }
       carrot.position.y = y;
       carrot.rotation.y = angle;
+
+      if (hits > 1) setClose(true);
       requestAnimationFrame(anim);
     };
 
     requestAnimationFrame(anim);
   };
   return (
-    <div className="w-full h-full pointer-events-none">
+    <div
+      className={`w-full h-full pointer-events-none ${!loaded && "opacity-0"}`}
+    >
       <Spline
         scene="https://prod.spline.design/eJaaelfKopc4HxY3/scene.splinecode"
         onLoad={onLoad}
