@@ -13,18 +13,14 @@ import {
   Scope,
 } from "animejs";
 import FullScreenSection from "./components/common/FullScreenSection";
-import { Application, extend } from "@pixi/react";
-import { Container, Text, Graphics, Assets, Texture, Sprite } from "pixi.js";
 import PopupTag from "./components/common/PopupTag";
 import HomeBackground from "./components/HomeBackground";
+import AnimatedPhone, {
+  PhoneState,
+  TransitionType,
+} from "./components/AnimatedPhone";
+import { Application } from "@pixi/react";
 
-extend({
-  Container,
-  Graphics,
-  Text,
-  Texture,
-  Sprite,
-});
 // await Assets.init();
 export default function Home() {
   const root = useRef(null);
@@ -44,21 +40,25 @@ export default function Home() {
 
   const landingBgRef = useRef<HTMLDivElement>(null);
   const textSectionRef = useRef<HTMLDivElement>(null);
-  const [texture, setTexture] = useState(Texture.EMPTY);
+  const [phoneState, setPhoneState] = useState<PhoneState>(PhoneState.SCREEN1);
+  const [transitionType, setTransitionType] = useState<TransitionType>(
+    TransitionType.SLIDE_LEFT
+  );
+
+  const handleNextScreen = useCallback(() => {
+    setTransitionType(TransitionType.SLIDE_LEFT);
+    setPhoneState(
+      phoneState === PhoneState.SCREEN1
+        ? PhoneState.SCREEN2
+        : PhoneState.SCREEN2
+    );
+  }, [phoneState]);
 
   // const demoInteractable = useMemo(() => {
   //   if (canvasRef.current) {
   //     return parseFloat(window.getComputedStyle(canvasRef.current).opacity) > 0;
   //   }
   // }, []);
-  // PIXIJS USE EFFECT
-  useEffect(() => {
-    if (texture === Texture.EMPTY) {
-      Assets.load("/assets/FreebitesScreen.png").then((result) => {
-        setTexture(result);
-      });
-    }
-  }, [texture]);
 
   // ANIMATION USEEFFECT
   useEffect(() => {
@@ -150,55 +150,11 @@ export default function Home() {
       }
 
       if (canvasRef.current && canvasRef2.current && textSectionRef.current) {
-        // const canvasAnimation = animate(canvasRef.current, {
-        // opacity: { from: 0, to: 1, duration: 1000, ease: "linear" },
-        // translateY: {
-        //   from: 50,
-        //   to: 0,
-        //   ease: "inOut",
-        //   duration: 500,
-        //   delay: 150,
-        // },
-        // autoplay: false,
-        // });
-
-        // const exitAnimation = animate(canvasRef2.current, {
-        //   opacity: { from: 1, to: 0, duration: 500, ease: "out(4)" },
-        //   translateY: {
-        //     from: 0,
-        //     to: -200,
-        //     ease: "inOut",
-        //     duration: 500,
-        //     delay: 150,
-        //   },
-        //   autoplay: false,
-        // });
-
-        // onScroll({
-        //   target: textSectionRef.current,
-        //   container: ".page",
-        //   enter: "bottom-=20% top+=5%",
-        //   leave: "bottom max",
-        //   onEnterForward: () => {
-        //     canvasAnimation.play();
-        //   },
-        //   onLeaveBackward: () => {
-        //     canvasAnimation.reverse();
-        //   },
-        //   onLeaveForward: () => {
-        //     exitAnimation.play();
-        //   },
-        //   onEnterBackward: () => {
-        //     exitAnimation.reverse();
-        //   },
-        //   // debug: true,
-        // });
-
         createTimeline({
           autoplay: onScroll({
             target: textSectionRef.current,
             container: ".page",
-            enter: "bottom-=20% top+=5%",
+            enter: "bottom-=20% top+=15%",
             leave: "bottom-=20% max",
             sync: 1,
             // debug: true,
@@ -225,6 +181,7 @@ export default function Home() {
             },
             1400
           )
+          // .call(handleNextScreen, 3500) // might need sep timeline/callers for the state changes
           .add(
             canvasRef.current,
             {
@@ -298,12 +255,11 @@ export default function Home() {
         });
       });
     });
-  }, []);
+  }, [handleNextScreen]);
 
   const jumpToPhone = useCallback(() => {
     scope.current?.methods.jumpToDemo();
   }, []);
-  if (!texture) return null; // nothing until it’s ready
 
   return (
     <div ref={root} className="relative z-10 page flex flex-col">
@@ -325,7 +281,7 @@ export default function Home() {
           ref={textSectionRef}
         >
           <div className="flex flex-col items-start gap-20 mx-16 md:w-1/2">
-            <div className="h-[120vh]"> </div>
+            <div className="h-[150vh]"> </div>
             <FullScreenSection
               ref={block1Ref}
               title="Find Free Food"
@@ -359,20 +315,10 @@ export default function Home() {
       >
         <div ref={canvasRef2}>
           <Application backgroundAlpha={0} width={800} height={800}>
-            <pixiContainer>
-              <pixiSprite
-                // ref={spriteRef}
-                texture={texture}
-                anchor={0.5} // centre of sprite is (0 .5, 0 .5)
-                x={400} // 4 ️⃣ place sprite in the middle
-                y={400}
-                eventMode="static"
-                // onClick={(event) => setIsActive(!isActive)}
-                // onPointerOver={(event) => setIsHover(true)}
-                // onPointerOut={(event) => setIsHover(false)}
-                // scale={isActive ? 1 : 1.5}
-              />
-            </pixiContainer>
+            <AnimatedPhone
+              currentState={phoneState}
+              transitionType={transitionType}
+            />
           </Application>
         </div>
       </div>

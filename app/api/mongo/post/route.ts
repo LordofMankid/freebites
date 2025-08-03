@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // REMOVE THIS AFTER API ENDPOINT SECURING
-
 import { NextResponse } from "next/server";
 import {
   deletePostController,
