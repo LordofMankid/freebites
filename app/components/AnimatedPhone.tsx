@@ -362,7 +362,7 @@ const AnimatedPhone = forwardRef<AnimatedPhoneRef, AnimatedPhoneProps>(
       };
 
       animateIdleRef.current = animateIdle;
-      app.ticker.add(() => animateIdle(1));
+      app.ticker.add(() => animateIdle(0.5));
 
       return () => {
         if (animateIdleRef.current) {
