@@ -3,7 +3,7 @@
 import Navbar from "./components/Navbar";
 import TopHero from "./components/TopHero";
 import BottomHero from "./components/BottomHero";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   animate,
   createScope,
@@ -16,8 +16,8 @@ import FullScreenSection from "./components/common/FullScreenSection";
 import PopupTag from "./components/common/PopupTag";
 import HomeBackground from "./components/HomeBackground";
 import AnimatedPhone, {
+  AnimatedPhoneRef,
   PhoneState,
-  TransitionType,
 } from "./components/AnimatedPhone";
 import { Application } from "@pixi/react";
 import LoadingScreen from "./components/LoadingScreen";
@@ -41,20 +41,16 @@ export default function Home() {
 
   const landingBgRef = useRef<HTMLDivElement>(null);
   const textSectionRef = useRef<HTMLDivElement>(null);
-  const [phoneState, setPhoneState] = useState<PhoneState>(PhoneState.SCREEN1);
-  const [transitionType, setTransitionType] = useState<TransitionType>(
-    TransitionType.SLIDE_LEFT
-  );
 
-  const handleNextScreen = useCallback(() => {
-    setTransitionType(TransitionType.SLIDE_LEFT);
-    setPhoneState(
-      phoneState === PhoneState.SCREEN1
-        ? PhoneState.SCREEN2
-        : PhoneState.SCREEN2
-    );
-  }, [phoneState]);
+  // Replace state with direct ref to phone component
+  const phoneRef = useRef<AnimatedPhoneRef>(null);
 
+  const animationState = useRef({
+    swipeTriggered: false,
+    notificationsTriggered: false,
+    lastScrollDirection: "down",
+  });
+  const lastProgress = useRef(0);
   // const demoInteractable = useMemo(() => {
   //   if (canvasRef.current) {
   //     return parseFloat(window.getComputedStyle(canvasRef.current).opacity) > 0;
@@ -159,6 +155,66 @@ export default function Home() {
             leave: "bottom-=20% max",
             sync: 1,
             // debug: true,
+            // use this as bridge for pixi progress
+            onUpdate: (self) => {
+              const progress = self.progress; // normalized between 0 to 1
+
+              const scrollDirection =
+                progress > lastProgress.current ? "down" : "up";
+              lastProgress.current = progress;
+
+              // Define breakpoints
+              const swipeBreakpoint = 0.65;
+              const notificationBreakpoint = 0.85;
+
+              // Track scroll direction
+              if (
+                scrollDirection !== animationState.current.lastScrollDirection
+              ) {
+                animationState.current.lastScrollDirection = scrollDirection;
+              }
+
+              // SWIPE ANIMATION
+              if (
+                scrollDirection === "down" &&
+                progress >= swipeBreakpoint &&
+                !animationState.current.swipeTriggered
+              ) {
+                // Fire swipe animation
+                animationState.current.swipeTriggered = true;
+                phoneRef.current?.fireAnimation("swipe", "forward");
+              } else if (
+                scrollDirection === "up" &&
+                progress < swipeBreakpoint &&
+                animationState.current.swipeTriggered
+              ) {
+                // Reverse swipe animation
+                animationState.current.swipeTriggered = false;
+                phoneRef.current?.fireAnimation("swipe", "reverse");
+              }
+
+              // NOTIFICATION ANIMATION
+              if (
+                scrollDirection === "down" &&
+                progress >= notificationBreakpoint &&
+                !animationState.current.notificationsTriggered
+              ) {
+                // Fire notification sequence
+                animationState.current.notificationsTriggered = true;
+                phoneRef.current?.fireAnimation("notifications", "forward");
+              } else if (
+                scrollDirection === "up" &&
+                progress < notificationBreakpoint &&
+                animationState.current.notificationsTriggered
+              ) {
+                // Reverse notification sequence
+                animationState.current.notificationsTriggered = false;
+                phoneRef.current?.fireAnimation("notifications", "reverse");
+              }
+
+              // Optional: Still pass progress for any scroll-dependent effects (like parallax)
+              phoneRef.current?.updateScrollProgress(progress);
+            },
           }),
         })
           .add(canvasRef.current, {
@@ -182,7 +238,6 @@ export default function Home() {
             },
             1400
           )
-          // .call(handleNextScreen, 3500) // might need sep timeline/callers for the state changes
           .add(
             canvasRef.current,
             {
@@ -230,6 +285,7 @@ export default function Home() {
             duration: 1000,
             delay: 150,
           },
+
           autoplay: onScroll({
             target: target,
             container: ".page",
@@ -256,7 +312,7 @@ export default function Home() {
         });
       });
     });
-  }, [handleNextScreen]);
+  }, []);
 
   const jumpToPhone = useCallback(() => {
     scope.current?.methods.jumpToDemo();
@@ -316,10 +372,7 @@ export default function Home() {
       >
         <div ref={canvasRef2}>
           <Application backgroundAlpha={0} width={800} height={800}>
-            <AnimatedPhone
-              currentState={phoneState}
-              transitionType={transitionType}
-            />
+            <AnimatedPhone ref={phoneRef} initialState={PhoneState.SCREEN1} />
           </Application>
         </div>
       </div>

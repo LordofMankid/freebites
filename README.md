@@ -80,3 +80,7 @@ credentials in the same API call/server render.
    - Runs on every server-side render of protected routes.
    - Validates the cookie and re-verifies the token.
    - Redirects to /admin/login if validation fails (e.g., expired or forged cookie).
+
+## Custom `npm` package
+
+We have a `@freebites/freebites-types` package that we share between our website and mobile app repos.

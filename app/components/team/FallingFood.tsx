@@ -139,7 +139,7 @@ const FallingFood = () => {
     const objects: { s: Sprite; b: Matter.Body }[] = [];
 
     const initFood = async (x: number, y: number) => {
-      const scale = Math.min(Math.max(window.innerWidth / 1500, 0.6), 2);
+      const scale = Math.min(Math.max(window.innerWidth / 1500, 0.6), 1);
 
       const i = Math.floor(Math.random() * 8);
       const randFood = [
@@ -196,9 +196,7 @@ const FallingFood = () => {
       return { x, y };
     });
 
-    setTimeout(() => {
-      Promise.all(foods.map(({ x, y }) => initFood(x, y)));
-    }, 1000);
+    Promise.all(foods.map(({ x, y }) => initFood(x, y)));
 
     // CREATING BOUNDARIES
     // CREATING BOUNDARIES
@@ -365,6 +363,19 @@ const FallingFood = () => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+
+      // Only remove touch event listeners if they were added (touch devices)
+      // if (isTouchDevice) {
+      //   const preventTouch = (e: Event) => {
+      //     e.preventDefault();
+      //     e.stopPropagation();
+      //   };
+      //   app.canvas.removeEventListener("touchstart", preventTouch);
+      //   app.canvas.removeEventListener("touchmove", preventTouch);
+      //   app.canvas.removeEventListener("touchend", preventTouch);
+      //   app.canvas.removeEventListener("touchcancel", preventTouch);
+      // }
+
       ticker.destroy();
       app.stage.removeChild(container);
       container.destroy({ children: true });
