@@ -4,6 +4,7 @@ import {
   ReportType,
   UserType,
 } from "@freebites/freebites-types";
+import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 import axios from "axios";
 
 // comment crud
@@ -135,9 +136,13 @@ export const getReport = async (reportId: string): Promise<ReportType> => {
   }
 };
 
-export const getAllReports = async (): Promise<ReportType[]> => {
+export const getAllReports = async (
+  category?: ReportCategory
+): Promise<ReportType[]> => {
   try {
-    const response = await axios.get("/api/mongo/report");
+    const response = await axios.get("/api/mongo/report", {
+      params: category ? { category: category } : {},
+    });
 
     return response.data;
   } catch (error) {

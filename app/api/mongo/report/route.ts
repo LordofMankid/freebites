@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
-import {
-  getAllReports,
-  getReportById,
-  putReportController,
-} from "./controller";
-import { ReportType } from "@freebites/freebites-types";
+import { getAllReports, getReportById } from "./controller";
 import { verifySessionCookie } from "@/lib/verifySession";
+import { isValidReportCategory } from "@/lib/util/backend";
 
 export async function GET(req: Request) {
   try {
@@ -15,18 +11,21 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
 
     const id = searchParams.get("id");
+    const category_string = searchParams.get("category");
+    const category = isValidReportCategory(category_string)
+      ? category_string
+      : undefined;
 
     if (id) {
       const post = await getReportById(id);
-      // console.log(user);
       return NextResponse.json(post);
     } else {
-      const posts = await getAllReports();
+      const posts = await getAllReports(category);
       return NextResponse.json(posts);
     }
   } catch (error) {
     return NextResponse.json(
-      { error: `Failed to get post: ${error}` },
+      { error: `Failed to get report: ${error}` },
       { status: 500 }
     );
   }

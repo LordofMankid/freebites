@@ -1,6 +1,7 @@
 import { ReportSchema, ReportType } from "@freebites/freebites-types";
 import connectToDatabase from "@/lib/mongodb";
 import mongoose from "mongoose";
+import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 
 let ReportModel: mongoose.Model<ReportType> | null = null;
 
@@ -15,9 +16,11 @@ export const getReportModel = async (): Promise<mongoose.Model<ReportType>> => {
   return ReportModel;
 };
 
-export const getAllReports = async (): Promise<ReportType[]> => {
-  const Report = await getReportModel();
-  return Report.find({}).exec();
+export const getAllReports = async (
+  category: ReportCategory | undefined
+): Promise<ReportType[]> => {
+  const Reports = await getReportModel();
+  return Reports.find(category ? { type: category } : {}).exec();
 };
 
 export const getReportById = async (id: string): Promise<ReportType> => {

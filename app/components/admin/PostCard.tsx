@@ -57,10 +57,10 @@ const PostCard = (props: PostCardProps) => {
           <p>{post.postTime.toLocaleDateString()}</p>
         </div>
       </div>
-      <div className="w-full">
+      <div className="w-full flex flex-row gap-2">
         <CommonButton
           label={"Delete Post"}
-          altStyle="w-full bg-[#FF9529] border-0 py-3 mt-11 mb-16"
+          altStyle="w-full bg-orange-medium border-0 py-3 mt-11 mb-16"
           altTextStyle="font-inter text-white text-lg font-medium"
           onClick={deletePostCallback}
         />

@@ -164,7 +164,7 @@ export default function Home() {
               lastProgress.current = progress;
 
               // Define breakpoints
-              const swipeBreakpoint = 0.65;
+              const swipeBreakpoint = 0.55;
               const notificationBreakpoint = 0.85;
 
               // Track scroll direction
@@ -329,7 +329,7 @@ export default function Home() {
           onClick={jumpToPhone}
         />
       </div>
-      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24 pointer-events-none  mt-16 lg:mt-32">
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24 pointer-events-none mt-16 lg:mt-32">
         <div className="flex flex-col w-full justify-start min-h-[90vh]">
           <TopHero ref={topHeroRef} />
         </div>

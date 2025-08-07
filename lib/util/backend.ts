@@ -1,5 +1,6 @@
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebaseClient";
+import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 
 // backend fetch function to send auth cookie to server for validation
 export const setAuthCookie = async (token: string) => {
@@ -25,4 +26,27 @@ export const fetchImageURL = async (path: string): Promise<string> => {
     // console.error("Error fetching image:", err);
     throw err; // Rethrow for react-query to handle
   }
+};
+
+export const groupByMap = <T, K>(
+  array: T[],
+  keyFn: (item: T) => K
+): Map<K, T[]> => {
+  const groups = new Map<K, T[]>();
+
+  for (const item of array) {
+    const key = keyFn(item);
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key)!.push(item);
+  }
+
+  return groups;
+};
+
+export const isValidReportCategory = (
+  value: string | null
+): value is ReportCategory => {
+  return Object.values(ReportCategory).includes(value as ReportCategory);
 };
