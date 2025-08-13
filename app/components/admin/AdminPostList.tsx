@@ -8,6 +8,7 @@ import { ReportType } from "@freebites/freebites-types";
 import { useEffect, useState } from "react";
 import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 import { groupByMap } from "@/lib/util/backend";
+import ReportCard from "./ReportCard";
 
 interface AdminPostListProps {
   viewState: AdminViewType;
@@ -125,12 +126,12 @@ const AdminPostList = (props: AdminPostListProps) => {
       return (
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(20rem,_1fr))] gap-20 mt-11">
           {Array.from(groupedReportData.entries()).map(([postID, reports]) => (
-            <div key={postID}>
-              {reports.map((report) => (
-                <p key={report._id}>{report._id}</p>
-              ))}
-              <p>{postID}</p>
-            </div>
+            <ReportCard
+              key={postID}
+              category={ReportCategory.POST}
+              reportedID={postID}
+              reports={reports}
+            />
           ))}
         </div>
       );
@@ -139,12 +140,12 @@ const AdminPostList = (props: AdminPostListProps) => {
       return (
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(20rem,_1fr))] gap-20 mt-11">
           {Array.from(groupedReportData.entries()).map(([userID, reports]) => (
-            <div key={userID}>
-              {reports.map((report) => (
-                <p key={report._id}>{report._id}</p>
-              ))}
-              <p>{userID}</p>
-            </div>
+            <ReportCard
+              key={userID}
+              category={ReportCategory.USER}
+              reportedID={userID}
+              reports={reports}
+            />
           ))}
         </div>
       );
