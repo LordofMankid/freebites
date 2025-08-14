@@ -21,42 +21,55 @@ function ReportCard(props: ReportCardProps) {
   >([]);
 
   useEffect(() => {
-    const handleReports = async () => {
-      const reporters = await Promise.all(
-        reports.map((report) => {
-          return getUser(report.reportedByID);
-        })
-      );
-      const reports_users = reports.map((r, i) => ({
-        report: r,
-        reporter: reporters[i],
-      }));
-      setParsedReports(reports_users);
-    };
-    handleReports();
-  }, [reports]);
-
-  useEffect(() => {
-    if (!reportedID) return;
-
     const getContent = async () => {
-      let data;
+      if (reports.length == 0) return;
 
-      switch (category) {
-        case "Post":
-          data = await getPost(reportedID);
-          break;
-        case "User":
-          data = await getUser(reportedID);
-          break;
-        case "Comment":
-          data = await getComment(reportedID);
-          break;
+      // fetching users who made the reports
+      try {
+        const reportersPromise = await Promise.allSettled(
+          reports.map((report) => {
+            return getUser(report.reportedByID);
+          })
+        );
+
+        const reporters = reportersPromise.map((r) =>
+          r.status === "fulfilled"
+            ? r.value
+            : ({ userName: "unknown" } as UserType)
+        );
+
+        // zipping together reports and reporters
+        const reports_users = reports.map((r, i) => ({
+          report: r,
+          reporter: reporters[i],
+        }));
+        setParsedReports(reports_users);
+
+        // if we are reporting a comment with no grouping just use the postID
+        const id = reportedID ?? reports[0].postID;
+
+        let data;
+
+        switch (category) {
+          case "Post":
+            data = await getPost(id);
+            break;
+          case "User":
+            data = await getUser(id);
+            break;
+          case "Comment":
+            data = await getComment(id);
+            break;
+        }
+
+        setReported(data);
+      } catch (error) {
+        console.error("error fetching data", error);
       }
-      setReported(data);
     };
+
     getContent();
-  }, [reportedID, category]);
+  }, [reportedID, reports, category]);
 
   return (
     <div className="flex flex-col gap-4 w-full relative bg-white rounded-2xl max-w-md items-center p-4">
@@ -87,8 +100,13 @@ function ReportCard(props: ReportCardProps) {
         {reported &&
           category == "Comment" &&
           (() => {
-            // const comment = reported as Comment;
-            return <div className="w-full h-40 bg-green-100"> </div>;
+            const comment = reported as Comment;
+            return (
+              <div className="w-full h-40 bg-green-100">
+                <p>{comment.username}</p>
+                <p>{comment.body}</p>
+              </div>
+            );
           })()}
         {!reported && <div className="w-full h-40 bg-grey-300" />}
       </div>

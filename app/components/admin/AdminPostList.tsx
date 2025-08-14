@@ -154,7 +154,13 @@ const AdminPostList = (props: AdminPostListProps) => {
       return (
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(20rem,_1fr))] gap-20 mt-11">
           {reportData.map((commentReport) => {
-            return <div key={commentReport._id}>{commentReport._id}</div>;
+            return (
+              <ReportCard
+                key={commentReport._id}
+                category={ReportCategory.COMMENT}
+                reports={[commentReport]}
+              />
+            );
           })}
         </div>
       );

@@ -1,17 +1,17 @@
 import { CommentSchema, Comment } from "@freebites/freebites-types";
-import getAccountConnection from "@/lib/mongoAccounts";
 import mongoose from "mongoose";
+import connectToDatabase from "@/lib/mongodb";
 
 let CommentModel: mongoose.Model<Comment> | null = null;
 
 export const getCommentModel = async (): Promise<mongoose.Model<Comment>> => {
   if (CommentModel) return CommentModel;
 
-  const conn = await getAccountConnection();
+  const conn = await connectToDatabase();
 
   CommentModel =
     conn.models.Comment ||
-    conn.model<Comment>("Comment", CommentSchema, "profiles");
+    conn.model<Comment>("Comment", CommentSchema, "comments");
   return CommentModel;
 };
 
