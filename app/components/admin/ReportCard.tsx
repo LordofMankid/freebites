@@ -1,13 +1,14 @@
 import {
-  deleteComment,
-  deletePost,
   getComment,
   getPost,
   getUser,
+  ignoreAllReportsOnItem,
 } from "@/lib/api/admin";
+import { useDeleteComment, useDeletePost } from "@/lib/hooks/useMutations";
 import { Comment, PostType, UserType } from "@freebites/freebites-types";
 import {
   ReportCategory,
+  ReportStatus,
   ReportType,
 } from "@freebites/freebites-types/dist/ReportTypes";
 import React, { useCallback, useEffect, useState } from "react";
@@ -27,32 +28,41 @@ function ReportCard(props: ReportCardProps) {
     { report: ReportType; reporter: UserType }[]
   >([]);
 
-  const ignoreReport = useCallback(() => {}, []);
+  const ignoreReport = useCallback(() => {
+    if (reportedID) ignoreAllReportsOnItem(reportedID, category);
+  }, [category, reportedID]);
+
+  const deletePostMutation = useDeletePost();
+  const deleteCommentMutation = useDeleteComment();
 
   const deleteItem = useCallback(async () => {
-    console.log("deleting item");
+    console.log("deleting item", category);
     switch (category) {
       case "Post":
         if (reportedID) {
           // set all reports corresponding to this post to resolved
-          await deletePost(reportedID);
+          await deletePostMutation.mutateAsync(reportedID);
         }
         break;
       case "User":
         console.log("user banning not implemented yet");
         break;
       case "Comment":
+        console.log("reported comment", reportedID);
         if (reportedID) {
           // set all reports corresponding to this post to resolved
-          await deleteComment(reportedID);
+          await deleteCommentMutation.mutateAsync(reportedID);
         }
         break;
     }
-  }, [category, reportedID]);
+  }, [category, deleteCommentMutation, deletePostMutation, reportedID]);
   useEffect(() => {
     const getContent = async () => {
       if (reports.length == 0) return;
 
+      // temp fix to handle where useEffect fires on changing category
+      // but before state gets updated, causing lookup on the wrong category
+      if (reports[0].type !== category) return;
       // fetching users who made the reports
       try {
         const reportersPromise = await Promise.allSettled(
@@ -99,7 +109,8 @@ function ReportCard(props: ReportCardProps) {
 
     getContent();
   }, [reportedID, reports, category]);
-
+  const isDeleting =
+    deletePostMutation.isPending || deleteCommentMutation.isPending;
   return (
     <div className="flex flex-col gap-4 w-full relative bg-white rounded-2xl max-w-md items-center p-4">
       <div className="flex flex-col w-full">
@@ -137,7 +148,11 @@ function ReportCard(props: ReportCardProps) {
               </div>
             );
           })()}
-        {!reported && <div className="w-full h-40 bg-grey-300" />}
+        {!reported && (
+          <div className="w-full h-40 bg-grey-300">
+            <p>This {category.toLowerCase()} has been deleted.</p>
+          </div>
+        )}
       </div>
       <div className="flex flex-col w-full gap-2">
         {parsedReports.length != 0 ? (
@@ -161,6 +176,12 @@ function ReportCard(props: ReportCardProps) {
                 <p className="font-inter text-md">
                   {r.report.reportedText ?? "no text given"}
                 </p>
+                <p
+                  className={`font-inter text-md 
+                    ${r.report.status === ReportStatus.RESOLVED ? "text-emerald-700" : "text-orange-medium"}`}
+                >
+                  {r.report.status}
+                </p>
               </div>
             );
           })
@@ -176,10 +197,10 @@ function ReportCard(props: ReportCardProps) {
 
       <div className="flex gap-4">
         <button className="bg-red-200" onClick={ignoreReport}>
-          ignore report
+          ignore reports
         </button>
         <button className="bg-orange-200" onClick={deleteItem}>
-          delete {category.toLowerCase()}
+          {isDeleting ? "deleting..." : `delete ${category.toLowerCase()}`}
         </button>
       </div>
     </div>

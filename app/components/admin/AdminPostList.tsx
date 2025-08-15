@@ -159,6 +159,7 @@ const AdminPostList = (props: AdminPostListProps) => {
                 key={commentReport._id}
                 category={ReportCategory.COMMENT}
                 reports={[commentReport]}
+                reportedID={commentReport.postID}
               />
             );
           })}

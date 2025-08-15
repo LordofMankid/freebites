@@ -39,12 +39,12 @@ export const putReportController = async (
   reportData: ReportType
 ): Promise<ReportType> => {
   try {
-    const User = await getReportModel();
+    const Report = await getReportModel();
     if (!reportData) {
       throw new Error("Missing required information");
     }
 
-    const updatedUser = await User.findOneAndReplace(
+    const updatedUser = await Report.findOneAndReplace(
       { uid: reportData._id },
       reportData,
       {

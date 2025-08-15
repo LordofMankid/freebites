@@ -1,9 +1,11 @@
 import { PostWithUser } from "@/lib/api/admin";
 import connectToDatabase from "@/lib/mongodb";
 import { PostType, PostSchemaDefinition } from "@freebites/freebites-types";
-import mongoose from "mongoose";
+import mongoose, { startSession } from "mongoose";
 import { getUserModel } from "../user/controller";
 import { getStorage } from "@/lib/firebaseAdmin";
+import { getReportModel } from "../report/controller";
+import { ReportStatus } from "@freebites/freebites-types/dist/ReportTypes";
 
 let PostModel: mongoose.Model<PostType> | null = null;
 
@@ -111,24 +113,50 @@ export const putPostController = async (
  */
 export const deletePostController = async (
   postId: string
-): Promise<PostType> => {
+): Promise<PostType | null> => {
+  const session = await startSession();
   try {
     const Post = await getPostModel();
+    const Report = await getReportModel();
     if (!postId) {
       throw new Error("Missing required information");
     }
 
-    const deletedPost = await Post.findByIdAndDelete(postId)
-      .lean() // save as javascript document for less overhead
-      .exec();
+    let deletedPost: PostType | null = null;
+    let imagePaths: string[] = [];
 
-    if (!deletedPost) {
-      throw new Error(`Post with id ${postId} not found`);
-    }
+    // start w/ atomicity so we don't fail delete
+    await session.withTransaction(async () => {
+      deletedPost = await Post.findByIdAndDelete(postId)
+        .session(session)
+        .lean()
+        .exec();
 
-    const bucket = getStorage().bucket(); // This uses your initialized admin app
+      if (!deletedPost) {
+        throw new Error(`Post with id ${postId} not found`);
+      }
+
+      imagePaths = deletedPost.imageURIs || [];
+
+      // resolve associated reports
+      const reportUpdateResult = await Report.updateMany(
+        { postID: postId, status: { $ne: ReportStatus.RESOLVED } },
+        {
+          status: ReportStatus.RESOLVED,
+          resolvedAt: new Date(),
+          resolvedReason: "Post deleted by admin",
+        },
+        { session }
+      );
+      console.log(
+        `Resolved ${reportUpdateResult.modifiedCount} reports for post ${postId}`
+      );
+    });
+
+    // delete all associated pictures
+    const bucket = getStorage().bucket(); // uses initialized admin app
     await Promise.all(
-      deletedPost.imageURIs.map(async (imagePath: string) => {
+      imagePaths.map(async (imagePath: string) => {
         try {
           await bucket.file(imagePath).delete();
         } catch (error) {
@@ -142,7 +170,9 @@ export const deletePostController = async (
 
     return deletedPost;
   } catch (error) {
-    console.error("Error updating post", error);
+    console.error("Error deleting post", error);
     throw error;
+  } finally {
+    await session.endSession();
   }
 };

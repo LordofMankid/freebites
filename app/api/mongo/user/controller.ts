@@ -25,7 +25,9 @@ export const getUserById = async (uid: string): Promise<UserType> => {
   try {
     const user = await User.findOne({ uid: uid }).exec();
     if (user) return user;
-    else throw new Error("User not found!");
+    else {
+      throw new Error("User not found!");
+    }
   } catch (error) {
     console.error("Error fetching user:", error);
     throw error;

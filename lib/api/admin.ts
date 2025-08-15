@@ -185,6 +185,47 @@ export const getAllReports = async (
 //   }
 // };
 
+export const updateReport = async (
+  reportId: string,
+  updatedReport: Partial<ReportType>
+): Promise<ReportType> => {
+  try {
+    const response = await axios.patch(
+      // use patch for partial updates
+      `/api/mongo/report${reportId}`,
+      updatedReport
+    );
+
+    const deletedReport: ReportType = {
+      ...response.data,
+      postTime: new Date(response.data.postTime),
+    };
+
+    return deletedReport;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to update report: ${error.message}`);
+    } else {
+      throw new Error(`Failed to update report: An unknown error occurred.`);
+    }
+  }
+};
+
+/* used for updating all reports */
+export const ignoreAllReportsOnItem = async (itemId: string, type: string) => {
+  try {
+    await axios.patch("/api/mongo/report/bulk", {
+      action: type,
+      id: itemId,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to ignore reports: ${error.message}`);
+    } else {
+      throw new Error(`Failed to ignore reports: An unknown error occurred.`);
+    }
+  }
+};
 ////////////////////////////////////////////
 // user crud
 export const getUser = async (userId: string): Promise<UserType> => {

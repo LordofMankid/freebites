@@ -1,6 +1,7 @@
 import { CommentSchema, Comment } from "@freebites/freebites-types";
-import mongoose, { DeleteResult } from "mongoose";
+import mongoose, { startSession } from "mongoose";
 import connectToDatabase from "@/lib/mongodb";
+import { ReportStatus } from "@freebites/freebites-types/dist/ReportTypes";
 
 let CommentModel: mongoose.Model<Comment> | null = null;
 
@@ -32,12 +33,43 @@ export const getCommentById = async (id: string): Promise<Comment> => {
   }
 };
 
-export const deleteComment = async (id: string): Promise<DeleteResult> => {
+export const deleteComment = async (id: string): Promise<Comment | null> => {
   const Comment = await getCommentModel();
+  const session = await startSession();
+
   try {
-    const comment = await Comment.deleteOne({ _id: id }).exec();
-    if (comment) return comment;
-    else throw new Error("Comment not found!");
+    if (!id) {
+      throw new Error("Missing required information");
+    }
+
+    let deletedComment: Comment | null = null;
+
+    await session.withTransaction(async () => {
+      deletedComment = await Comment.findByIdAndDelete(id)
+        .session(session)
+        .lean()
+        .exec();
+
+      if (!deletedComment) {
+        throw new Error(`Comment with id ${id} not found`);
+      }
+
+      const resolvedCommentsResult = await Comment.updateMany(
+        { postID: id, status: { $ne: ReportStatus.RESOLVED } },
+        {
+          status: ReportStatus.RESOLVED,
+          resolvedAt: new Date(),
+          adminNotes: "Post deleted by admin",
+        },
+        { session }
+      );
+
+      console.log(
+        `Resolved ${resolvedCommentsResult.modifiedCount} reports for post ${id}`
+      );
+    });
+
+    return deletedComment;
   } catch (error) {
     console.error("Error deleting comment:", error);
     throw error;

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPostComments, getCommentById } from "./controller";
+import { getPostComments, getCommentById, deleteComment } from "./controller";
 import { verifySessionCookie } from "@/lib/verifySession";
 
 export async function GET(req: Request) {
@@ -29,12 +29,11 @@ export async function GET(req: Request) {
 export async function DELETE(req: Request) {
   try {
     await verifySessionCookie();
-    console.log("deleting comment");
     const { searchParams } = new URL(req.url);
 
     const id = searchParams.get("id");
     if (id) {
-      const comment = await getCommentById(id);
+      const comment = await deleteComment(id);
       // console.log(comment);
       return NextResponse.json(comment);
     }

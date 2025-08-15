@@ -1,8 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
-import { getAllReports, getReportById } from "./controller";
+import {
+  getAllReports,
+  getReportById,
+  putReportController,
+} from "./controller";
 import { verifySessionCookie } from "@/lib/verifySession";
 import { isValidReportCategory } from "@/lib/util/backend";
+import { ReportType } from "@freebites/freebites-types";
 
 export async function GET(req: Request) {
   try {
@@ -31,15 +35,16 @@ export async function GET(req: Request) {
   }
 }
 
-// export async function PUT(req: Request) {
-//   try {
-//     const reportData: ReportType = await req.json();
-//     const updatedReport = await putReportController(reportData);
-//     return NextResponse.json(updatedReport);
-//   } catch (error) {
-//     return NextResponse.json(
-//       { error: `Failed to update post: ${error}` },
-//       { status: 500 }
-//     );
-//   }
-// }
+// for replacing an entire comment. for partial updates(most cases), use PATCH in [id]
+export async function PUT(req: Request) {
+  try {
+    const reportData: ReportType = await req.json();
+    const updatedReport = await putReportController(reportData);
+    return NextResponse.json(updatedReport);
+  } catch (error) {
+    return NextResponse.json(
+      { error: `Failed to update post: ${error}` },
+      { status: 500 }
+    );
+  }
+}
