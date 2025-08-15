@@ -1,16 +1,23 @@
-import { getComment, getPost, getUser } from "@/lib/api/admin";
+import {
+  deleteComment,
+  deletePost,
+  getComment,
+  getPost,
+  getUser,
+} from "@/lib/api/admin";
 import { Comment, PostType, UserType } from "@freebites/freebites-types";
 import {
   ReportCategory,
   ReportType,
 } from "@freebites/freebites-types/dist/ReportTypes";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface ReportCardProps {
   category: ReportCategory;
   reportedID?: string;
   reports: ReportType[];
 }
+
 function ReportCard(props: ReportCardProps) {
   const { category, reportedID, reports } = props;
   const [reported, setReported] = useState<
@@ -20,6 +27,28 @@ function ReportCard(props: ReportCardProps) {
     { report: ReportType; reporter: UserType }[]
   >([]);
 
+  const ignoreReport = useCallback(() => {}, []);
+
+  const deleteItem = useCallback(async () => {
+    console.log("deleting item");
+    switch (category) {
+      case "Post":
+        if (reportedID) {
+          // set all reports corresponding to this post to resolved
+          await deletePost(reportedID);
+        }
+        break;
+      case "User":
+        console.log("user banning not implemented yet");
+        break;
+      case "Comment":
+        if (reportedID) {
+          // set all reports corresponding to this post to resolved
+          await deleteComment(reportedID);
+        }
+        break;
+    }
+  }, [category, reportedID]);
   useEffect(() => {
     const getContent = async () => {
       if (reports.length == 0) return;
@@ -143,6 +172,15 @@ function ReportCard(props: ReportCardProps) {
             <p className="h-5" />
           </div>
         )}
+      </div>
+
+      <div className="flex gap-4">
+        <button className="bg-red-200" onClick={ignoreReport}>
+          ignore report
+        </button>
+        <button className="bg-orange-200" onClick={deleteItem}>
+          delete {category.toLowerCase()}
+        </button>
       </div>
     </div>
   );

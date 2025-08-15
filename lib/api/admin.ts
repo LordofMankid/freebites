@@ -39,6 +39,20 @@ export const getCommentsByPost = async (postId: string): Promise<Comment[]> => {
   }
 };
 
+export const deleteComment = async (id: string): Promise<Comment> => {
+  try {
+    const response = await axios.delete("/api/mongo/comment", {
+      params: { id: id },
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch comment: ${error.message}`);
+    } else {
+      throw new Error(`Failed to fetch comment: An unknown error occurred.`);
+    }
+  }
+};
 ////////////////////////////////////////////
 // post crud
 export type PostWithUser = PostType & {

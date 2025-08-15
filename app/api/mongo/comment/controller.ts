@@ -1,5 +1,5 @@
 import { CommentSchema, Comment } from "@freebites/freebites-types";
-import mongoose from "mongoose";
+import mongoose, { DeleteResult } from "mongoose";
 import connectToDatabase from "@/lib/mongodb";
 
 let CommentModel: mongoose.Model<Comment> | null = null;
@@ -28,6 +28,18 @@ export const getCommentById = async (id: string): Promise<Comment> => {
     else throw new Error("Comment not found!");
   } catch (error) {
     console.error("Error fetching comment:", error);
+    throw error;
+  }
+};
+
+export const deleteComment = async (id: string): Promise<DeleteResult> => {
+  const Comment = await getCommentModel();
+  try {
+    const comment = await Comment.deleteOne({ _id: id }).exec();
+    if (comment) return comment;
+    else throw new Error("Comment not found!");
+  } catch (error) {
+    console.error("Error deleting comment:", error);
     throw error;
   }
 };
