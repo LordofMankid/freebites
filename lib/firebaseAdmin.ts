@@ -36,7 +36,7 @@ const initializeFirebaseAdmin = () => {
     throw new Error("Firebase Admin SDK should only be used server-side");
   }
 
-  console.log("Initializing Firebase Admin SDK...");
+  // console.log("Initializing Firebase Admin SDK...");
 
   // Check if already initialized
   if (global.firebaseAdmin) {

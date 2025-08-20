@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useCallback } from "react";
 import CommonButton from "./common/CommonButton";
 import LogoArms from "../assets/arms.svg";
 
@@ -9,6 +9,13 @@ interface BottomHeroProps {
 const BottomHero = forwardRef<HTMLDivElement, BottomHeroProps>((props, ref) => {
   const { altContainerStyle } = props;
 
+  const handleSignupClick = useCallback(() => {
+    window.open(
+      "https://forms.gle/m87SvcUr1scsnPYj8",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }, []);
   return (
     <div
       ref={ref}
@@ -29,6 +36,7 @@ const BottomHero = forwardRef<HTMLDivElement, BottomHeroProps>((props, ref) => {
             altStyle="bg-orange-medium border-orange-medium border-[1.5px] py-2 px-5 sm:py-4 sm:px-10"
             altTextStyle="font-semibold text-white text-lg sm:text-xl"
             animated={true}
+            onClick={handleSignupClick}
           />
 
           <CommonButton

@@ -16,6 +16,7 @@ export default async function AuthGuard({
   }
   try {
     const decodedToken = await verifyIdToken(token);
+    // console.log(decodedToken);
 
     const conn = await getAccountConnection();
 
