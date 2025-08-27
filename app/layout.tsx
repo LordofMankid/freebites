@@ -29,6 +29,18 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Freebites",
   description: "Food is better when it's free.",
+  keywords: ["freebites", "food", "startup"],
+  publisher: "FreeBites HQ",
+  openGraph: {
+    type: "website",
+    determiner: "",
+    url: "https://www.freebites.org/",
+    title: "FreeBites",
+    description: "Food is better when it's free.",
+    locale: "en_US",
+    siteName: "FreeBites",
+    images: { url: "https://www.freebites.org/assets/freebites.png" },
+  },
 };
 
 export default function RootLayout({
