@@ -36,9 +36,10 @@ export const metadata: Metadata = {
     determiner: "",
     url: "https://www.freebites.org/",
     title: "FreeBites",
-    description: "Food is better when it's free.",
-    locale: "en_US",
     siteName: "FreeBites",
+    description: "Food is better when it's free.",
+    emails: "freebites-team@freebites.org",
+    locale: "en_US",
     images: { url: "https://www.freebites.org/assets/freebites.png" },
   },
 };
