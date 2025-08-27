@@ -55,7 +55,7 @@ export default function page() {
       <Navbar />
       <PageHeader
         title="Meet the team"
-        subtitle="We're proud to be entirely student run blah blah blah"
+        subtitle="We're proud to be entirely student run!"
         altStyle="mt-16 lg:mt-32"
       />
       <ImageSection sectionTitle="Founders" imageCardInfo={Founders} />
