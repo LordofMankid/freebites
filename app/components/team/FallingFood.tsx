@@ -3,6 +3,9 @@ import { Assets, Container, Sprite, Texture } from "pixi.js";
 import React, { useEffect, useState } from "react";
 import Matter, { Mouse, MouseConstraint, Vector } from "matter-js";
 
+import * as decomp from "poly-decomp";
+Matter.Common.setDecomp(decomp);
+
 const vertexMap = new Map<string, Vector[]>([
   [
     "cake",
@@ -121,6 +124,7 @@ const FallingFood = () => {
   const [texture, setTexture] = useState(Texture.EMPTY);
 
   useEffect(() => {
+    if (!app || !app.renderer) return;
     // INIT
     // INIT
     // INIT
@@ -189,7 +193,7 @@ const FallingFood = () => {
     );
     const foods = Array.from({ length: foodCount }, () => {
       const x = Math.min(
-        Math.random() * app.renderer.width,
+        Math.random() * app.screen.width,
         app.renderer.width - 100
       );
       const y = Math.random() * -app.renderer.height * 1.8 - 100;
