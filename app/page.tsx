@@ -322,7 +322,10 @@ export default function Home() {
     <div ref={root} className="relative z-10 page flex flex-col">
       <Navbar />
       <HomeBackground ref={landingBgRef} />
-      <div ref={popupWrapperRef} className="fixed bottom-16 mx-40 z-20">
+      <div
+        ref={popupWrapperRef}
+        className="fixed bottom-16 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:mx-40 z-20"
+      >
         <PopupTag
           ref={popupTagRef}
           text="Learn more below!"
@@ -337,13 +340,14 @@ export default function Home() {
           className="flex w-full md:flex-row pointer-events-auto"
           ref={textSectionRef}
         >
-          <div className="flex flex-col items-start gap-20 mx-16 md:w-1/2">
+          <div className="flex flex-col items-start gap-20 mx-16 w-full md:w-1/2">
             <div className="h-[150vh]"> </div>
             <FullScreenSection
               ref={block1Ref}
               title="Find Free Food"
               body="Feeling hungry? Browse Freebites for free food opportunities on your campus."
               altContainerStyle="opacity-0"
+              image="/assets/FreebitesScreen2.png"
             />
 
             <FullScreenSection
@@ -351,12 +355,20 @@ export default function Home() {
               title="Share Free Food"
               body="Got leftover food from an event you hosted? Post it on Freebites instead of throwing it away."
               altContainerStyle="opacity-0"
+              image="/assets/FreebitesShare.png"
             />
             <FullScreenSection
               ref={block3Ref}
               title="Get Notified"
               body="Receive instant push notifications when new food is posted, and check the comments for updates!"
               altContainerStyle="opacity-0"
+              images={[
+                "/assets/Notif_1.png",
+                "/assets/Notif_2.png",
+                "/assets/Notif_3.png",
+                "/assets/Notif_4.png",
+                "/assets/Notif_5.png",
+              ]}
             />
             <div className="h-[10vh]"> </div>
           </div>
@@ -366,7 +378,7 @@ export default function Home() {
 
       <div
         ref={canvasRef}
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:block"
         // style={{ pointerEvents: demoInteractable ? "none" : "auto" }} // Add dynamic pointer-events handling
         style={{ pointerEvents: "none" }}
       >
