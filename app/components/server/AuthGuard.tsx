@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserType, UserSchemaDefinition } from "@freebites/freebites-types";
 import getAccountConnection from "@/lib/mongoAccounts";
+import { UserRole } from "@freebites/freebites-types/dist/UserTypes";
 export default async function AuthGuard({
   children,
 }: {
@@ -24,10 +25,10 @@ export default async function AuthGuard({
       conn.models.User ||
       conn.model<UserType>("User", UserSchemaDefinition, "profiles");
 
-    const user = await UserModel.findOne({
+    const user: UserType = await UserModel.findOne({
       uid: decodedToken.uid,
     }).exec();
-    if (!user || !user.isAdmin)
+    if (!user || user.role === UserRole.USER)
       throw new Error("user not found or not an admin");
 
     // Token is valid and mongo admin status verified, render children

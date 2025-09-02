@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import PostCard from "./PostCard";
 import { AdminViewType } from "@/lib/util/types";
 import { ReportType } from "@freebites/freebites-types";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 import { groupByMap } from "@/lib/util/backend";
 import ReportCard from "./ReportCard";
@@ -19,9 +19,6 @@ const AdminPostList = (props: AdminPostListProps) => {
   // State to store aggregated data
   const [postData, setPostData] = useState<PostWithUser[]>([]);
   const [reportData, setReportData] = useState<ReportType[]>([]);
-  const [groupedReportData, setGroupedReportData] = useState<
-    Map<string, ReportType[]>
-  >(new Map());
   // All hooks run on every render, but only the enabled one fetches
   const postsQuery = useQuery({
     queryKey: ["posts"],
@@ -31,22 +28,83 @@ const AdminPostList = (props: AdminPostListProps) => {
 
   const postReportsQuery = useQuery({
     queryKey: ["post-reports"],
-    queryFn: () => getAllReports(ReportCategory.POST),
+    queryFn: async () => {
+      try {
+        return await getAllReports(ReportCategory.POST);
+      } catch {
+        return [];
+      }
+    },
     enabled: viewState === AdminViewType.POST_REPORTS,
   });
 
   const commentReportsQuery = useQuery({
     queryKey: ["comment-reports"],
-    queryFn: () => getAllReports(ReportCategory.COMMENT),
+    queryFn: async () => {
+      try {
+        return await getAllReports(ReportCategory.COMMENT);
+      } catch {
+        return [];
+      }
+    },
     enabled: viewState === AdminViewType.COMMENT_REPORTS,
   });
 
   const userReportsQuery = useQuery({
     queryKey: ["user-reports"],
-    queryFn: () => getAllReports(ReportCategory.USER),
+    queryFn: async () => {
+      try {
+        return await getAllReports(ReportCategory.USER);
+      } catch {
+        return [];
+      }
+    },
     enabled: viewState === AdminViewType.USER_REPORTS,
   });
 
+  // reported posts:"
+  /*
+[
+  {
+    postInfo: {...postInfo} PostType
+    defendant: {...userInfo} UserType
+    reportsWithUsers: {report: ReportType, reporter: UserType}[]
+  },
+  {
+    postInfo: {...postInfo} PostType
+    defendant: {...userInfo} UserType
+    reportsWithUsers: {report: ReportType, reporter: UserType}[]
+  },
+]
+
+// reported users:
+[
+  {
+    reportedUser: UserType
+    reportsWithUsers: {report: ReportType, reporter: UserType}[]
+  },
+]
+// reported comments:
+[
+  {
+    commentInfo: {...commentInfo} CommentType
+    defendant: {...userInfo} UserType
+    reportsWithUsers: {report: ReportType, reporter: UserType}[]
+  },
+]
+  
+
+routes:
+- report
+  - [id]
+  - bulk
+  - count
+  [new]:
+  - report
+  - comment
+  - user
+  
+*/
   // Get the active query data
   const activeQuery = (() => {
     switch (viewState) {
@@ -66,6 +124,21 @@ const AdminPostList = (props: AdminPostListProps) => {
   const { data, error, isLoading } = activeQuery;
   // group by using Map for better type safety with complex keys
 
+  const groupedReportData = useMemo(() => {
+    if (!reportData || reportData.length === 0) return new Map();
+
+    const reports = data as unknown as ReportType[];
+    switch (viewState) {
+      case AdminViewType.POST_REPORTS:
+        return groupByMap(reports, (report) => report.postID);
+      case AdminViewType.USER_REPORTS:
+        // const userReports = data as ReportType[];
+        return groupByMap(reports, (report) => report.defendentID);
+      default:
+        return new Map();
+    }
+  }, [viewState, reportData, data]);
+
   useEffect(() => {
     if (data) {
       switch (viewState) {
@@ -75,30 +148,20 @@ const AdminPostList = (props: AdminPostListProps) => {
           setReportData([]);
           break;
         case AdminViewType.POST_REPORTS:
-          const postReports = data as ReportType[];
-          const groupedPostReports = groupByMap(
-            postReports,
-            (report) => report.postID
-          );
+          const postReports = data as unknown as ReportType[];
           setPostData([]);
           setReportData(postReports);
-          setGroupedReportData(groupedPostReports);
           break;
         case AdminViewType.COMMENT_REPORTS:
-          const commentReports = data as ReportType[];
+          const commentReports = data as unknown as ReportType[];
           setPostData([]);
           setReportData(commentReports);
           break;
         case AdminViewType.USER_REPORTS:
-          const userReports = data as ReportType[];
-          const groupedUserReports = groupByMap(
-            userReports,
-            (report) => report.defendentID
-          );
+          const userReports = data as unknown as ReportType[];
 
           setPostData([]);
           setReportData(userReports);
-          setGroupedReportData(groupedUserReports);
           break;
         default:
           const postData = data as PostWithUser[]; // cast to posts
@@ -110,7 +173,7 @@ const AdminPostList = (props: AdminPostListProps) => {
   }, [data, viewState]);
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading posts</div>;
+  if (error) return <div>Error loading posts: {error.toString()}</div>;
 
   switch (viewState) {
     case AdminViewType.POSTS:
@@ -124,46 +187,85 @@ const AdminPostList = (props: AdminPostListProps) => {
       );
     case AdminViewType.POST_REPORTS:
       return (
-        <div className="grid grid-cols-[repeat(auto-fit,_minmax(20rem,_1fr))] gap-20 mt-11">
-          {Array.from(groupedReportData.entries()).map(([postID, reports]) => (
-            <ReportCard
-              key={postID}
-              category={ReportCategory.POST}
-              reportedID={postID}
-              reports={reports}
-            />
-          ))}
-        </div>
+        <table className="w-full">
+          <thead className="bg-[#FFE0C0] text-left [&>tr>th]:font-inter [&>tr>th]:font-normal [&>tr>th]:py-2">
+            <tr>
+              <th className="pl-6 rounded-l-xl">Date</th>
+              <th>Image</th>
+              <th>Message</th>
+              <th>Sender</th>
+              <th>Reciever</th>
+              <th className="rounded-r-xl">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from(groupedReportData.entries()).map(
+              ([postID, reports]) => (
+                <ReportCard
+                  key={postID}
+                  category={ReportCategory.POST}
+                  reportedID={postID}
+                  reports={reports}
+                />
+              )
+            )}
+          </tbody>
+        </table>
       );
 
     case AdminViewType.USER_REPORTS:
       return (
-        <div className="grid grid-cols-[repeat(auto-fit,_minmax(20rem,_1fr))] gap-20 mt-11">
-          {Array.from(groupedReportData.entries()).map(([userID, reports]) => (
-            <ReportCard
-              key={userID}
-              category={ReportCategory.USER}
-              reportedID={userID}
-              reports={reports}
-            />
-          ))}
-        </div>
+        <table className="w-full">
+          <thead className="bg-[#FFE0C0] text-left [&>tr>th]:font-inter [&>tr>th]:font-normal [&>tr>th]:py-2">
+            <tr>
+              <th className="pl-6 py-2 rounded-l-xl">Date</th>
+              <th>Reported User</th>
+              <th>Reporter</th>
+              <th>Reporter&apos;s Message</th>
+              <th className="rounded-r-xl">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from(groupedReportData.entries()).map(
+              ([userID, reports]) => (
+                <ReportCard
+                  key={userID}
+                  category={ReportCategory.USER}
+                  reportedID={userID}
+                  reports={reports}
+                />
+              )
+            )}
+          </tbody>
+        </table>
       );
 
     case AdminViewType.COMMENT_REPORTS:
       return (
-        <div className="grid grid-cols-[repeat(auto-fit,_minmax(20rem,_1fr))] gap-20 mt-11">
-          {reportData.map((commentReport) => {
-            return (
-              <ReportCard
-                key={commentReport._id}
-                category={ReportCategory.COMMENT}
-                reports={[commentReport]}
-                reportedID={commentReport.postID}
-              />
-            );
-          })}
-        </div>
+        <table>
+          <thead className="bg-[#FFE0C0] text-left [&>tr>th]:font-inter [&>tr>th]:font-normal [&>tr>th]:py-2">
+            <tr>
+              <th className="pl-6 py-2 rounded-l-xl">Date</th>
+              <th>Reported Comment</th>
+              <th>Commenter</th>
+              <th>Reporter</th>
+              <th>Message</th>
+              <th className="rounded-r-xl">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reportData.map((commentReport) => {
+              return (
+                <ReportCard
+                  key={commentReport._id}
+                  category={ReportCategory.COMMENT}
+                  reports={[commentReport]}
+                  reportedID={commentReport.postID}
+                />
+              );
+            })}
+          </tbody>
+        </table>
       );
     default:
       return null;

@@ -28,7 +28,7 @@ const PostCard = (props: PostCardProps) => {
   const deletePostCallback = useCallback(async () => {
     await deletePost(post._id);
 
-    queryClient.invalidateQueries({ queryKey: ["posts"] });
+    queryClient.invalidateQueries({ queryKey: ["posts", "all-report-counts"] });
   }, [post._id, queryClient]);
 
   return (

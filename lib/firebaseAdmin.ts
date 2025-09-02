@@ -23,6 +23,7 @@
 import { UserSchemaDefinition, UserType } from "@freebites/freebites-types";
 import admin from "firebase-admin";
 import getAccountConnection from "./mongoAccounts";
+import { UserRole } from "@freebites/freebites-types/dist/UserTypes";
 
 // Extend global to include our Firebase app
 declare global {
@@ -109,11 +110,11 @@ export const verifyIdToken = async (token: string) => {
       conn.models.User ||
       conn.model<UserType>("User", UserSchemaDefinition, "profiles");
     // add mongoDB verification here, throw error if not admin
-    const user = await UserModel.findOne({
+    const user: UserType = await UserModel.findOne({
       uid: decodedToken.uid,
     }).exec();
 
-    if (!user || !user.isAdmin)
+    if (!user || user.role === UserRole.USER)
       throw new Error("user not found or not an admin");
 
     return decodedToken;

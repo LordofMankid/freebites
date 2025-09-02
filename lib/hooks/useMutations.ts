@@ -12,7 +12,9 @@ export const useDeletePost = () => {
     onSuccess: () => {
       // Invalidate all relevant queries
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["post-reports"] });
+      queryClient.invalidateQueries({
+        queryKey: ["post-reports", "all-report-counts"],
+      });
     },
     onError: (error) => {
       console.error("Failed to delete post:", error);
@@ -28,7 +30,9 @@ export const useDeleteComment = () => {
       return await deleteComment(commentId);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comment-reports"] });
+      queryClient.invalidateQueries({
+        queryKey: ["comment-reports", "all-report-counts"],
+      });
     },
     onError: (error) => {
       console.error("Failed to delete comment:", error);

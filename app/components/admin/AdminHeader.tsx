@@ -1,22 +1,21 @@
 import SignoutButton from "../forms/SignoutButton";
 import Image from "next/image";
-import { AdminViewType } from "@/lib/util/types";
+// import { AdminViewType } from "@/lib/util/types";
 interface AdminHeaderProps {
-  setViewState: (arg0: AdminViewType) => void;
   school?: string;
 }
 
 const AdminHeader = (props: AdminHeaderProps) => {
-  const { school = "Harvard University", setViewState } = props;
+  const { school = "Harvard University" } = props;
   return (
     <div className="flex justify-between w-full">
       <div>
-        <h1 className="text-5xl font-medium font-baloo">Admin View</h1>
+        <h1 className="text-5xl font-medium font-baloo">Moderation</h1>
         <p className="text-xl font-inter text-neutral-light-text">
-          Remove posts from your school directly from here
+          View all reported posts, users, and comments here
         </p>
       </div>
-      <select
+      {/* <select
         onChange={(e) => {
           setViewState(e.target.value as AdminViewType); // cast because it's just from the options
         }}
@@ -26,7 +25,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
             {viewType}
           </option>
         ))}
-      </select>
+      </select> */}
       <div className="flex flex-row items-center-safe gap-5">
         <Image
           alt={`${school} logo here`}

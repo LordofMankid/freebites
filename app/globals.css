@@ -21,6 +21,9 @@
   --color-neutral-gray: #d0d0d0;
   --color-dark-green: #00373e;
 
+  --color-secondary-100: #cdecab;
+  --color-secondary-300: #85c840;
+  --color-secondary-500: #558d22;
   --font-baloo: "Baloo 2", "sans-serif";
   --font-inter: "Inter", "sans-serif";
 }

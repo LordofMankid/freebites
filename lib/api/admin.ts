@@ -168,6 +168,26 @@ export const getAllReports = async (
   }
 };
 
+export const getReportCountByCategory = async (
+  category?: ReportCategory
+): Promise<number> => {
+  try {
+    const response = await axios.get("/api/mongo/report/count", {
+      params: category ? { category: category } : {},
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch report count: ${error.message}`);
+    } else {
+      throw new Error(
+        `Failed to fetch report count: An unknown error occurred.`
+      );
+    }
+  }
+};
+
 // not a function yet but we might want it
 // export const getReportsByPost = async (postId: string): Promise<PostType[]> => {
 //   try {
@@ -271,3 +291,5 @@ export const editUser = async (UserData: UserType): Promise<UserType> => {
     }
   }
 };
+
+/////////////////

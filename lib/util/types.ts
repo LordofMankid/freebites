@@ -25,8 +25,8 @@ export const emptyLoginData: LoginData = {
 };
 
 export enum AdminViewType {
-  POSTS = "Posts",
-  POST_REPORTS = "Reported Posts",
-  USER_REPORTS = "Reported Users",
-  COMMENT_REPORTS = "Reported Comments",
+  POST_REPORTS = "Posts",
+  USER_REPORTS = "Users",
+  COMMENT_REPORTS = "Comments",
+  POSTS = "All Posts",
 }
