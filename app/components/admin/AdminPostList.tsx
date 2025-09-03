@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllPosts, getAllReports, PostWithUser } from "@/lib/api/admin";
+import { getAllPosts, PostWithUser } from "@/lib/api/admin/admin";
 import { useQuery } from "@tanstack/react-query";
 import PostCard from "./PostCard";
 import { AdminViewType } from "@/lib/util/types";
@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 import { groupByMap } from "@/lib/util/backend";
 import ReportCard from "./ReportCard";
+import { getAllReports } from "@/lib/api/admin/reports";
 
 interface AdminPostListProps {
   viewState: AdminViewType;

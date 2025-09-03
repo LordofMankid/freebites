@@ -1,5 +1,5 @@
 "use client";
-import { deletePost, PostWithUser } from "@/lib/api/admin";
+import { deletePost, PostWithUser } from "@/lib/api/admin/admin";
 import CommonButton from "../common/CommonButton";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchImageURL } from "@/lib/util/backend";

@@ -4,7 +4,6 @@ import {
   ReportType,
   UserType,
 } from "@freebites/freebites-types";
-import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 import axios from "axios";
 
 // comment crud
@@ -127,63 +126,6 @@ export const deletePost = async (postId: string): Promise<PostType> => {
       throw new Error(`Failed to delete post: ${error.message}`);
     } else {
       throw new Error(`Failed to delete post: An unknown error occurred.`);
-    }
-  }
-};
-
-////////////////////////////////////////////
-// report crud
-
-export const getReport = async (reportId: string): Promise<ReportType> => {
-  try {
-    const response = await axios.get("/api/mongo/report", {
-      params: { id: reportId },
-    });
-
-    return response.data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to fetch report: ${error.message}`);
-    } else {
-      throw new Error(`Failed to fetch report: An unknown error occurred.`);
-    }
-  }
-};
-
-export const getAllReports = async (
-  category?: ReportCategory
-): Promise<ReportType[]> => {
-  try {
-    const response = await axios.get("/api/mongo/report", {
-      params: category ? { category: category } : {},
-    });
-
-    return response.data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to fetch reports: ${error.message}`);
-    } else {
-      throw new Error(`Failed to fetch reports: An unknown error occurred.`);
-    }
-  }
-};
-
-export const getReportCountByCategory = async (
-  category?: ReportCategory
-): Promise<number> => {
-  try {
-    const response = await axios.get("/api/mongo/report/count", {
-      params: category ? { category: category } : {},
-    });
-
-    return response.data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to fetch report count: ${error.message}`);
-    } else {
-      throw new Error(
-        `Failed to fetch report count: An unknown error occurred.`
-      );
     }
   }
 };

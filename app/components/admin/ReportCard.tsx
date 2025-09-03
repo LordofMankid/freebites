@@ -3,7 +3,7 @@ import {
   getPost,
   getUser,
   ignoreAllReportsOnItem,
-} from "@/lib/api/admin";
+} from "@/lib/api/admin/admin";
 import { useDeleteComment, useDeletePost } from "@/lib/hooks/useMutations";
 import { Comment, PostType, UserType } from "@freebites/freebites-types";
 import {

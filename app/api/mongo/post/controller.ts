@@ -1,4 +1,4 @@
-import { PostWithUser } from "@/lib/api/admin";
+import { PostWithUser } from "@/lib/api/admin/admin";
 import connectToDatabase from "@/lib/mongodb";
 import { PostType, PostSchemaDefinition } from "@freebites/freebites-types";
 import mongoose, { startSession } from "mongoose";

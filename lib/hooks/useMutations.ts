@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteComment, deletePost } from "../api/admin";
+import { deleteComment, deletePost } from "../api/admin/admin";
 
 // hooks that moodifying reports/comments that are compatible with use query client
 export const useDeletePost = () => {
