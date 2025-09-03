@@ -108,7 +108,7 @@ function ReportCard(props: ReportCardProps) {
     };
 
     getContent();
-  }, [reportedID, reports, category]);
+  }, [reportedID, reports, category, reported]);
   const isDeleting =
     deletePostMutation.isPending || deleteCommentMutation.isPending;
   return (
