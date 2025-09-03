@@ -1,9 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import AdminHeader from "./AdminHeader";
-import AdminPostList from "./AdminPostList";
-import { AdminViewType } from "@/lib/util/types";
+import {
+  AdminViewType,
+  GroupedCommentReports,
+  GroupedPostReports,
+} from "@/lib/util/types";
 import AdminTableHeader from "./AdminTableHeader";
 import {
   getReportsGroupedByComments,
@@ -11,11 +14,40 @@ import {
   getReportsGroupedByUser,
 } from "@/lib/api/admin/reports";
 import CommonButton from "../common/CommonButton";
+import PostReportTable from "./TableComponents/PostReportTable";
+import CommentReportTable from "./TableComponents/CommentReportTable";
 
 function AdminPage() {
   const [adminViewState, setAdminViewState] = useState<AdminViewType>(
     AdminViewType.POST_REPORTS
   );
+
+  const [postReports, setPostReports] = useState<GroupedPostReports[] | null>(
+    null
+  );
+
+  useEffect(() => {
+    const getContent = async () => {
+      if (postReports) return;
+      const reports = await getReportsGroupedByPost();
+      setPostReports(reports);
+    };
+    getContent();
+  }, [postReports]);
+
+  const [commentReports, setCommentReports] = useState<
+    GroupedCommentReports[] | null
+  >(null);
+
+  useEffect(() => {
+    const getContent = async () => {
+      if (commentReports) return;
+      const reports = await getReportsGroupedByComments();
+      setCommentReports(reports);
+    };
+    getContent();
+  }, [commentReports]);
+
   return (
     <>
       <div className=" bg-orange-faint">
@@ -50,8 +82,21 @@ function AdminPage() {
             viewState={adminViewState}
             setViewState={setAdminViewState}
           />
+          {adminViewState === AdminViewType.POST_REPORTS && postReports && (
+            <PostReportTable reports={postReports} />
+          )}
 
-          <AdminPostList viewState={adminViewState} />
+          {adminViewState === AdminViewType.USER_REPORTS && (
+            <div>user reports here [WIP]</div>
+          )}
+          {adminViewState === AdminViewType.COMMENT_REPORTS &&
+            commentReports && <CommentReportTable reports={commentReports} />}
+
+          {adminViewState === AdminViewType.POSTS && (
+            <div>all posts here [WIP]</div>
+          )}
+
+          {/* <AdminPostList viewState={adminViewState} /> */}
         </div>
       </div>
     </>
