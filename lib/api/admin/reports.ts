@@ -1,7 +1,11 @@
 ////////////////////////////////////////////
 // report crud
 
-import { GroupedCommentReports, GroupedPostReports } from "@/lib/util/types";
+import {
+  GroupedCommentReports,
+  GroupedPostReports,
+  GroupedUserReports,
+} from "@/lib/util/types";
 import { ReportType } from "@freebites/freebites-types";
 import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
 import axios from "axios";
@@ -83,6 +87,26 @@ export const getReportsGroupedByComments = async (): Promise<
 > => {
   try {
     const response = await axios.get("/api/mongo/report/comment");
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch reports by comment: ${error.message}`);
+    } else {
+      throw new Error(
+        `Failed to fetch reports by comment: An unknown error occurred.`
+      );
+    }
+  }
+};
+
+// this function gets all types of reports associated with a user, as we want to
+// see ALL types of reports associated with a user, not just user reports.
+export const getReportsGroupedByUser = async (): Promise<
+  GroupedUserReports[]
+> => {
+  try {
+    // todo: pass in a parameter or diff endpoint if you just want the "user report" types?
+    const response = await axios.get("/api/mongo/report/user");
     return response.data;
   } catch (error) {
     if (error instanceof Error) {

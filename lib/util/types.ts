@@ -63,3 +63,9 @@ export interface GroupedCommentReports {
   defendent: UserType; // fetch poster from the post
   reportsWithUsers: ReportWithReportedByUser[];
 }
+
+// NOTE: doesn't contain full details, will instead pull individually (expand details) to avoid excessive joins
+export interface GroupedUserReports {
+  reportedUser: UserType;
+  reportsWithUsers: ReportWithReportedByUser[];
+}

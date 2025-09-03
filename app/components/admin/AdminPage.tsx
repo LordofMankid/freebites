@@ -8,6 +8,7 @@ import AdminTableHeader from "./AdminTableHeader";
 import {
   getReportsGroupedByComments,
   getReportsGroupedByPost,
+  getReportsGroupedByUser,
 } from "@/lib/api/admin/reports";
 import CommonButton from "../common/CommonButton";
 
@@ -28,7 +29,13 @@ function AdminPage() {
           }}
           label={"get reports by post"}
         />
-        <CommonButton onClick={() => {}} label={"get reports by user [WIP]"} />
+        <CommonButton
+          onClick={async () => {
+            const reports = await getReportsGroupedByUser();
+            console.log(reports);
+          }}
+          label={"get reports by user"}
+        />
         <CommonButton
           onClick={async () => {
             const commentReports = await getReportsGroupedByComments();
