@@ -16,7 +16,7 @@ export default async function AuthGuard({
     redirect("/admin/login?logout=1");
   }
   try {
-    const decodedToken = await verifyIdToken(token);
+    const { decodedToken } = await verifyIdToken(token);
     // console.log(decodedToken);
 
     const conn = await getAccountConnection();

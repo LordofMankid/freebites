@@ -117,7 +117,11 @@ export const verifyIdToken = async (token: string) => {
     if (!user || user.role === UserRole.USER)
       throw new Error("user not found or not an admin");
 
-    return decodedToken;
+    return {
+      decodedToken: decodedToken,
+      adminSchool: user.school,
+      role: user.role,
+    };
   } catch (error) {
     console.error("Token verification failed:", error);
     throw error;
