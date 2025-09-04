@@ -13,9 +13,8 @@ function UserReportTable(props: UserReportTableProps) {
 
   const deleteItem = useCallback(
     async (userIndex: number) => {
-      if (reports[userIndex].reportedUser) {
-        console.log("suspending", reports[userIndex].reportedUser.userName);
-      }
+      const userId = reports[userIndex].reportedUser?.userName;
+      if (!userId) console.log("suspending", userId);
     },
     [reports]
   );
