@@ -5,7 +5,7 @@ import { isValidReportCategory } from "@/lib/util/backend";
 
 export async function GET(req: Request) {
   try {
-    await verifySessionCookie();
+    const { adminSchool } = await verifySessionCookie();
 
     const { searchParams } = new URL(req.url);
 
@@ -14,7 +14,10 @@ export async function GET(req: Request) {
       ? category_string
       : undefined;
 
-    const reportCountByCategory = await getAllReportsCount(category);
+    const reportCountByCategory = await getAllReportsCount(
+      category,
+      adminSchool
+    );
     return NextResponse.json(reportCountByCategory);
   } catch (error) {
     return NextResponse.json(

@@ -1,11 +1,14 @@
 import { PostWithUser } from "@/lib/api/admin/admin";
 import connectToDatabase from "@/lib/mongodb";
-import { PostType, PostSchemaDefinition } from "@freebites/freebites-types";
+import {
+  PostType,
+  PostSchemaDefinition,
+  ReportStatus,
+} from "@freebites/freebites-types";
 import mongoose, { startSession } from "mongoose";
 import { getUserModel } from "../user/controller";
 import { getStorage } from "@/lib/firebaseAdmin";
 import { getReportModel } from "../report/controller";
-import { ReportStatus } from "@freebites/freebites-types/dist/ReportTypes";
 
 let PostModel: mongoose.Model<PostType> | null = null;
 

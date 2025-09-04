@@ -1,4 +1,4 @@
-import { ReportStatus } from "@freebites/freebites-types/dist/ReportTypes";
+import { ReportStatus } from "@freebites/freebites-types";
 import { getReportModel } from "../controller";
 
 export const ignoreAllReportsForUser = async (userId: string) => {

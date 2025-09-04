@@ -20,10 +20,14 @@
  * const firestore = getFirestore();
  * const docRef = firestore.collection('users').doc(userId);
  */
-import { UserSchemaDefinition, UserType } from "@freebites/freebites-types";
+import {
+  UserSchemaDefinition,
+  UserType,
+  School,
+} from "@freebites/freebites-types";
 import admin from "firebase-admin";
 import getAccountConnection from "./mongoAccounts";
-import { UserRole } from "@freebites/freebites-types/dist/UserTypes";
+import { UserRole } from "@freebites/freebites-types";
 
 // Extend global to include our Firebase app
 declare global {
@@ -117,9 +121,14 @@ export const verifyIdToken = async (token: string) => {
     if (!user || user.role === UserRole.USER)
       throw new Error("user not found or not an admin");
 
+    // validate enum
+    if (!Object.values(School).includes(user.school as School)) {
+      throw new Error(`Invalid school value in DB: ${user.school}`);
+    }
+
     return {
       decodedToken: decodedToken,
-      adminSchool: user.school,
+      adminSchool: user.school as School,
       role: user.role,
     };
   } catch (error) {

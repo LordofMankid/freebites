@@ -9,10 +9,13 @@ import { getReportModel } from "../controller";
 import {
   ReportCategory,
   ReportStatus,
-} from "@freebites/freebites-types/dist/ReportTypes";
+  School,
+} from "@freebites/freebites-types";
 import { fetchAdminImageURL } from "@/lib/api/admin/firebase";
 
-export const getPostReports = async (): Promise<GroupedPostReports[]> => {
+export const getPostReports = async (
+  school: School
+): Promise<GroupedPostReports[]> => {
   const Reports = await getReportModel();
   const Users = await getUserModel();
   const Posts = await getPostModel();
@@ -21,6 +24,7 @@ export const getPostReports = async (): Promise<GroupedPostReports[]> => {
   const reports = await Reports.find({
     status: { $ne: ReportStatus.RESOLVED },
     type: ReportCategory.POST,
+    school: school,
   }).lean();
 
   const postIds = [

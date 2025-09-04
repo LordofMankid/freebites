@@ -7,7 +7,7 @@ import {
   GroupedUserReports,
 } from "@/lib/util/types";
 import { ReportType } from "@freebites/freebites-types";
-import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
+import { ReportCategory } from "@freebites/freebites-types";
 import axios from "axios";
 
 export const getReport = async (reportId: string): Promise<ReportType> => {

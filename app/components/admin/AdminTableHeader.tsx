@@ -1,6 +1,6 @@
 import { getReportCountByCategory } from "@/lib/api/admin/reports";
 import { AdminViewType } from "@/lib/util/types";
-import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
+import { ReportCategory } from "@freebites/freebites-types";
 import { useQuery } from "@tanstack/react-query";
 interface AdminTableHeaderProps {
   viewState: AdminViewType;

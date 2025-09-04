@@ -1,11 +1,13 @@
 import {
   ReportCategory,
   ReportStatus,
-} from "@freebites/freebites-types/dist/ReportTypes";
+  School,
+} from "@freebites/freebites-types";
 import { getReportModel } from "../controller";
 
 export const getAllReportsCount = async (
-  category: ReportCategory | undefined
+  category: ReportCategory | undefined,
+  school: School
 ): Promise<number> => {
   const Reports = await getReportModel();
 
@@ -14,6 +16,7 @@ export const getAllReportsCount = async (
     const distinctUsers = await Reports.distinct("defendentID", {
       status: { $ne: ReportStatus.RESOLVED },
       defendentID: { $nin: ["", null] },
+      school: school,
     });
 
     return distinctUsers.filter(Boolean).length;
@@ -23,5 +26,6 @@ export const getAllReportsCount = async (
   return Reports.countDocuments({
     status: { $ne: ReportStatus.RESOLVED },
     ...(category && { type: category }),
+    school: school,
   }).exec();
 };

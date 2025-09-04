@@ -1,16 +1,19 @@
 import { GroupedUserReports, UserTypeWithImageURL } from "@/lib/util/types";
 import { getUserModel } from "../../user/controller";
 import { getReportModel } from "../controller";
-import { ReportStatus } from "@freebites/freebites-types/dist/ReportTypes";
+import { ReportStatus, School } from "@freebites/freebites-types";
 import { fetchAdminImageURL } from "@/lib/api/admin/firebase";
 
-export const getAllReportsOnUsers = async (): Promise<GroupedUserReports[]> => {
+export const getAllReportsOnUsers = async (
+  school: School
+): Promise<GroupedUserReports[]> => {
   const Reports = await getReportModel();
   const Users = await getUserModel();
 
   // grab reports, posts, and people who made reports, then filter out duplicates + resolved
   const reports = await Reports.find({
     status: { $ne: ReportStatus.RESOLVED }, // no type filter since we want to aggregate all types of reports
+    school: school,
   }).lean();
 
   const defendentIds = [

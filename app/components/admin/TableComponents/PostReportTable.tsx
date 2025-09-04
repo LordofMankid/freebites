@@ -4,7 +4,7 @@ import { useDeletePost } from "@/lib/hooks/useMutations";
 
 import React, { useCallback } from "react";
 import { ignoreAllReportsOnItem } from "@/lib/api/admin/admin";
-import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
+import { ReportCategory } from "@freebites/freebites-types";
 import DateCell from "./DateCell";
 import NamePFPCell from "./NamePFPCell";
 interface PostReportTableProps {

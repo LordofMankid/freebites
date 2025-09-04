@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserType, UserSchemaDefinition } from "@freebites/freebites-types";
 import getAccountConnection from "@/lib/mongoAccounts";
-import { UserRole } from "@freebites/freebites-types/dist/UserTypes";
+import { UserRole } from "@freebites/freebites-types";
+import { AdminProvider } from "../admin/AdminContext";
 export default async function AuthGuard({
   children,
 }: {
@@ -16,7 +17,7 @@ export default async function AuthGuard({
     redirect("/admin/login?logout=1");
   }
   try {
-    const { decodedToken } = await verifyIdToken(token);
+    const { decodedToken, adminSchool, role } = await verifyIdToken(token);
     // console.log(decodedToken);
 
     const conn = await getAccountConnection();
@@ -32,7 +33,9 @@ export default async function AuthGuard({
       throw new Error("user not found or not an admin");
 
     // Token is valid and mongo admin status verified, render children
-    return <>{children}</>;
+    return (
+      <AdminProvider value={{ adminSchool, role }}>{children}</AdminProvider>
+    );
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     redirect("/admin/login?logout=2");

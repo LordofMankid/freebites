@@ -4,11 +4,14 @@ import { getReportModel } from "../controller";
 import {
   ReportCategory,
   ReportStatus,
-} from "@freebites/freebites-types/dist/ReportTypes";
+  School,
+} from "@freebites/freebites-types";
 import { fetchAdminImageURL } from "@/lib/api/admin/firebase";
 import { getCommentModel } from "../../comment/controller";
 
-export const getCommentReports = async (): Promise<GroupedCommentReports[]> => {
+export const getCommentReports = async (
+  school: School
+): Promise<GroupedCommentReports[]> => {
   const Reports = await getReportModel();
   const Users = await getUserModel();
   const Comments = await getCommentModel();
@@ -17,6 +20,7 @@ export const getCommentReports = async (): Promise<GroupedCommentReports[]> => {
   const reports = await Reports.find({
     status: { $ne: ReportStatus.RESOLVED },
     type: ReportCategory.COMMENT,
+    school: school,
   }).lean();
 
   const commentIds = [

@@ -6,7 +6,7 @@ import { getAllReportsOnUsers } from "./controller";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(req: Request) {
   try {
-    await verifySessionCookie();
+    const { adminSchool } = await verifySessionCookie();
 
     // save this for filtered searches later
 
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     // const { searchParams } = new URL(req.url);
 
     const groupedPostReports: GroupedUserReports[] =
-      await getAllReportsOnUsers();
+      await getAllReportsOnUsers(adminSchool);
 
     return NextResponse.json(groupedPostReports);
   } catch (error) {

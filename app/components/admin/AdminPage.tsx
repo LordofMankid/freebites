@@ -46,7 +46,7 @@ function AdminPage() {
       </div>
       <div className="bg-orange-faint min-h-screen min-w-screen pt-16 lg:pt-32">
         <div className="mx-20 mt-16">
-          <AdminHeader school="Tufts University" />
+          <AdminHeader />
           <hr className="border-t border-gray-300 mt-8 mb-5" />
           <AdminTableHeader
             viewState={adminViewState}

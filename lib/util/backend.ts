@@ -1,6 +1,6 @@
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebaseClient";
-import { ReportCategory } from "@freebites/freebites-types/dist/ReportTypes";
+import { ReportCategory } from "@freebites/freebites-types";
 
 // backend fetch function to send auth cookie to server for validation
 export const setAuthCookie = async (token: string) => {

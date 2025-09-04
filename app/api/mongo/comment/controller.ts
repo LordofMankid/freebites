@@ -1,7 +1,7 @@
 import { CommentSchema, Comment } from "@freebites/freebites-types";
 import mongoose, { startSession } from "mongoose";
 import connectToDatabase from "@/lib/mongodb";
-import { ReportStatus } from "@freebites/freebites-types/dist/ReportTypes";
+import { ReportStatus } from "@freebites/freebites-types";
 
 let CommentModel: mongoose.Model<Comment> | null = null;
 
