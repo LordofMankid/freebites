@@ -6,6 +6,7 @@ import {
   AdminViewType,
   GroupedCommentReports,
   GroupedPostReports,
+  GroupedUserReports,
 } from "@/lib/util/types";
 import AdminTableHeader from "./AdminTableHeader";
 import {
@@ -13,15 +14,17 @@ import {
   getReportsGroupedByPost,
   getReportsGroupedByUser,
 } from "@/lib/api/admin/reports";
-import CommonButton from "../common/CommonButton";
+// import CommonButton from "../common/CommonButton";
 import PostReportTable from "./TableComponents/PostReportTable";
 import CommentReportTable from "./TableComponents/CommentReportTable";
+import UserReportTable from "./TableComponents/UserReportTable";
 
 function AdminPage() {
   const [adminViewState, setAdminViewState] = useState<AdminViewType>(
     AdminViewType.POST_REPORTS
   );
 
+  // temporary data fetching, not optimal
   const [postReports, setPostReports] = useState<GroupedPostReports[] | null>(
     null
   );
@@ -48,13 +51,26 @@ function AdminPage() {
     getContent();
   }, [commentReports]);
 
+  const [userReports, setUserReports] = useState<GroupedUserReports[] | null>(
+    null
+  );
+
+  useEffect(() => {
+    const getContent = async () => {
+      if (userReports) return;
+      const reports = await getReportsGroupedByUser();
+      setUserReports(reports);
+    };
+    getContent();
+  }, [userReports]);
+
   return (
     <>
       <div className=" bg-orange-faint">
         <Navbar />
       </div>
       <div className="bg-orange-faint min-h-screen min-w-screen pt-16 lg:pt-32">
-        <CommonButton
+        {/* <CommonButton
           onClick={async () => {
             const reports = await getReportsGroupedByPost();
             console.log(reports);
@@ -74,7 +90,7 @@ function AdminPage() {
             console.log(commentReports);
           }}
           label={"get reports by comments"}
-        />
+        /> */}
         <div className="mx-20 mt-16">
           <AdminHeader school="Tufts University" />
           <hr className="border-t border-gray-300 mt-8 mb-5" />
@@ -86,17 +102,13 @@ function AdminPage() {
             <PostReportTable reports={postReports} />
           )}
 
-          {adminViewState === AdminViewType.USER_REPORTS && (
-            <div>user reports here [WIP]</div>
+          {adminViewState === AdminViewType.USER_REPORTS && userReports && (
+            <UserReportTable reports={userReports} />
           )}
           {adminViewState === AdminViewType.COMMENT_REPORTS &&
             commentReports && <CommentReportTable reports={commentReports} />}
 
-          {adminViewState === AdminViewType.POSTS && (
-            <div>all posts here [WIP]</div>
-          )}
-
-          {/* <AdminPostList viewState={adminViewState} /> */}
+          {adminViewState === AdminViewType.POSTS && <div> all posts TBD </div>}
         </div>
       </div>
     </>
