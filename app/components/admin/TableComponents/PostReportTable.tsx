@@ -17,10 +17,11 @@ function PostReportTable(props: PostReportTableProps) {
 
   const deleteItem = useCallback(
     async (postIndex: number) => {
-      if (reports[postIndex].postInfo?._id) {
-        // set all reports corresponding to this post to resolved
-        await deletePostMutation.mutateAsync(reports[postIndex].postInfo._id);
-      }
+      const postId = reports[postIndex]?.postInfo?._id;
+      if (!postId) return; // exit early if null or undefined
+
+      // safe to call mutateAsync now
+      await deletePostMutation.mutateAsync(postId);
     },
     [deletePostMutation, reports]
   );
@@ -29,11 +30,10 @@ function PostReportTable(props: PostReportTableProps) {
 
   const ignoreReport = useCallback(
     (postIndex: number) => {
-      if (reports[postIndex].postInfo?._id)
-        ignoreAllReportsOnItem(
-          reports[postIndex].postInfo._id,
-          ReportCategory.POST
-        );
+      const postId = reports[postIndex]?.postInfo?._id;
+      if (!postId) return;
+
+      ignoreAllReportsOnItem(postId, ReportCategory.POST);
     },
     [reports]
   );

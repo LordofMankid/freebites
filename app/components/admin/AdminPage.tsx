@@ -21,16 +21,19 @@ function AdminPage() {
   );
 
   // temporary data fetching, not optimal
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: postReports, isLoading: postReportsLoading } = useQuery({
     queryKey: ["postReports"],
     queryFn: getReportsGroupedByPost,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: commentReports, isLoading: commentReportsLoading } = useQuery({
     queryKey: ["commentReports"],
     queryFn: getReportsGroupedByComments,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: userReports, isLoading: userReportsLoading } = useQuery({
     queryKey: ["userReports"],
     queryFn: getReportsGroupedByUser,
