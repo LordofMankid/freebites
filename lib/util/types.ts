@@ -38,9 +38,18 @@ export enum AdminViewType {
   POSTS = "All Posts",
 }
 
+// get the full firebase URL
+export interface PostTypeWithImageURL extends PostType {
+  imageURL?: string | null;
+}
+
+export interface UserTypeWithImageURL extends UserType {
+  profileURL?: string | null;
+}
+
 // for use in group fetches for the same person when you don't need to fetch them every time
 export type ReportWithReportedByUser = Omit<ReportType, "reportedByID"> & {
-  reportedBy: UserType;
+  reportedBy: UserTypeWithImageURL | null;
 };
 
 // for use when you do want to fetch the defendent, e.g. looking at a singular report
@@ -48,24 +57,24 @@ export type ReportWithUsers = Omit<
   ReportType,
   "defendentID" | "reportedByID"
 > & {
-  defendant: UserType;
-  reportedBy: UserType;
+  defendant: UserTypeWithImageURL;
+  reportedBy: UserTypeWithImageURL;
 };
 
 export interface GroupedPostReports {
-  postInfo: PostType;
-  defendent: UserType; // fetch poster from the post
+  postInfo: PostTypeWithImageURL | null;
+  defendent: UserTypeWithImageURL | null; // fetch poster from the post
   reportsWithUsers: ReportWithReportedByUser[];
 }
 
 export interface GroupedCommentReports {
   commentInfo: Comment;
-  defendent: UserType; // fetch poster from the post
+  defendent: UserTypeWithImageURL | null; // fetch poster from the post
   reportsWithUsers: ReportWithReportedByUser[];
 }
 
 // NOTE: doesn't contain full details, will instead pull individually (expand details) to avoid excessive joins
 export interface GroupedUserReports {
-  reportedUser: UserType;
+  reportedUser: UserTypeWithImageURL;
   reportsWithUsers: ReportWithReportedByUser[];
 }

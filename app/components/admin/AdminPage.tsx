@@ -1,13 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../Navbar";
 import AdminHeader from "./AdminHeader";
-import {
-  AdminViewType,
-  GroupedCommentReports,
-  GroupedPostReports,
-  GroupedUserReports,
-} from "@/lib/util/types";
+import { AdminViewType } from "@/lib/util/types";
 import AdminTableHeader from "./AdminTableHeader";
 import {
   getReportsGroupedByComments,
@@ -18,6 +13,7 @@ import {
 import PostReportTable from "./TableComponents/PostReportTable";
 import CommentReportTable from "./TableComponents/CommentReportTable";
 import UserReportTable from "./TableComponents/UserReportTable";
+import { useQuery } from "@tanstack/react-query";
 
 function AdminPage() {
   const [adminViewState, setAdminViewState] = useState<AdminViewType>(
@@ -25,44 +21,20 @@ function AdminPage() {
   );
 
   // temporary data fetching, not optimal
-  const [postReports, setPostReports] = useState<GroupedPostReports[] | null>(
-    null
-  );
+  const { data: postReports, isLoading: postReportsLoading } = useQuery({
+    queryKey: ["postReports"],
+    queryFn: getReportsGroupedByPost,
+  });
 
-  useEffect(() => {
-    const getContent = async () => {
-      if (postReports) return;
-      const reports = await getReportsGroupedByPost();
-      setPostReports(reports);
-    };
-    getContent();
-  }, [postReports]);
+  const { data: commentReports, isLoading: commentReportsLoading } = useQuery({
+    queryKey: ["commentReports"],
+    queryFn: getReportsGroupedByComments,
+  });
 
-  const [commentReports, setCommentReports] = useState<
-    GroupedCommentReports[] | null
-  >(null);
-
-  useEffect(() => {
-    const getContent = async () => {
-      if (commentReports) return;
-      const reports = await getReportsGroupedByComments();
-      setCommentReports(reports);
-    };
-    getContent();
-  }, [commentReports]);
-
-  const [userReports, setUserReports] = useState<GroupedUserReports[] | null>(
-    null
-  );
-
-  useEffect(() => {
-    const getContent = async () => {
-      if (userReports) return;
-      const reports = await getReportsGroupedByUser();
-      setUserReports(reports);
-    };
-    getContent();
-  }, [userReports]);
+  const { data: userReports, isLoading: userReportsLoading } = useQuery({
+    queryKey: ["userReports"],
+    queryFn: getReportsGroupedByUser,
+  });
 
   return (
     <>

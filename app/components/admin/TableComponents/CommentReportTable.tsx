@@ -79,22 +79,23 @@ function CommentReportTable(props: CommentReportTableProps) {
                 })}
               </td>
               <td>
+                <NamePFPCell
+                  src={comment.defendent?.profileURL ?? "/images/logo.png"}
+                  username={comment.defendent?.userName}
+                />
+              </td>
+              <td>
                 {comment.reportsWithUsers.map((r) => {
                   return (
                     <NamePFPCell
                       key={r._id}
-                      src="/images/logo.png"
+                      src={r.reportedBy?.profileURL ?? "/images/logo.png"}
                       username={r.reportedBy?.userName}
                     />
                   );
                 })}
               </td>
-              <td>
-                <NamePFPCell
-                  src="/images/logo.png"
-                  username={comment.defendent?.userName}
-                />
-              </td>
+
               <td className="pr-6">
                 <div className="flex flex-col gap-4">
                   <button

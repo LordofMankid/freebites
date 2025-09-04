@@ -17,7 +17,7 @@ function PostReportTable(props: PostReportTableProps) {
 
   const deleteItem = useCallback(
     async (postIndex: number) => {
-      if (reports[postIndex].postInfo._id) {
+      if (reports[postIndex].postInfo?._id) {
         // set all reports corresponding to this post to resolved
         await deletePostMutation.mutateAsync(reports[postIndex].postInfo._id);
       }
@@ -29,7 +29,7 @@ function PostReportTable(props: PostReportTableProps) {
 
   const ignoreReport = useCallback(
     (postIndex: number) => {
-      if (reports[postIndex].postInfo._id)
+      if (reports[postIndex].postInfo?._id)
         ignoreAllReportsOnItem(
           reports[postIndex].postInfo._id,
           ReportCategory.POST
@@ -66,7 +66,7 @@ function PostReportTable(props: PostReportTableProps) {
               <td>
                 <div className="relative w-[155px] h-24 bg-orange-dark">
                   <Image
-                    src={"/images/logo.png"}
+                    src={post.postInfo?.imageURL ?? "/images/logo.png"}
                     alt="image of the reported post"
                     fill
                   />
@@ -94,7 +94,7 @@ function PostReportTable(props: PostReportTableProps) {
               </td>
               <td>
                 <NamePFPCell
-                  src="/images/logo.png"
+                  src={post.defendent?.profileURL ?? "/images/logo.png"}
                   username={post.defendent?.userName}
                 />
               </td>

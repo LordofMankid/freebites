@@ -88,7 +88,7 @@ function ReportCard(props: ReportCardProps) {
   useEffect(() => {
     const getContent = async () => {
       if (reports.length == 0 || reported) return;
-      console.log("GET CONTENT FIRED");
+      // console.log("GET CONTENT FIRED");
 
       // temp fix to handle where useEffect fires on changing category
       // but before state gets updated, causing lookup on the wrong category

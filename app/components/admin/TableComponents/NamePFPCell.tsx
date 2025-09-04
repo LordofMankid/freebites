@@ -3,7 +3,7 @@ import React from "react";
 
 interface NamePFPCellProps {
   src: string;
-  username: string | null;
+  username: string | null | undefined;
 }
 
 function NamePFPCell(props: NamePFPCellProps) {
