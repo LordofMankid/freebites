@@ -75,6 +75,6 @@ export interface GroupedCommentReports {
 
 // NOTE: doesn't contain full details, will instead pull individually (expand details) to avoid excessive joins
 export interface GroupedUserReports {
-  reportedUser: UserTypeWithImageURL;
+  reportedUser: UserTypeWithImageURL | null;
   reportsWithUsers: ReportWithReportedByUser[];
 }

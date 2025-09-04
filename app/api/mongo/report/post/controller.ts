@@ -48,7 +48,7 @@ export const getPostReports = async (): Promise<GroupedPostReports[]> => {
 
   const grouped: Record<string, GroupedPostReports> = {};
 
-  // collect for image URLs
+  // collect promises for image URLs
   const imagePromises: Promise<void>[] = [];
 
   // grouping logic, return null if postInfo or users aren't found or don't exist (e.g. deleted)

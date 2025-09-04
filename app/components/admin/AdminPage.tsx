@@ -45,27 +45,6 @@ function AdminPage() {
         <Navbar />
       </div>
       <div className="bg-orange-faint min-h-screen min-w-screen pt-16 lg:pt-32">
-        {/* <CommonButton
-          onClick={async () => {
-            const reports = await getReportsGroupedByPost();
-            console.log(reports);
-          }}
-          label={"get reports by post"}
-        />
-        <CommonButton
-          onClick={async () => {
-            const reports = await getReportsGroupedByUser();
-            console.log(reports);
-          }}
-          label={"get reports by user"}
-        />
-        <CommonButton
-          onClick={async () => {
-            const commentReports = await getReportsGroupedByComments();
-            console.log(commentReports);
-          }}
-          label={"get reports by comments"}
-        /> */}
         <div className="mx-20 mt-16">
           <AdminHeader school="Tufts University" />
           <hr className="border-t border-gray-300 mt-8 mb-5" />

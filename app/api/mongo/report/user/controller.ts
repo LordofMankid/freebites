@@ -1,7 +1,8 @@
-import { GroupedUserReports } from "@/lib/util/types";
+import { GroupedUserReports, UserTypeWithImageURL } from "@/lib/util/types";
 import { getUserModel } from "../../user/controller";
 import { getReportModel } from "../controller";
 import { ReportStatus } from "@freebites/freebites-types/dist/ReportTypes";
+import { fetchAdminImageURL } from "@/lib/api/admin/firebase";
 
 export const getAllReportsOnUsers = async (): Promise<GroupedUserReports[]> => {
   const Reports = await getReportModel();
@@ -41,6 +42,9 @@ export const getAllReportsOnUsers = async (): Promise<GroupedUserReports[]> => {
 
   const grouped: Record<string, GroupedUserReports> = {};
 
+  // collect promises for image URLs
+  const imagePromises: Promise<void>[] = [];
+
   // grouping logic, return null if postInfo or users aren't found or don't exist (e.g. deleted)
   // can handle null cases in the front end
   for (const report of reports) {
@@ -48,20 +52,55 @@ export const getAllReportsOnUsers = async (): Promise<GroupedUserReports[]> => {
 
     if (!did) continue; // don't process if did is invalid value
     if (!grouped[did]) {
-      const defendentInfo = defendentMap[did];
+      const defendent = defendentMap[did];
 
-      grouped[did] = {
-        reportedUser: defendentInfo ?? null,
+      // initialize group for one user
+      const groupedItem: GroupedUserReports = {
+        reportedUser: defendent
+          ? ({ ...defendent, profileURL: null } as UserTypeWithImageURL)
+          : null,
         reportsWithUsers: [],
       };
+
+      grouped[did] = groupedItem;
+
+      // fetch defendent's profile image
+      if (defendent?.profile) {
+        imagePromises.push(
+          fetchAdminImageURL("profilePictures/" + defendent.profile)
+            .then((url) => {
+              groupedItem.reportedUser!.profileURL = url;
+            })
+            .catch((err) => console.warn("Failed to fetch user:", err))
+        );
+      }
     }
 
-    grouped[did].reportsWithUsers.push({
+    // handle reporting users
+    const reportedBy = reportedByMap[report.reportedByID] ?? null;
+    const reportWithUser = {
       ...report,
-      reportedBy: reportedByMap[report.reportedByID],
-    });
-  }
+      reportedBy: reportedBy
+        ? ({ ...reportedBy, profileURL: null } as UserTypeWithImageURL)
+        : null,
+    };
 
+    grouped[did].reportsWithUsers.push(reportWithUser);
+
+    // fetch reporter profile URL
+    if (reportedBy?.profile) {
+      imagePromises.push(
+        fetchAdminImageURL("profilePictures/" + reportedBy.profile)
+          .then((url) => {
+            reportWithUser.reportedBy!.profileURL = url;
+          })
+          .catch((err) =>
+            console.warn("Failed to fetch reporter profile URL:", err)
+          )
+      );
+    }
+  }
+  await Promise.all(imagePromises);
   // console.log(Object.values(grouped));
   return Object.values(grouped);
 };

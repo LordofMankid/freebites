@@ -20,6 +20,9 @@ interface ReportCardProps {
   reports: ReportType[];
 }
 
+/**
+ * @deprecated can delete later
+ */
 function ReportCard(props: ReportCardProps) {
   const { category, reportedID, reports } = props;
   const [reported, setReported] = useState<

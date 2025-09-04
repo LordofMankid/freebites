@@ -22,11 +22,10 @@ function UserReportTable(props: UserReportTableProps) {
 
   const ignoreReport = useCallback(
     (userIndex: number) => {
-      if (reports[userIndex].reportedUser.uid)
-        ignoreAllReportsOnItem(
-          reports[userIndex].reportedUser.uid,
-          ReportCategory.COMMENT
-        );
+      const userId = reports[userIndex]?.reportedUser?.uid;
+      if (!userId) return;
+
+      ignoreAllReportsOnItem(userId, ReportCategory.COMMENT);
     },
     [reports]
   );
@@ -56,10 +55,7 @@ function UserReportTable(props: UserReportTableProps) {
                 })}
               </td>
               <td>
-                <NamePFPCell
-                  src="/images/logo.png"
-                  username={user.reportedUser?.userName ?? "unknown"}
-                />
+                <NamePFPCell user={user.reportedUser} />
               </td>
 
               <td>
@@ -73,13 +69,7 @@ function UserReportTable(props: UserReportTableProps) {
               </td>
               <td>
                 {user.reportsWithUsers.map((r) => {
-                  return (
-                    <NamePFPCell
-                      key={r._id}
-                      src="/images/logo.png"
-                      username={r.reportedBy?.userName}
-                    />
-                  );
+                  return <NamePFPCell key={r._id} user={r.reportedBy} />;
                 })}
               </td>
 

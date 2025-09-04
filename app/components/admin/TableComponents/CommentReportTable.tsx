@@ -79,20 +79,11 @@ function CommentReportTable(props: CommentReportTableProps) {
                 })}
               </td>
               <td>
-                <NamePFPCell
-                  src={comment.defendent?.profileURL ?? "/images/logo.png"}
-                  username={comment.defendent?.userName}
-                />
+                <NamePFPCell user={comment.defendent} />
               </td>
               <td>
                 {comment.reportsWithUsers.map((r) => {
-                  return (
-                    <NamePFPCell
-                      key={r._id}
-                      src={r.reportedBy?.profileURL ?? "/images/logo.png"}
-                      username={r.reportedBy?.userName}
-                    />
-                  );
+                  return <NamePFPCell key={r._id} user={r.reportedBy} />;
                 })}
               </td>
 

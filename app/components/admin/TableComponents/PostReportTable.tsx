@@ -83,20 +83,11 @@ function PostReportTable(props: PostReportTableProps) {
               </td>
               <td>
                 {post.reportsWithUsers.map((r) => {
-                  return (
-                    <NamePFPCell
-                      key={r._id}
-                      src="/images/logo.png"
-                      username={r.reportedBy?.userName}
-                    />
-                  );
+                  return <NamePFPCell key={r._id} user={r.reportedBy} />;
                 })}
               </td>
               <td>
-                <NamePFPCell
-                  src={post.defendent?.profileURL ?? "/images/logo.png"}
-                  username={post.defendent?.userName}
-                />
+                <NamePFPCell user={post.defendent} />
               </td>
               <td className="pr-6">
                 <div className="flex flex-col gap-4">

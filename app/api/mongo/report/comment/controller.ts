@@ -108,6 +108,6 @@ export const getCommentReports = async (): Promise<GroupedCommentReports[]> => {
   }
 
   await Promise.all(imagePromises);
-  console.log(grouped);
+  // console.log(grouped);
   return Object.values(grouped);
 };

@@ -15,6 +15,9 @@ interface AdminPostListProps {
   viewState: AdminViewType;
 }
 
+/**
+ * @deprecated can delete later
+ */
 const AdminPostList = (props: AdminPostListProps) => {
   const { viewState } = props;
   // State to store aggregated data
