@@ -14,7 +14,7 @@ import {
 import { fetchAdminImageURL } from "@/lib/api/admin/firebase";
 
 export const getPostReports = async (
-  school: School
+  school?: School
 ): Promise<GroupedPostReports[]> => {
   const Reports = await getReportModel();
   const Users = await getUserModel();
@@ -24,7 +24,7 @@ export const getPostReports = async (
   const reports = await Reports.find({
     status: { $ne: ReportStatus.RESOLVED },
     type: ReportCategory.POST,
-    school: school,
+    ...(school && { school }),
   }).lean();
 
   const postIds = [

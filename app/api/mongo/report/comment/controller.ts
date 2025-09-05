@@ -10,7 +10,7 @@ import { fetchAdminImageURL } from "@/lib/api/admin/firebase";
 import { getCommentModel } from "../../comment/controller";
 
 export const getCommentReports = async (
-  school: School
+  school?: School
 ): Promise<GroupedCommentReports[]> => {
   const Reports = await getReportModel();
   const Users = await getUserModel();
@@ -20,7 +20,7 @@ export const getCommentReports = async (
   const reports = await Reports.find({
     status: { $ne: ReportStatus.RESOLVED },
     type: ReportCategory.COMMENT,
-    school: school,
+    ...(school && { school }),
   }).lean();
 
   const commentIds = [

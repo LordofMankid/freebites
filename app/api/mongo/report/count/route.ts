@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { getAllReportsCount } from "./controller";
 import { verifySessionCookie } from "@/lib/verifySession";
 import { isValidReportCategory } from "@/lib/util/backend";
+import { UserRole } from "@freebites/freebites-types";
 
 export async function GET(req: Request) {
   try {
-    const { adminSchool } = await verifySessionCookie();
+    const { adminSchool, role } = await verifySessionCookie();
 
     const { searchParams } = new URL(req.url);
 
@@ -14,10 +15,10 @@ export async function GET(req: Request) {
       ? category_string
       : undefined;
 
-    const reportCountByCategory = await getAllReportsCount(
-      category,
-      adminSchool
-    );
+    const reportCountByCategory =
+      role === UserRole.ADMIN
+        ? await getAllReportsCount(category)
+        : await getAllReportsCount(category, adminSchool);
     return NextResponse.json(reportCountByCategory);
   } catch (error) {
     return NextResponse.json(
