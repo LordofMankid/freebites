@@ -64,11 +64,12 @@ function PostReportTable(props: PostReportTableProps) {
                 })}
               </td>
               <td>
-                <div className="relative w-[155px] h-24 bg-orange-dark">
+                <div className="relative w-[155px] h-[155px] bg-black rounded-lg overflow-hidden">
                   <Image
                     src={post.postInfo?.imageURL ?? "/images/logo.png"}
                     alt="image of the reported post"
                     fill
+                    className="object-cover object-center"
                   />
                 </div>
               </td>
