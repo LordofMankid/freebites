@@ -54,6 +54,7 @@ function AdminPage() {
           <AdminTableHeader
             viewState={adminViewState}
             setViewState={setAdminViewState}
+            adminSchoolSelection={adminSchool}
           />
           {adminViewState === AdminViewType.POST_REPORTS && postReports && (
             <PostReportTable

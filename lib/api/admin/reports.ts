@@ -45,11 +45,12 @@ export const getAllReports = async (
 };
 
 export const getReportCountByCategory = async (
+  school: string,
   category?: ReportCategory
 ): Promise<number> => {
   try {
     const response = await axios.get("/api/mongo/report/count", {
-      params: category ? { category: category } : {},
+      params: category ? { category: category, school: school } : {},
     });
 
     return response.data;

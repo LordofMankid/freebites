@@ -5,27 +5,37 @@ import { useQuery } from "@tanstack/react-query";
 interface AdminTableHeaderProps {
   viewState: AdminViewType;
   setViewState: (arg0: AdminViewType) => void;
+  adminSchoolSelection: string;
 }
 
 const AdminTableHeader = (props: AdminTableHeaderProps) => {
-  const { viewState, setViewState } = props;
+  const { viewState, setViewState, adminSchoolSelection } = props;
 
   const reportCountQuery = useQuery({
-    queryKey: ["all-report-counts"],
+    queryKey: ["all-report-counts", adminSchoolSelection],
     queryFn: async () => {
       const counts = await Promise.all([
         { viewType: AdminViewType.POSTS, count: 0 }, // Or getPostsCount()
         {
           viewType: AdminViewType.POST_REPORTS,
-          count: await getReportCountByCategory(ReportCategory.POST),
+          count: await getReportCountByCategory(
+            adminSchoolSelection,
+            ReportCategory.POST
+          ),
         },
         {
           viewType: AdminViewType.COMMENT_REPORTS,
-          count: await getReportCountByCategory(ReportCategory.COMMENT),
+          count: await getReportCountByCategory(
+            adminSchoolSelection,
+            ReportCategory.COMMENT
+          ),
         },
         {
           viewType: AdminViewType.USER_REPORTS,
-          count: await getReportCountByCategory(ReportCategory.USER),
+          count: await getReportCountByCategory(
+            adminSchoolSelection,
+            ReportCategory.USER
+          ),
         },
       ]);
       return counts.reduce(

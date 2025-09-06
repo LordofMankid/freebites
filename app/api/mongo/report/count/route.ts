@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAllReportsCount } from "./controller";
 import { verifySessionCookie } from "@/lib/verifySession";
-import { isValidReportCategory } from "@/lib/util/backend";
+import { isValidReportCategory, isValidSchool } from "@/lib/util/backend";
 import { UserRole } from "@freebites/freebites-types";
 
 export async function GET(req: Request) {
@@ -15,9 +15,15 @@ export async function GET(req: Request) {
       ? category_string
       : undefined;
 
+    const school_string = searchParams.get("school");
+    const school_filter = isValidSchool(school_string)
+      ? school_string
+      : undefined;
+
+    // if user is a full admin, use their selected school
     const reportCountByCategory =
       role === UserRole.ADMIN
-        ? await getAllReportsCount(category)
+        ? await getAllReportsCount(category, school_filter)
         : await getAllReportsCount(category, adminSchool);
     return NextResponse.json(reportCountByCategory);
   } catch (error) {

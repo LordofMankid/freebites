@@ -1,6 +1,6 @@
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebaseClient";
-import { ReportCategory } from "@freebites/freebites-types";
+import { ReportCategory, School } from "@freebites/freebites-types";
 
 // backend fetch function to send auth cookie to server for validation
 export const setAuthCookie = async (token: string) => {
@@ -49,4 +49,8 @@ export const isValidReportCategory = (
   value: string | null
 ): value is ReportCategory => {
   return Object.values(ReportCategory).includes(value as ReportCategory);
+};
+
+export const isValidSchool = (value: string | null): value is School => {
+  return Object.values(School).includes(value as School);
 };
