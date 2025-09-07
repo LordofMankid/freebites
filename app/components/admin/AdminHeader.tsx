@@ -26,7 +26,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
           {adminSchoolSelection !== "All Schools" && (
             <Image
               alt={`${adminSchoolSelection} logo here`}
-              src={`/images/logos/${adminSchoolSelection}Logo.png`}
+              src={`/images/Logos/${adminSchoolSelection.replaceAll(" ", "_")}.png`}
               width={60}
               height={60}
               className="rounded-4xl"
@@ -51,7 +51,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
         <div className="flex flex-row items-center-safe gap-5">
           <Image
             alt={`${adminSchool} logo here`}
-            src="/images/logos/HarvardLogo.png"
+            src={`/images/Logos/${adminSchool.replaceAll(" ", "_")}.png`}
             width={60}
             height={60}
             className="rounded-4xl"
