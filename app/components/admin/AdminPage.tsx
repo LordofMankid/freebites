@@ -9,7 +9,6 @@ import {
   getReportsGroupedByPost,
   getReportsGroupedByUser,
 } from "@/lib/api/admin/reports";
-// import CommonButton from "../common/CommonButton";
 import PostReportTable from "./TableComponents/PostReportTable";
 import CommentReportTable from "./TableComponents/CommentReportTable";
 import UserReportTable from "./TableComponents/UserReportTable";
