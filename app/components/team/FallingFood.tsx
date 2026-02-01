@@ -206,7 +206,7 @@ const FallingFood = () => {
     // CREATING BOUNDARIES
     // CREATING BOUNDARIES
 
-    // TODO FLOOR
+    // TODO
     const floor = Matter.Bodies.rectangle(
       app.renderer.width / 2,
       app.renderer.height,
