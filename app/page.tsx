@@ -20,7 +20,7 @@ import AnimatedPhone, {
   PhoneState,
 } from "./components/AnimatedPhone";
 import { Application } from "@pixi/react";
-import LoadingScreen from "./components/LoadingScreen";
+// import LoadingScreen from "./components/LoadingScreen";
 
 // await Assets.init();
 export default function Home() {
@@ -90,7 +90,7 @@ export default function Home() {
               duration: 1000,
             },
           },
-          500
+          500,
         );
         // animating the popup
         landingTimeline.set(popupTagRef.current, { translateY: 150 }, 0).add(
@@ -109,7 +109,7 @@ export default function Home() {
               delay: 150,
             },
           },
-          600
+          600,
         );
 
         // animate on scroll
@@ -236,7 +236,7 @@ export default function Home() {
                 duration: 500,
               },
             },
-            1400
+            1400,
           )
           .add(
             canvasRef.current,
@@ -249,7 +249,7 @@ export default function Home() {
                 duration: 250,
               },
             },
-            5500
+            5500,
           );
       }
 
@@ -388,7 +388,7 @@ export default function Home() {
           </Application>
         </div>
       </div>
-      <LoadingScreen />
+      {/* <LoadingScreen /> */}
     </div>
   );
 }

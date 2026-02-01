@@ -1,6 +1,6 @@
 import { useApplication } from "@pixi/react";
-import { Assets, Container, Sprite, Texture } from "pixi.js";
-import React, { useEffect, useState } from "react";
+import { Assets, Container, Sprite, Ticker } from "pixi.js";
+import React, { useEffect } from "react";
 import Matter, { Mouse, MouseConstraint, Vector } from "matter-js";
 
 import * as decomp from "poly-decomp";
@@ -121,18 +121,18 @@ const vertexMap = new Map<string, Vector[]>([
 const FallingFood = () => {
   const { app } = useApplication();
 
-  const [texture, setTexture] = useState(Texture.EMPTY);
-
   useEffect(() => {
     if (!app || !app.renderer) return;
     // INIT
     // INIT
     // INIT
 
+    let initialized = false;
+    let alive = true;
+
     const engine = Matter.Engine.create();
     const world = engine.world;
 
-    app.stage.removeChildren();
     const container = new Container();
     app.stage.addChild(container);
 
@@ -168,7 +168,7 @@ const FallingFood = () => {
         (vertex) => ({
           x: vertex.x * scale,
           y: vertex.y * scale,
-        })
+        }),
       );
 
       let body = Matter.Bodies.circle(x, y, (sprite.height * scale) / 2.2, {
@@ -189,12 +189,12 @@ const FallingFood = () => {
 
     const foodCount = Math.min(
       Math.floor(Math.min(app.renderer.height, app.renderer.width) / 20),
-      60
+      60,
     );
     const foods = Array.from({ length: foodCount }, () => {
       const x = Math.min(
         Math.random() * app.screen.width,
-        app.renderer.width - 100
+        app.renderer.width - 100,
       );
       const y = Math.random() * -app.renderer.height * 1.8 - 100;
       return { x, y };
@@ -206,12 +206,13 @@ const FallingFood = () => {
     // CREATING BOUNDARIES
     // CREATING BOUNDARIES
 
+    // TODO FLOOR
     const floor = Matter.Bodies.rectangle(
       app.renderer.width / 2,
       app.renderer.height,
       app.renderer.width - 10,
       10,
-      { id: 0, isStatic: true }
+      { id: 0, isStatic: true },
     );
     let floorExists = true;
 
@@ -222,7 +223,7 @@ const FallingFood = () => {
       -app.renderer.height * 2,
       app.renderer.width,
       20,
-      { isStatic: true }
+      { isStatic: true },
     );
     Matter.World.add(world, ceiling);
 
@@ -231,7 +232,7 @@ const FallingFood = () => {
       0,
       10,
       app.renderer.height * 4,
-      { isStatic: true }
+      { isStatic: true },
     );
     Matter.World.add(world, leftWall);
 
@@ -240,7 +241,7 @@ const FallingFood = () => {
       0,
       10,
       app.renderer.height * 4,
-      { isStatic: true }
+      { isStatic: true },
     );
     Matter.World.add(world, rightWall);
 
@@ -340,7 +341,9 @@ const FallingFood = () => {
     // FRAME BY FRAME UPDATE
     // FRAME BY FRAME UPDATE
 
-    const ticker = app.ticker.add(() => {
+    const tick = () => {
+      if (!alive || !app || !app.stage || container.destroyed) return;
+
       Matter.Engine.update(engine, 500 / 60);
       objects.map((ob) => {
         clampVelocity(ob.b);
@@ -363,38 +366,32 @@ const FallingFood = () => {
           container.removeChild(ob.s);
         }
       });
-    });
+    };
+
+    const ticker = new Ticker();
+    ticker.add(tick);
+    ticker.start();
+
+    initialized = true;
 
     return () => {
+      if (!initialized) return;
+      alive = false;
+
       window.removeEventListener("resize", handleResize);
 
-      // Only remove touch event listeners if they were added (touch devices)
-      // if (isTouchDevice) {
-      //   const preventTouch = (e: Event) => {
-      //     e.preventDefault();
-      //     e.stopPropagation();
-      //   };
-      //   app.canvas.removeEventListener("touchstart", preventTouch);
-      //   app.canvas.removeEventListener("touchmove", preventTouch);
-      //   app.canvas.removeEventListener("touchend", preventTouch);
-      //   app.canvas.removeEventListener("touchcancel", preventTouch);
-      // }
-
+      ticker.stop();
       ticker.destroy();
-      app.stage.removeChild(container);
-      container.destroy({ children: true });
+
+      if (!container.destroyed && app?.stage) {
+        app.stage.removeChild(container);
+        container.destroy({ children: true });
+      }
+
       Matter.World.clear(world, false);
       Matter.Engine.clear(engine);
     };
   }, [app]);
-
-  useEffect(() => {
-    if (texture === Texture.EMPTY) {
-      Assets.load("/assets/foods/sandwich.png").then((result) => {
-        setTexture(result);
-      });
-    }
-  }, [texture]);
 
   return <></>;
 };

@@ -1,6 +1,7 @@
 import React, { forwardRef, useCallback } from "react";
 import CommonButton from "./common/CommonButton";
 import LogoArms from "../assets/arms.svg";
+import Link from "next/link";
 
 interface BottomHeroProps {
   altContainerStyle?: string;
@@ -13,7 +14,7 @@ const BottomHero = forwardRef<HTMLDivElement, BottomHeroProps>((props, ref) => {
     window.open(
       "https://forms.gle/m87SvcUr1scsnPYj8",
       "_blank",
-      "noopener,noreferrer"
+      "noopener,noreferrer",
     );
   }, []);
   return (
@@ -38,13 +39,14 @@ const BottomHero = forwardRef<HTMLDivElement, BottomHeroProps>((props, ref) => {
             animated={true}
             onClick={handleSignupClick}
           />
-
-          <CommonButton
-            label="Learn More"
-            altStyle="border-orange-medium border-[1.5px] py-2 px-5 sm:py-4 sm:px-10"
-            altTextStyle="font-semibold text-orange-dark text-lg sm:text-xl"
-            animated={true}
-          />
+          <Link href={"/partner"}>
+            <CommonButton
+              label="Ask a Question"
+              altStyle="border-orange-medium border-[1.5px] py-2 px-5 sm:py-4 sm:px-10"
+              altTextStyle="font-semibold text-orange-dark text-lg sm:text-xl"
+              animated={true}
+            />
+          </Link>
         </div>
       </div>
       <LogoArms className="max-w-60 lg:max-w-72 hidden md:block" />

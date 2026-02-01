@@ -1,9 +1,11 @@
 import { Application } from "@pixi/react";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import FallingFood from "./team/FallingFood";
+import { usePathname } from "next/navigation";
 
 const HomeBackground = forwardRef<HTMLDivElement, object>((props, ref) => {
   const pixiCanvas = useRef(null);
+  const pathname = usePathname();
   const [isTouch, setTouch] = useState<boolean>(false);
   useEffect(() => {
     const isTouchDevice =
@@ -29,7 +31,7 @@ const HomeBackground = forwardRef<HTMLDivElement, object>((props, ref) => {
           background={"#FFF5EB"}
           eventMode="auto"
         >
-          <FallingFood />
+          <FallingFood key={pathname} />
         </Application>
       </div>
     </div>
