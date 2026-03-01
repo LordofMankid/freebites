@@ -305,12 +305,19 @@ const Navbar = () => {
               <Link className="text-[#211f1f]" href="/team">
                 Team
               </Link>
+              <Link className="text-[#211f1f]" href="/mission">
+                Our mission
+              </Link>
+              {/* TODO: Donate doesn't direct to a page yet, just has homepage as placeholder */}
+              <Link className="text-[#211f1f]" href="/">
+                Donate
+              </Link>
               <Link
                 className="flex flex-col lg:flex-row lg:h-11 lg:items-center"
                 href={"/contact"}
               >
                 <CommonButton
-                  label={"Contact"}
+                  label={"Let's work together"}
                   altStyle="border-[#211f1f]"
                   altTextStyle="text-[#211f1f]"
                 />

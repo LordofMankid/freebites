@@ -15,6 +15,7 @@ import {
 import FullScreenSection from "./components/common/FullScreenSection";
 import PopupTag from "./components/common/PopupTag";
 import HomeBackground from "./components/HomeBackground";
+import Footer from "./components/Footer";
 import AnimatedPhone, {
   AnimatedPhoneRef,
   PhoneState,
@@ -32,6 +33,7 @@ export default function Home() {
   const block1Ref = useRef<HTMLDivElement>(null);
   const block2Ref = useRef<HTMLDivElement>(null);
   const block3Ref = useRef<HTMLDivElement>(null);
+  const block4Ref = useRef<HTMLDivElement>(null)
   const bottomHeroRef = useRef<HTMLDivElement>(null);
   const popupTagRef = useRef<HTMLDivElement>(null);
   const popupWrapperRef = useRef<HTMLDivElement>(null);
@@ -370,11 +372,25 @@ export default function Home() {
                 "/assets/Notif_5.png",
               ]}
             />
+            <FullScreenSection
+              ref={block4Ref}
+              title="Get Notified"
+              body="Receive instant push notifications when new food is posted, and check the comments for updates!"
+              altContainerStyle="opacity-0"
+              images={[
+                "/assets/Notif_1.png",
+                "/assets/Notif_2.png",
+                "/assets/Notif_3.png",
+                "/assets/Notif_4.png",
+                "/assets/Notif_5.png",
+              ]}
+            />
             <div className="h-[10vh]"> </div>
           </div>
         </div>
         <BottomHero ref={bottomHeroRef} altContainerStyle="opacity-0" />
       </div>
+      <Footer />
 
       <div
         ref={canvasRef}
