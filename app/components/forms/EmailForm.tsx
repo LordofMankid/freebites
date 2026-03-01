@@ -1,5 +1,5 @@
-import { createFeedback } from "@/lib/api/feedback";
-import { emptyFeedback, FeedbackFormData } from "@/lib/util/types";
+import { createContact } from "@/lib/api/contact";
+import { ContactFormData, emptyContact } from "@/lib/util/types";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import FormInput from "../common/FormInput";
@@ -13,7 +13,7 @@ const EmailForm = (props: EmailFormProps) => {
   const { className } = props;
   const scope = useRef<Scope | null>(null);
   const root = useRef(null);
-  const [formData, setFormData] = useState<FeedbackFormData>(emptyFeedback);
+  const [formData, setFormData] = useState<ContactFormData>(emptyContact);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
@@ -38,7 +38,7 @@ const EmailForm = (props: EmailFormProps) => {
   }, []);
   const handleSubmit = async () => {
     setSubmitted(true);
-    await createFeedback(formData);
+    await createContact(formData);
   };
   return (
     <div
@@ -52,8 +52,9 @@ const EmailForm = (props: EmailFormProps) => {
               title="Contact our team"
               subtitle={
                 <>
-                  Got any questions or inquiries about Freebites? <br /> Send a
-                  message and someone on our team will reach out :)
+                  Got any questions or want to bring Freebites to your school?{" "}
+                  <br /> Send a message and someone on our team will reach out
+                  :)
                 </>
               }
             />

@@ -72,7 +72,7 @@ function AdminLogin() {
       await signInWithEmailAndPassword(
         auth,
         loginData.email,
-        loginData.password
+        loginData.password,
       )
         .then((userCredential) => {
           return userCredential.user.getIdToken();
@@ -86,10 +86,10 @@ function AdminLogin() {
     }
   };
   return (
-    <div ref={root}>
+    <div className="flex flex-col" ref={root}>
       <Navbar />
       {/* <div className="bg-orange-faint min-h-screen min-w-screen"> </div> */}
-      <div className="w-full flex flex-col gap-2 justify-center items-center mt-12">
+      <div className="w-full flex flex-col gap-2 justify-center items-center lg:mt-24">
         <PageHeader
           title="Ambassador Login"
           subtitle={

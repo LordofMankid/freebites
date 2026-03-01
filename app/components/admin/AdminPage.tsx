@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 
 function AdminPage() {
   const [adminViewState, setAdminViewState] = useState<AdminViewType>(
-    AdminViewType.POST_REPORTS
+    AdminViewType.POST_REPORTS,
   );
   const [adminSchool, setAdminSchool] = useState<string>("All Schools");
 

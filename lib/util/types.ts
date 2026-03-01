@@ -5,14 +5,14 @@ import {
   UserType,
 } from "@freebites/freebites-types";
 
-export interface FeedbackFormData {
+export interface ContactFormData {
   name: string | null;
   email: string | null;
   message: string | null;
   date: Date | null;
 }
 
-export const emptyFeedback: FeedbackFormData = {
+export const emptyContact: ContactFormData = {
   name: null,
   email: null,
   message: null,

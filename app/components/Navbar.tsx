@@ -133,7 +133,7 @@ const Navbar = () => {
             duration: 400,
             ease: "out(4)",
           },
-          0
+          0,
         ) // Start at the same time as opacity
         .add(
           ".menu-item",
@@ -144,12 +144,12 @@ const Navbar = () => {
             duration: 300,
             ease: "out(3)",
           },
-          200
+          200,
         );
 
       self.add("toggleMenu", (open: boolean) => {
         const menuOverlay = document.querySelector(
-          ".mobile-menu-overlay"
+          ".mobile-menu-overlay",
         ) as HTMLElement;
         if (!menuOverlay) return;
 
@@ -305,15 +305,12 @@ const Navbar = () => {
               <Link className="text-[#211f1f]" href="/team">
                 Team
               </Link>
-              <Link className="text-[#211f1f]" href="/contact">
-                Contact
-              </Link>
               <Link
                 className="flex flex-col lg:flex-row lg:h-11 lg:items-center"
-                href={"/partner"}
+                href={"/contact"}
               >
                 <CommonButton
-                  label={"Partner with Us"}
+                  label={"Contact"}
                   altStyle="border-[#211f1f]"
                   altTextStyle="text-[#211f1f]"
                 />
@@ -354,16 +351,6 @@ const Navbar = () => {
                 }}
               >
                 Contact
-              </Link>
-              <Link
-                href="/partner"
-                className="menu-item opacity-0 font-inter text-3xl font-semibold text-[#211f1f] py-3"
-                onClick={() => {
-                  setOpen(false);
-                  scope.current?.methods.toggleMenu(false);
-                }}
-              >
-                Partner with Us
               </Link>
             </div>
           </div>
