@@ -23,7 +23,7 @@ function PostReportTable(props: PostReportTableProps) {
       // safe to call mutateAsync now
       await deletePostMutation.mutateAsync(postId);
     },
-    [deletePostMutation, reports]
+    [deletePostMutation, reports],
   );
 
   const isDeleting = deletePostMutation.isPending;
@@ -35,7 +35,7 @@ function PostReportTable(props: PostReportTableProps) {
 
       ignoreAllReportsOnItem(postId, ReportCategory.POST);
     },
-    [reports]
+    [reports],
   );
 
   return (
@@ -66,7 +66,7 @@ function PostReportTable(props: PostReportTableProps) {
               <td>
                 <div className="relative w-[155px] h-[155px] bg-black rounded-lg overflow-hidden">
                   <Image
-                    src={post.postInfo?.imageURL ?? "/images/logo.png"}
+                    src={post.postInfo?.imageURIs[0].url ?? "/images/logo.png"}
                     alt="image of the reported post"
                     fill
                     className="object-cover object-center"

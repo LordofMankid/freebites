@@ -14,7 +14,7 @@ import {
 import { fetchAdminImageURL } from "@/lib/api/admin/firebase";
 
 export const getPostReports = async (
-  school?: School
+  school?: School,
 ): Promise<GroupedPostReports[]> => {
   const Reports = await getReportModel();
   const Users = await getUserModel();
@@ -31,13 +31,13 @@ export const getPostReports = async (
     ...new Set(
       reports.map((r) => {
         if (r.postID) return r.postID;
-      })
+      }),
     ),
   ];
 
   const userIds = [
     ...new Set(
-      reports.flatMap((r) => [r.reportedByID, r.defendentID].filter(Boolean)) // remove undefined/null
+      reports.flatMap((r) => [r.reportedByID, r.defendentID].filter(Boolean)), // remove undefined/null
     ),
   ];
 
@@ -79,13 +79,13 @@ export const getPostReports = async (
       // fetch images, append to promises that will resolve to either the images or stay as null
       if (postInfo?.imageURIs?.[0]) {
         imagePromises.push(
-          fetchAdminImageURL(postInfo.imageURIs[0])
+          fetchAdminImageURL(postInfo.imageURIs[0].url)
             .then((url) => {
-              groupedItem.postInfo!.imageURL = url;
+              groupedItem.postInfo!.imageURIs[0].url = url;
             })
             .catch((err) =>
-              console.warn("Failed to fetch post image URL:", err)
-            )
+              console.warn("Failed to fetch post image URL:", err),
+            ),
         );
       }
       if (defendent?.profile) {
@@ -95,8 +95,8 @@ export const getPostReports = async (
               groupedItem.defendent!.profileURL = url;
             })
             .catch((err) =>
-              console.warn("Failed to fetch defendent profile URL:", err)
-            )
+              console.warn("Failed to fetch defendent profile URL:", err),
+            ),
         );
       }
     }
@@ -120,8 +120,8 @@ export const getPostReports = async (
             reportWithUser.reportedBy!.profileURL = url;
           })
           .catch((err) =>
-            console.warn("Failed to fetch reporter profile URL:", err)
-          )
+            console.warn("Failed to fetch reporter profile URL:", err),
+          ),
       );
     }
   }
