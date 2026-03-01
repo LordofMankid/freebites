@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com", // or storage.googleapis.com if using that
       },
+      {
+        protocol: "https",
+        hostname: "staging.media.freebites.org",
+      },
     ],
   },
   webpack(config) {

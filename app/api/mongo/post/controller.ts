@@ -4,11 +4,13 @@ import {
   PostType,
   PostSchemaDefinition,
   ReportStatus,
+  ImageRecord,
 } from "@freebites/freebites-types";
 import mongoose, { startSession } from "mongoose";
 import { getUserModel } from "../user/controller";
-import { getStorage } from "@/lib/firebaseAdmin";
 import { getReportModel } from "../report/controller";
+import { r2 } from "@/lib/r2";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 let PostModel: mongoose.Model<PostType> | null = null;
 
@@ -39,7 +41,7 @@ export const getAllPosts = async (): Promise<PostWithUser[]> => {
 
     // create a map for fast lookup
     const posterMap = Object.fromEntries(
-      posters.map((poster) => [poster.uid, poster])
+      posters.map((poster) => [poster.uid, poster]),
     );
 
     // combine the fields
@@ -79,7 +81,7 @@ export const getPostById = async (id: string): Promise<PostWithUser> => {
  * @returns - the updated post
  */
 export const putPostController = async (
-  postData: PostType
+  postData: PostType,
 ): Promise<PostType> => {
   try {
     const Post = await getPostModel();
@@ -92,7 +94,7 @@ export const putPostController = async (
       postData,
       {
         new: true,
-      }
+      },
     )
       .lean() // save as javascript document for less overhead
       .exec();
@@ -115,7 +117,7 @@ export const putPostController = async (
  * @returns - the deleted post
  */
 export const deletePostController = async (
-  postId: string
+  postId: string,
 ): Promise<PostType | null> => {
   const session = await startSession();
   try {
@@ -126,7 +128,7 @@ export const deletePostController = async (
     }
 
     let deletedPost: PostType | null = null;
-    let imagePaths: string[] = [];
+    let imagePaths: ImageRecord[] = [];
 
     // start w/ atomicity so we don't fail delete
     await session.withTransaction(async () => {
@@ -149,26 +151,31 @@ export const deletePostController = async (
           resolvedAt: new Date(),
           resolvedReason: "Post deleted by admin",
         },
-        { session }
+        { session },
       );
       console.log(
-        `Resolved ${reportUpdateResult.modifiedCount} reports for post ${postId}`
+        `Resolved ${reportUpdateResult.modifiedCount} reports for post ${postId}`,
       );
     });
 
     // delete all associated pictures
-    const bucket = getStorage().bucket(); // uses initialized admin app
     await Promise.all(
-      imagePaths.map(async (imagePath: string) => {
+      imagePaths.map(async (imagePath: ImageRecord, i: number) => {
+        if (i == 0) return; // don't delete the first image since we archive it later
         try {
-          await bucket.file(imagePath).delete();
+          r2.send(
+            new DeleteObjectCommand({
+              Bucket: process.env.R2_BUCKET,
+              Key: imagePath.key,
+            }),
+          );
         } catch (error) {
           console.warn(
             `Failed to delete Firebase Storage file at ${imagePath}:`,
-            error
+            error,
           );
         }
-      })
+      }),
     );
 
     return deletedPost;

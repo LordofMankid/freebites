@@ -12,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1000.0",
     "@freebites/freebites-types": "^1.0.27",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
