@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "staging.media.freebites.org",
       },
+      {
+        protocol: "https",
+        hostname: "media.freebites.org",
+      },
     ],
   },
   webpack(config) {
