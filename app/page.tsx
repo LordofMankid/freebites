@@ -15,6 +15,7 @@ import {
 import FullScreenSection from "./components/common/FullScreenSection";
 import PopupTag from "./components/common/PopupTag";
 import HomeBackground from "./components/HomeBackground";
+import SupportSection from "./components/SupportSection";
 import Footer from "./components/Footer";
 import AnimatedPhone, {
   AnimatedPhoneRef,
@@ -33,7 +34,7 @@ export default function Home() {
   const block1Ref = useRef<HTMLDivElement>(null);
   const block2Ref = useRef<HTMLDivElement>(null);
   const block3Ref = useRef<HTMLDivElement>(null);
-  const block4Ref = useRef<HTMLDivElement>(null)
+  const supportSectionRef = useRef<HTMLDivElement>(null);
   const bottomHeroRef = useRef<HTMLDivElement>(null);
   const popupTagRef = useRef<HTMLDivElement>(null);
   const popupWrapperRef = useRef<HTMLDivElement>(null);
@@ -65,6 +66,7 @@ export default function Home() {
       block1Ref.current,
       block2Ref.current,
       block3Ref.current,
+      supportSectionRef.current,
       bottomHeroRef.current,
     ].filter(Boolean); // Filter out null refs
 
@@ -334,7 +336,7 @@ export default function Home() {
           onClick={jumpToPhone}
         />
       </div>
-      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24 pointer-events-none mt-16 lg:mt-24">
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 pointer-events-none mt-16 lg:mt-24">
         <div className="flex flex-col w-full justify-start min-h-[90vh]">
           <TopHero ref={topHeroRef} />
         </div>
@@ -372,22 +374,14 @@ export default function Home() {
                 "/assets/Notif_5.png",
               ]}
             />
-            <FullScreenSection
-              ref={block4Ref}
-              title="Get Notified"
-              body="Receive instant push notifications when new food is posted, and check the comments for updates!"
-              altContainerStyle="opacity-0"
-              images={[
-                "/assets/Notif_1.png",
-                "/assets/Notif_2.png",
-                "/assets/Notif_3.png",
-                "/assets/Notif_4.png",
-                "/assets/Notif_5.png",
-              ]}
-            />
             <div className="h-[10vh]"> </div>
           </div>
         </div>
+      </div>
+
+      <SupportSection ref={supportSectionRef} altContainerStyle="opacity-0" />
+
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 my-16 lg:my-24 pointer-events-none">
         <BottomHero ref={bottomHeroRef} altContainerStyle="opacity-0" />
       </div>
       <Footer />
