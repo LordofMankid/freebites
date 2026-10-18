@@ -93,9 +93,10 @@ export default function page() {
               />
             </div>
           </div>
-          <div className="mt-20">
+          {/* TODO: uncomment once donation link is ready */}
+          {/* <div className="mt-20">
             <DonationPrompt />
-          </div>
+          </div> */}
           <div className="mt-20">
             <p className="font-baloo font-bold text-4xl mb-4">
               Our Initiatives
