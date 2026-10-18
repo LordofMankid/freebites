@@ -1,6 +1,6 @@
 import { useState } from "react";
 import React from "react";
-import Image, {StaticImageData} from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 interface InitiativeProps {
   title: string;
@@ -13,9 +13,7 @@ const Initiative = (props: InitiativeProps) => {
   const { title, description, images = [], color } = props;
   const [expanded, setExpanded] = useState(false);
   const hasMore = images.length > 0 && description.length > 100;
-  const clamp = images.length > 0
-    ? "line-clamp-2"
-    : "";
+  const clamp = images.length > 0 ? "line-clamp-2" : "";
 
   return (
     <div
@@ -34,19 +32,23 @@ const Initiative = (props: InitiativeProps) => {
                 alt={images.length > 1 ? `${title} image ${i + 1}` : title}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className={images.length > 1 ? "object-contain" : "object-cover"}
+                className={
+                  images.length > 1 ? "object-contain" : "object-cover"
+                }
               />
             </div>
           ))}
         </div>
       )}
-      
+
       {/* content Container */}
       <div className="flex flex-col gap-3">
-        <h3 className="text-emerald-950 font-bold text-xl sm:text-2xl md:text-3xl leading-tight">
+        <h3 className="text-emerald-950 font-bold text-lg sm:text-lg md:text-2xl leading-tight">
           {title}
         </h3>
-        <p className={`text-neutral-600 text-base leading-relaxed ${expanded ? "" : clamp}`}>
+        <p
+          className={`text-neutral-600 text-base leading-relaxed ${expanded ? "" : clamp}`}
+        >
           {description}
         </p>
         {hasMore && (
