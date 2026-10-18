@@ -38,14 +38,14 @@ const SupportSection = forwardRef<HTMLDivElement, SupportSectionProps>(
               Freebites is a 501(c)(3) non-profit. Your tax-deductible contribution supports our mission to minimize food waste.
             </p>
             <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-1 sm:pt-2">
-              <Link href="/">
+              {/* <Link href="/">
                 <CommonButton
                   label="Donate"
                   altStyle="bg-orange-medium border-orange-medium border-[1.5px] py-2 px-7 sm:py-3.5 sm:px-9 rounded-full"
                   altTextStyle="font-inter font-semibold text-white text-base sm:text-lg"
                   animated={true}
                 />
-              </Link>
+              </Link> */}
               <Link href="/mission">
                 <CommonButton
                   label="Our Mission"

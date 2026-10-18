@@ -308,10 +308,9 @@ const Navbar = () => {
               <Link className="text-[#211f1f]" href="/mission">
                 Our mission
               </Link>
-              {/* TODO: Donate doesn't direct to a page yet, just has homepage as placeholder */}
-              <Link className="text-[#211f1f]" href="/">
+              {/* <Link className="text-[#211f1f]" href="/">
                 Donate
-              </Link>
+              </Link> */}
               <Link
                 className="flex flex-col lg:flex-row lg:h-11 lg:items-center"
                 href={"/contact"}

@@ -21,15 +21,14 @@ const Footer = () => {
         >
           freebites7@gmail.com
         </a>
-        {/* TODO: Donate doesn't direct to a page yet, just has homepage as placeholder */}
-        <Link href="/" className="justify-self-center sm:justify-self-end">
+        {/* <Link href="/" className="justify-self-center sm:justify-self-end">
           <CommonButton
             label="Donate"
             altStyle="bg-orange-medium border-orange-medium h-[54px] w-[151px] px-0 py-0 rounded-[100px]"
             altTextStyle="font-inter font-semibold text-[20px] leading-none tracking-[0.5px] text-white"
             animated
           />
-        </Link>
+        </Link> */}
       </div>
     </footer>
   );
