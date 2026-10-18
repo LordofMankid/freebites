@@ -1,47 +1,64 @@
+import { useState } from "react";
 import React from "react";
-import Image from "next/image";
+import Image, {StaticImageData} from "next/image";
 
 interface InitiativeProps {
   title: string;
   description: string;
-  image?: string;
+  images?: (string | StaticImageData)[]; // none, one, or several
   color: string;
 }
 
 const Initiative = (props: InitiativeProps) => {
-  const { title, description, image, color } = props;
+  const { title, description, images = [], color } = props;
+  const [expanded, setExpanded] = useState(false);
+  const hasMore = images.length > 0 && description.length > 100;
+  const clamp = images.length > 0
+    ? "line-clamp-2"
+    : "";
 
   return (
     <div
       className="flex flex-col rounded-3xl p-6 sm:p-8 font-inter overflow-hidden shadow-sm"
       style={{ backgroundColor: color }}
     >
-      {/* image container */}
-      {image && (
-        <div className="relative w-full h-64 sm:h-72 mb-6 flex items-center justify-center">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            sizes="100vw"
-            style={{ objectFit: "contain" }}
-          />
+      {images.length > 0 && (
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          {images.map((src, i) => (
+            <div
+              key={i}
+              className="relative w-full sm:flex-1 h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden"
+            >
+              <Image
+                src={src}
+                alt={images.length > 1 ? `${title} image ${i + 1}` : title}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className={images.length > 1 ? "object-contain" : "object-cover"}
+              />
+            </div>
+          ))}
         </div>
       )}
-
+      
       {/* content Container */}
       <div className="flex flex-col gap-3">
         <h3 className="text-emerald-950 font-bold text-xl sm:text-2xl md:text-3xl leading-tight">
           {title}
         </h3>
-
-        {/* description, hidden on small screens */}
-        <p className="hidden sm:block text-neutral-600 font-normal text-base md:text-lg leading-relaxed">
+        <p className={`text-neutral-600 text-base leading-relaxed ${expanded ? "" : clamp}`}>
           {description}
-          <span className="text-neutral-400 cursor-pointer font-medium hover:underline">
-            {/* TODO: add more... functionality */}
-          </span>
         </p>
+        {hasMore && (
+          <button
+            type="button"
+            onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
+            className="self-start text-neutral-400 font-medium hover:underline text-sm"
+          >
+            {expanded ? "less" : "more"}
+          </button>
+        )}
       </div>
     </div>
   );
