@@ -15,6 +15,8 @@ import {
 import FullScreenSection from "./components/common/FullScreenSection";
 import PopupTag from "./components/common/PopupTag";
 import HomeBackground from "./components/HomeBackground";
+import SupportSection from "./components/SupportSection";
+import Footer from "./components/Footer";
 import AnimatedPhone, {
   AnimatedPhoneRef,
   PhoneState,
@@ -32,6 +34,7 @@ export default function Home() {
   const block1Ref = useRef<HTMLDivElement>(null);
   const block2Ref = useRef<HTMLDivElement>(null);
   const block3Ref = useRef<HTMLDivElement>(null);
+  const supportSectionRef = useRef<HTMLDivElement>(null);
   const bottomHeroRef = useRef<HTMLDivElement>(null);
   const popupTagRef = useRef<HTMLDivElement>(null);
   const popupWrapperRef = useRef<HTMLDivElement>(null);
@@ -63,6 +66,7 @@ export default function Home() {
       block1Ref.current,
       block2Ref.current,
       block3Ref.current,
+      supportSectionRef.current,
       bottomHeroRef.current,
     ].filter(Boolean); // Filter out null refs
 
@@ -332,7 +336,7 @@ export default function Home() {
           onClick={jumpToPhone}
         />
       </div>
-      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 mb-24 pointer-events-none mt-16 lg:mt-24">
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 pointer-events-none mt-16 lg:mt-24">
         <div className="flex flex-col w-full justify-start min-h-[90vh]">
           <TopHero ref={topHeroRef} />
         </div>
@@ -373,8 +377,14 @@ export default function Home() {
             <div className="h-[10vh]"> </div>
           </div>
         </div>
+      </div>
+
+      <SupportSection ref={supportSectionRef} altContainerStyle="opacity-0" />
+
+      <div className="flex flex-col items-center mx-4 lg:mx-24 md:mx-4 my-16 lg:my-24 pointer-events-none">
         <BottomHero ref={bottomHeroRef} altContainerStyle="opacity-0" />
       </div>
+      <Footer />
 
       <div
         ref={canvasRef}

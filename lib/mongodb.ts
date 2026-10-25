@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGO_URI = process.env.MONGO_URI!;
-
-if (!MONGO_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable");
-}
-
 // Module-level cache
 const cached: {
   conn: typeof mongoose | null;
@@ -13,6 +7,12 @@ const cached: {
 } = { conn: null, promise: null };
 
 async function connectToDatabase() {
+  const MONGO_URI = process.env.MONGO_URI;
+
+  if (!MONGO_URI) {
+    throw new Error("Please define the MONGO_URI environment variable");
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
