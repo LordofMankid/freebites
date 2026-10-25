@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Logo from "../assets/freebites.svg";
-import CommonButton from "./common/CommonButton";
 
 const Footer = () => {
   return (
