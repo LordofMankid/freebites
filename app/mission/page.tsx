@@ -4,7 +4,7 @@ import PageHeader from "../components/common/PageHeader";
 import Navbar from "../components/Navbar";
 import teamPhoto from "../../public/images/team-photo.jpg";
 import Image from "next/image";
-import DonationPrompt from "../components/DonationPrompt";
+import Footer from "../components/Footer";
 
 const missionStatement =
   "Freebites minimizes environmental food waste by connecting college students with surplus food from campus events before it is thrown away.";
@@ -65,7 +65,7 @@ export default function page() {
       <PageHeader
         title="Our Mission"
         subtitle={missionStatement}
-        altStyle="mt-20"
+        altStyle="mt-30"
       />
       <div className="px-4 md:px-20">
         <div className=" mt-10">
@@ -93,7 +93,7 @@ export default function page() {
               />
             </div>
           </div>
-          {/* TODO: uncomment once donation link is ready */}
+          {/* TODO: uncomment once donation link is ready, and add import */}
           {/* <div className="mt-20">
             <DonationPrompt />
           </div> */}
@@ -116,8 +116,9 @@ export default function page() {
           </div>
         </div>
       </div>
-
-      {/* TODO: add in footer from home page ticket */}
+      <div className="mt-20">
+        <Footer />
+      </div>
     </div>
   );
 }
