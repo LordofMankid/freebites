@@ -2,7 +2,7 @@
 import Initiative from "../components/common/Initiative";
 import PageHeader from "../components/common/PageHeader";
 import Navbar from "../components/Navbar";
-import teamPhoto from "../../public/images/team-photo.jpg";
+import teamPhoto from "../../public/images/team-photo.png";
 import Image from "next/image";
 import Footer from "../components/Footer";
 

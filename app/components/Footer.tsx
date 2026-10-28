@@ -14,12 +14,17 @@ const Footer = () => {
             Freebites
           </p>
         </Link>
-        <a
-          href="mailto:freebites7@gmail.com"
-          className="justify-self-center font-inter text-[22px] font-normal leading-[34px] tracking-[0.5px] text-[#211f1f]"
-        >
-          freebites7@gmail.com
-        </a>
+        <div className="flex flex-col items-center">
+          <a
+            href="mailto:freebites7@gmail.com"
+            className="justify-self-center font-inter text-lg font-normal leading-[34px] tracking-[0.5px] text-[#211f1f]"
+          >
+            freebites7@gmail.com
+          </a>
+          <p className="text-neutral-light-text text-md">
+            Employer ID: 41-4110550
+          </p>
+        </div>
         {/* <Link href="/" className="justify-self-center sm:justify-self-end">
           <CommonButton
             label="Donate"
